@@ -1,20 +1,7 @@
 "use client";
 
-import {
-  Calendar,
-  ChartNoAxesCombined,
-  ShieldUser,
-  Settings,
-  VenetianMask,
-  MapPin,
-  ChevronRight,
-  Brush,
-  ChevronUp,
-  LogOut,
-} from "lucide-react";
 
 import { usePathname } from "next/navigation";
-
 import {
   Sidebar,
   SidebarContent,
@@ -30,78 +17,18 @@ import {
 import Logo from "./Logo";
 import Link from "next/link";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import ProfilePicture from "./ProfilePicture";
-import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Tinos } from "next/font/google";
-import { Button } from "./ui/button";
+import { general, analytics, managements } from "@/lib/constants";
+import { LogOut, ChevronRight } from "lucide-react";
 
-const managements = [
-  {
-    title: "Appointments",
-    url: "/owner/manage-appointments",
-    icon: Calendar,
-  },
-  {
-    title: "Aesthetician",
-    url: "/owner/manage-aesthetician",
-    icon: VenetianMask,
-  },
-  {
-    title: "Service",
-    url: "/owner/manage-service",
-    icon: Brush,
-  },
-  {
-    title: "Branch",
-    url: "/owner/manage-branch",
-    icon: MapPin,
-  },
-  {
-    title: "Admin",
-    url: "/owner/manage-admin",
-    icon: ShieldUser,
-  },
-];
 
-const general = [
-  {
-    title: "Settings",
-    url: "/owner/settings",
-    icon: Settings,
-  },
-];
 
-const analytics = [
-  {
-    title: "Dashboard",
-    icon: ChartNoAxesCombined,
-    isActive: true,
-    items: [
-      {
-        title: "Appointments",
-        url: "/owner/dashboard/appointments",
-      },
-      {
-        title: "Sales",
-        url: "/owner/dashboard/sales",
-      },
-    ],
-  },
-];
 
-const tinos = Tinos({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
+
+
 
 export function AppSidebar() {
   const pathname = usePathname();
