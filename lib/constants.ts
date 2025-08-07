@@ -6,7 +6,6 @@ import {
   VenetianMask,
   MapPin,
   Brush,
-
 } from "lucide-react";
 
 export const general = [

@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MY Aesthetics Brow Studio Owner",
+  title: "MY Aesthetics Brow Studio - Owner",
   description: "",
 };
 
