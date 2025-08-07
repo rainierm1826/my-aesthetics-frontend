@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Branch } from "./types";
+import { Admin } from "./types";
 import { Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,27 +12,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-export const branchColumns: ColumnDef<Branch>[] = [
+export const adminColumn: ColumnDef<Admin>[] = [
+  {
+    id: "fullName",
+    header: "Full Name",
+    cell: ({ row }) => {
+      const { firstName, middleInitial, lastName } = row.original;
+      return `${firstName} ${middleInitial}. ${lastName}`;
+    },
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
   {
     accessorKey: "branchName",
     header: "Branch Name",
-  },
-  {
-    accessorKey: "region",
-    header: "Region",
-  },
-  {
-    accessorKey: "city",
-    header: "City",
-  },
-  {
-    accessorKey: "barangay",
-    header: "Barangay",
-  },
-  {
-    accessorKey: "blk",
-    header: "Blk",
   },
   {
     id: "actions",
@@ -56,9 +51,6 @@ export const branchColumns: ColumnDef<Branch>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem className="text-red-400 hover:text-red-500 hover:bg-transparent">
               Delete
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-gray-700 hover:text-gray-900 hover:bg-transparent">
-              Preview
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

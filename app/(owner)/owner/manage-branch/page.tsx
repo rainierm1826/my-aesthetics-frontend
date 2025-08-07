@@ -45,7 +45,6 @@ export default async function BranchPage() {
       <div className="container mx-auto py-5 px-5">
         <DataTable columns={branchColumns} data={data} />
       </div>
-      
     </div>
   );
 }

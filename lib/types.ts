@@ -5,3 +5,12 @@ export type Branch = {
   barangay: string
   blk: string
 }
+
+export type Admin = {
+  firstName: string
+  lastName: string
+  middleInitial: string
+  branchName: string
+  email: string
+}
+
