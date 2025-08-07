@@ -1,3 +1,10 @@
+import OwnerNavbar from "@/components/OwnerNavbar";
+
 export default function SalesDashboardPage() {
-  return <div className="">sales dashboard</div>;
+  return (
+    <div>
+      <OwnerNavbar title="Sales Dashboard" />
+      <p>Sales</p>
+    </div>
+  );
 }

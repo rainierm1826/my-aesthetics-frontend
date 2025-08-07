@@ -1,6 +1,5 @@
 "use client";
 
-
 import { usePathname } from "next/navigation";
 import {
   Sidebar,
@@ -22,19 +21,13 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { general, analytics, managements } from "@/lib/constants";
-import { LogOut, ChevronRight } from "lucide-react";
-
-
-
-
-
-
+import { Power, ChevronRight } from "lucide-react";
 
 export function AppSidebar() {
   const pathname = usePathname();
   return (
     <Sidebar collapsible="offcanvas">
-      <SidebarContent className="flex flex-col min-h-screen">
+      <SidebarContent className="flex flex-col">
         <SidebarHeader className="flex items-center">
           <Logo mainSize="text-4xl" size="text-xl" href="#" />
         </SidebarHeader>
@@ -147,7 +140,7 @@ const SFooter = () => {
         <SidebarMenuItem>
           <SidebarMenuButton asChild className="text-red-400">
             <Link href={"/"}>
-              <LogOut />
+              <Power />
               <span>Logout</span>
             </Link>
           </SidebarMenuButton>

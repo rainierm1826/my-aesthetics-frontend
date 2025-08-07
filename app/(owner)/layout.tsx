@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import "../globals.css";
 
@@ -23,9 +23,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className}`}>
         <SidebarProvider>
-          <AppSidebar />
-          <SidebarTrigger />
-          {children}
+          <AppSidebar/>
+          <SidebarInset>
+            {children}
+          </SidebarInset>
         </SidebarProvider>
       </body>
     </html>
