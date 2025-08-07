@@ -1,10 +1,18 @@
+"use client";
+
 import {
   Calendar,
   ChartNoAxesCombined,
   ShieldUser,
   Settings,
-  VenetianMask
+  VenetianMask,
+  MapPin,
+  ChevronRight,
+  Brush,
+  ChevronUp,
 } from "lucide-react";
+
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -20,14 +28,21 @@ import {
 } from "@/components/ui/sidebar";
 import Logo from "./Logo";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import ProfilePicture from "./ProfilePicture";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Tinos } from "next/font/google";
 
-// Menu items.
-const items = [
-  {
-    title: "Dashboard",
-    url: "/owner/dashboard",
-    icon: ChartNoAxesCombined,
-  },
+const managements = [
   {
     title: "Appointments",
     url: "/owner/manage-appointments",
@@ -39,11 +54,23 @@ const items = [
     icon: VenetianMask,
   },
   {
+    title: "Service",
+    url: "/owner/manage-service",
+    icon: Brush,
+  },
+  {
+    title: "Branch",
+    url: "/owner/manage-branch",
+    icon: MapPin,
+  },
+  {
     title: "Admin",
     url: "/owner/manage-admin",
     icon: ShieldUser,
   },
+];
 
+const general = [
   {
     title: "Settings",
     url: "/owner/settings",
@@ -51,32 +78,179 @@ const items = [
   },
 ];
 
+const analytics = [
+  {
+    title: "Dashboard",
+    icon: ChartNoAxesCombined,
+    isActive: true,
+    items: [
+      {
+        title: "Sales",
+        url: "/owner/dashboard/sales",
+      },
+      {
+        title: "Appointments",
+        url: "/owner/dashboard/appointments",
+      },
+    ],
+  },
+];
+
+const tinos = Tinos({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
+
 export function AppSidebar() {
+  const pathname = usePathname();
   return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarHeader>
-          <Logo />
+    <Sidebar collapsible="offcanvas">
+      <SidebarContent className="flex flex-col min-h-screen">
+        <SidebarHeader className="flex items-center">
+          <Logo mainSize="text-4xl" size="text-xl" href="#" />
         </SidebarHeader>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarFooter></SidebarFooter>
+        <AnalyticsGroup pathname={pathname} />
+        <ManagementGroup pathname={pathname} />
+        <GeneralGroup pathname={pathname} />
+        <SFooter />
       </SidebarContent>
     </Sidebar>
   );
 }
+
+const AnalyticsGroup = ({ pathname }: { pathname: string }) => {
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>Analytics</SidebarGroupLabel>
+      <SidebarGroupContent>
+        {analytics.map((item) => (
+          <div key={item.title}>
+            <Collapsible
+              defaultOpen={item.isActive}
+              className="group/collapsible"
+            >
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton>
+                  <item.icon />
+                  <span>{item.title}</span>
+                  <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="ml-8 flex flex-col gap-2">
+                {item.items.map((subItem) => (
+                  <Link
+                    key={subItem.title}
+                    href={subItem.url}
+                    className={`text-sm px-2 py-1 rounded transition-colors ${
+                      pathname === subItem.url
+                        ? "bg-primary/20 font-bold"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    {subItem.title}
+                  </Link>
+                ))}
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
+        ))}
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+};
+
+const ManagementGroup = ({ pathname }: { pathname: string }) => {
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>Management</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {managements.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <Link
+                  href={item.url}
+                  className={`px-2 py-1 rounded transition-colors ${
+                    pathname === item.url
+                      ? "bg-primary/20 font-bold"
+                      : "hover:bg-muted"
+                  }`}
+                >
+                  <item.icon />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+};
+
+const GeneralGroup = ({ pathname }: { pathname: string }) => {
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>General</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {general.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <Link
+                  href={item.url}
+                  className={`px-2 py-1 rounded transition-colors ${
+                    pathname === item.url
+                      ? "bg-primary/20 font-bold"
+                      : "hover:bg-muted"
+                  }`}
+                >
+                  <item.icon />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+};
+
+const SFooter = () => {
+  return (
+    <SidebarFooter className="mt-auto">
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton className="py-5 focus:border-0 mx-auto">
+                <div className="flex justify-center items-center gap-3">
+                  <ProfilePicture />
+                  <div className="">
+                    <p className={`${tinos.className} text-sm font-bold`}>
+                      Rainier Marasigan
+                    </p>
+                    <p className="text-xs">Owner</p>
+                  </div>
+                </div>
+                <ChevronUp className="ml-auto" />
+              </SidebarMenuButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="top" className="w-[225px]">
+              <DropdownMenuItem>
+                <span>Account</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <span>Billing</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <span>Sign out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarFooter>
+  );
+};

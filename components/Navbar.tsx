@@ -10,7 +10,7 @@ const Navbar = () => {
       <nav className="flex justify-between items-center h-[60px] px-4">
         {/* logo */}
         <div>
-          <Logo />
+          <Logo mainSize="text-4xl" size="text-xl" href="/"/>
         </div>
 
         {/* nav links */}

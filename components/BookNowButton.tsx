@@ -68,7 +68,7 @@ const SignInForm = () => {
         <Button
           className="w-full mt-5"
           type="button"
-          onClick={() => router.push("/owner/dashboard")}
+          onClick={() => router.push("/owner/dashboard/appointments")}
         >
           Sign-In
         </Button>
