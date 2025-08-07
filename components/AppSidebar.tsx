@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Brush,
   ChevronUp,
+  LogOut,
 } from "lucide-react";
 
 import { usePathname } from "next/navigation";
@@ -41,6 +42,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Tinos } from "next/font/google";
+import { Button } from "./ui/button";
 
 const managements = [
   {
@@ -85,12 +87,12 @@ const analytics = [
     isActive: true,
     items: [
       {
-        title: "Sales",
-        url: "/owner/dashboard/sales",
-      },
-      {
         title: "Appointments",
         url: "/owner/dashboard/appointments",
+      },
+      {
+        title: "Sales",
+        url: "/owner/dashboard/sales",
       },
     ],
   },
@@ -142,9 +144,7 @@ const AnalyticsGroup = ({ pathname }: { pathname: string }) => {
                     key={subItem.title}
                     href={subItem.url}
                     className={`text-sm px-2 py-1 rounded transition-colors ${
-                      pathname === subItem.url
-                        ? "bg-primary/20 font-bold"
-                        : "hover:bg-muted"
+                      pathname === subItem.url ? "bg-muted" : ""
                     }`}
                   >
                     {subItem.title}
@@ -171,9 +171,7 @@ const ManagementGroup = ({ pathname }: { pathname: string }) => {
                 <Link
                   href={item.url}
                   className={`px-2 py-1 rounded transition-colors ${
-                    pathname === item.url
-                      ? "bg-primary/20 font-bold"
-                      : "hover:bg-muted"
+                    pathname === item.url ? "bg-muted" : ""
                   }`}
                 >
                   <item.icon />
@@ -200,9 +198,7 @@ const GeneralGroup = ({ pathname }: { pathname: string }) => {
                 <Link
                   href={item.url}
                   className={`px-2 py-1 rounded transition-colors ${
-                    pathname === item.url
-                      ? "bg-primary/20 font-bold"
-                      : "hover:bg-muted"
+                    pathname === item.url ? "bg-muted" : ""
                   }`}
                 >
                   <item.icon />
@@ -222,33 +218,12 @@ const SFooter = () => {
     <SidebarFooter className="mt-auto">
       <SidebarMenu>
         <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton className="py-5 focus:border-0 mx-auto">
-                <div className="flex justify-center items-center gap-3">
-                  <ProfilePicture />
-                  <div className="">
-                    <p className={`${tinos.className} text-sm font-bold`}>
-                      Rainier Marasigan
-                    </p>
-                    <p className="text-xs">Owner</p>
-                  </div>
-                </div>
-                <ChevronUp className="ml-auto" />
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" className="w-[225px]">
-              <DropdownMenuItem>
-                <span>Account</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span>Billing</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span>Sign out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <SidebarMenuButton asChild className="text-red-400">
+            <Link href={"/"}>
+              <LogOut />
+              <span>Logout</span>
+            </Link>
+          </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarFooter>
