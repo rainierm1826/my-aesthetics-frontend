@@ -59,12 +59,15 @@ export const serviceColumn: ColumnDef<Service>[] = [
     accessorKey: "price",
     header: "Price",
     cell: ({ row }) => {
+      const { originalPrice, isSale, finalPrice } = row.original;
       return (
         <p>
-          <span className="line-through decoration- text-[#7C7C7C]">
-            ₱{row.original.originalPrice}
-          </span>{" "}
-          ₱{row.original.finalPrice}
+          {isSale && (
+            <span className="line-through decoration- text-[#7C7C7C]">
+              ₱{originalPrice}
+            </span>
+          )}{" "}
+          ₱{finalPrice}
         </p>
       );
     },
