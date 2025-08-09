@@ -1,10 +1,9 @@
-import OwnerNavbar from "@/components/OwnerNavbar";
+import OwnerWrapper from "@/components/OwnerWrapper";
 
 export default function AppointmentsDashboardPage() {
   return (
-    <div>
-      <OwnerNavbar title="Appointments Dashboard"/>
-      <p>AppointmentsDashboardPage</p>
-    </div>
+    <OwnerWrapper title="Appointments Dashboard">
+      <div>appointments dashboard</div>
+    </OwnerWrapper>
   );
 }

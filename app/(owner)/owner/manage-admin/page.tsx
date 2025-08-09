@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/DataTable";
-import OwnerNavbar from "@/components/OwnerNavbar";
+import OwnerWrapper from "@/components/OwnerWrapper";
 import { adminColumn } from "@/lib/admin-column";
 import { Admin } from "@/lib/types";
 
@@ -38,11 +38,10 @@ async function getData(): Promise<Admin[]> {
 export default async function AdminPage() {
   const data = await getData();
   return (
-    <div>
-      <OwnerNavbar title="Manage Admins" />
-      <div className="container mx-auto py-5 px-5">
+    <OwnerWrapper title="Manage Admins">
+      <div className="">
         <DataTable columns={adminColumn} data={data} />
       </div>
-    </div>
+    </OwnerWrapper>
   );
 }

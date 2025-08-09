@@ -1,10 +1,9 @@
-import OwnerNavbar from "@/components/OwnerNavbar";
+import OwnerWrapper from "@/components/OwnerWrapper";
 
 export default function ServicePage() {
   return (
-    <div>
-      <OwnerNavbar title="Manage Services" />
+    <OwnerWrapper title="Manage Services">
       <p>Manage Services</p>
-    </div>
+    </OwnerWrapper>
   );
 }

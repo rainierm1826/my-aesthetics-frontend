@@ -1,10 +1,9 @@
-import OwnerNavbar from "@/components/OwnerNavbar";
+import OwnerWrapper from "@/components/OwnerWrapper";
 
 export default function AppointmentsPage() {
   return (
-    <div>
-      <OwnerNavbar title="Manage Appointments" />
+    <OwnerWrapper title="Manage Appointments">
       <p>Manage Appointments</p>
-    </div>
+    </OwnerWrapper>
   );
 }

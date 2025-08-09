@@ -1,10 +1,9 @@
-import OwnerNavbar from "@/components/OwnerNavbar";
+import OwnerWrapper from "@/components/OwnerWrapper";
 
 export default function SettingsPage() {
   return (
-    <div>
-      <OwnerNavbar title="Settings" />
+    <OwnerWrapper title="Settings">
       <p>Settings</p>
-    </div>
+    </OwnerWrapper>
   );
 }

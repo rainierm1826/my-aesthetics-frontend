@@ -1,10 +1,9 @@
-import OwnerNavbar from "@/components/OwnerNavbar";
+import OwnerWrapper from "@/components/OwnerWrapper";
 
 export default function AestheticianPage() {
   return (
-    <div>
-      <OwnerNavbar title="Manage Aesthetician" />
+    <OwnerWrapper title="Manage Aesthetician">
       <p>Manage Aesthetician</p>
-    </div>
+    </OwnerWrapper>
   );
 }

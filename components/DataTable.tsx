@@ -37,7 +37,7 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex justify-between items-center mb-5">
-        <div className="flex items-center w-1/2 border-2 px-2 rounded-lg">
+        <div className="flex items-center w-1/2 border border-[#7C7C7C] px-2 rounded-lg">
           <Search />
           <Input
             placeholder="Search by name..."
