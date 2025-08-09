@@ -41,7 +41,7 @@ export default async function BranchPage() {
   return (
     <OwnerWrapper title="Manage Branches">
       <div className="">
-        <DataTable columns={branchColumns} data={data} />
+        <DataTable buttonLabel="Add Branches" searchPlaceholder="Search by branch name..." columns={branchColumns} data={data} />
       </div>
     </OwnerWrapper>
   );

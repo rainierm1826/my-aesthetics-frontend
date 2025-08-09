@@ -22,11 +22,15 @@ import { Search } from "lucide-react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  buttonLabel: string;
+  searchPlaceholder: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  buttonLabel,
+  searchPlaceholder,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -36,17 +40,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="flex justify-between items-center mb-5">
-        <div className="flex items-center w-1/2 border border-[#7C7C7C] px-2 rounded-lg">
-          <Search />
-          <Input
-            placeholder="Search by name..."
-            className="w-full max-w-sm border-0 focus-visible:ring-0"
-          />
-        </div>
+      <DataTableActions
+        buttonLabel={buttonLabel}
+        searchPlaceholder={searchPlaceholder}
+      />
 
-        <Button>Add New Branch</Button>
-      </div>
       <div className="overflow-hidden border-1">
         <Table>
           <TableHeader className="font-extrabold bg-primary/15">
@@ -101,3 +99,25 @@ export function DataTable<TData, TValue>({
     </>
   );
 }
+
+const DataTableActions = ({
+  searchPlaceholder,
+  buttonLabel,
+}: {
+  searchPlaceholder: string;
+  buttonLabel: string;
+}) => {
+  return (
+    <div className="flex justify-between items-center mb-5">
+      <div className="flex items-center w-1/2 border border-[#7C7C7C] px-2 rounded-lg">
+        <Search />
+        <Input
+          placeholder={searchPlaceholder}
+          className="w-full max-w-sm border-0 focus-visible:ring-0"
+        />
+      </div>
+
+      <Button>{buttonLabel}</Button>
+    </div>
+  );
+};

@@ -40,7 +40,7 @@ export default async function AdminPage() {
   return (
     <OwnerWrapper title="Manage Admins">
       <div className="">
-        <DataTable columns={adminColumn} data={data} />
+        <DataTable buttonLabel="Add Admin" searchPlaceholder="Search by admin name..." columns={adminColumn} data={data} />
       </div>
     </OwnerWrapper>
   );

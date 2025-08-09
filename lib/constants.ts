@@ -56,7 +56,7 @@ export const managements = [
     icon: MapPin,
   },
   {
-    title: "Admin",
+    title: "Administrator",
     url: "/owner/manage-admin",
     icon: ShieldUser,
   },
