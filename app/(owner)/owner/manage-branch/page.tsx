@@ -2,6 +2,8 @@ import { DataTable } from "@/components/DataTable";
 import { Branch } from "@/lib/types";
 import { branchColumns } from "@/lib/branch-columns";
 import OwnerWrapper from "@/components/OwnerWrapper";
+import { Button } from "@/components/ui/button";
+import SearchInput from "@/components/SearchInput";
 
 async function getData(): Promise<Branch[]> {
   return [
@@ -45,12 +47,10 @@ export default async function BranchPage() {
   return (
     <OwnerWrapper title="Manage Branches">
       <div className="">
-        <DataTable
-          buttonLabel="Add Branches"
-          searchPlaceholder="Search by branch name..."
-          columns={branchColumns}
-          data={data}
-        />
+        <DataTable columns={branchColumns} data={data}>
+          <SearchInput placeholder="Search by branch name..." />
+          <Button>New Branch</Button>
+        </DataTable>
       </div>
     </OwnerWrapper>
   );

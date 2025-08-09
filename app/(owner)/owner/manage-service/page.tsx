@@ -1,5 +1,7 @@
 import { DataTable } from "@/components/DataTable";
 import OwnerWrapper from "@/components/OwnerWrapper";
+import SearchInput from "@/components/SearchInput";
+import { Button } from "@/components/ui/button";
 import { serviceColumn } from "@/lib/service-column";
 import { Service, ServiceCategory } from "@/lib/types";
 
@@ -123,12 +125,10 @@ export default async function ServicePage() {
   return (
     <OwnerWrapper title="Manage Services">
       <div className="">
-        <DataTable
-          buttonLabel="Add Service"
-          searchPlaceholder="Search by service name..."
-          columns={serviceColumn}
-          data={data}
-        />
+        <DataTable columns={serviceColumn} data={data}>
+          <SearchInput placeholder="Search service by name..." />
+          <Button>New Service</Button>
+        </DataTable>
       </div>
     </OwnerWrapper>
   );

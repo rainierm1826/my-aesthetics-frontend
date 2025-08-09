@@ -1,5 +1,7 @@
 import { DataTable } from "@/components/DataTable";
 import OwnerWrapper from "@/components/OwnerWrapper";
+import SearchInput from "@/components/SearchInput";
+import { Button } from "@/components/ui/button";
 import { adminColumn } from "@/lib/admin-column";
 import { Admin } from "@/lib/types";
 
@@ -40,7 +42,10 @@ export default async function AdminPage() {
   return (
     <OwnerWrapper title="Manage Admins">
       <div className="">
-        <DataTable buttonLabel="Add Admin" searchPlaceholder="Search by admin name..." columns={adminColumn} data={data} />
+        <DataTable columns={adminColumn} data={data}>
+          <SearchInput placeholder="Search by admin name..." />
+          <Button>New Admin</Button>
+        </DataTable>
       </div>
     </OwnerWrapper>
   );

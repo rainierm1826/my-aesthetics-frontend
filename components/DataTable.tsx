@@ -5,9 +5,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  Table as ReactTableType,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -16,30 +14,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import type { VisibilityState } from "@tanstack/react-table";
+import { ReactNode, useState } from "react";
+import type {
+  VisibilityState,
+  Table as ReactTableType,
+} from "@tanstack/react-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  buttonLabel: string;
-  searchPlaceholder: string;
+  children?: ReactNode; // For Add button, search, etc.
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  buttonLabel,
-  searchPlaceholder,
+  children,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     phoneNumber: false,
@@ -47,28 +45,58 @@ export function DataTable<TData, TValue>({
     barangay: false,
     blk: false,
     isSale: false,
-    discountPercentage: false
-
+    discountPercentage: false,
   });
 
   const table = useReactTable({
     data,
     columns,
-    state: {
-      columnVisibility,
-    },
+    state: { columnVisibility },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  return (
-    <>
-      <DataTableActions
-        table={table}
-        buttonLabel={buttonLabel}
-        searchPlaceholder={searchPlaceholder}
-      />
+  function ColumnToggle({ table }: { table: ReactTableType<TData> }) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">
+            Columns <ChevronDown />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {table
+            .getAllColumns()
+            .filter(
+              (column) =>
+                column.getCanHide() && !["id", "actions"].includes(column.id)
+            )
+            .map((column) => (
+              <DropdownMenuCheckboxItem
+                key={column.id}
+                className="capitalize"
+                checked={column.getIsVisible()}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              >
+                {typeof column.columnDef.header === "string"
+                  ? column.columnDef.header
+                  : column.columnDef.header?.toString?.() || column.id}
+              </DropdownMenuCheckboxItem>
+            ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 
+  return (
+    <div className="">
+      {/* Actions row */}
+      <div className="flex justify-between mb-5 w-full">
+        <div className="flex gap-2 w-full">{children}</div>
+        <ColumnToggle table={table} />
+      </div>
+
+      {/* Table */}
       <div className="overflow-hidden border-1">
         <Table>
           <TableHeader className="font-extrabold bg-primary/15">
@@ -118,61 +146,6 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-    </>
-  );
-}
-
-const DataTableActions = <TData,>({
-  table,
-  searchPlaceholder,
-  buttonLabel,
-}: {
-  table: ReactTableType<TData>;
-  searchPlaceholder: string;
-  buttonLabel: string;
-}) => {
-  return (
-    <div className="flex justify-between items-center mb-5 gap-3">
-      {/* Search */}
-      <div className="flex items-center w-1/2 border border-[#7C7C7C] px-2 rounded-lg">
-        <Search />
-        <Input
-          placeholder={searchPlaceholder}
-          className="w-full max-w-sm border-0 focus-visible:ring-0"
-        />
-      </div>
-
-      {/* Column Toggle */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="ml-auto">
-            Columns <ChevronDown />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {table
-            .getAllColumns()
-            .filter(
-              (column) =>
-                column.getCanHide() && !["id", "actions"].includes(column.id)
-            )
-            .map((column) => (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-              >
-                {typeof column.columnDef.header === "string"
-                  ? column.columnDef.header
-                  : column.columnDef.header?.toString?.() || column.id}
-              </DropdownMenuCheckboxItem>
-            ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      {/* Add Button */}
-      <Button>{buttonLabel}</Button>
     </div>
   );
-};
+}

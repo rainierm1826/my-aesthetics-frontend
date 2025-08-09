@@ -1,5 +1,7 @@
 import { DataTable } from "@/components/DataTable";
 import OwnerWrapper from "@/components/OwnerWrapper";
+import SearchInput from "@/components/SearchInput";
+import { Button } from "@/components/ui/button";
 import { aestheticianColumn } from "@/lib/aesthetician-column";
 import { Aesthetician, Availability, Experience, Sex } from "@/lib/types";
 
@@ -134,12 +136,10 @@ export default async function AestheticianPage() {
   return (
     <OwnerWrapper title="Manage Aestheticians">
       <div className="">
-        <DataTable
-          buttonLabel="Add Aesthetician"
-          searchPlaceholder="Search by aesthetician name..."
-          columns={aestheticianColumn}
-          data={data}
-        />
+        <DataTable columns={aestheticianColumn} data={data}>
+          <SearchInput placeholder="Search by aesthetician name..." />
+          <Button>New Aesthetician</Button>
+        </DataTable>
       </div>
     </OwnerWrapper>
   );
