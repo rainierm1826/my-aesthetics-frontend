@@ -27,22 +27,13 @@ export const branchColumns: ColumnDef<Branch>[] = [
       return <RatingStar rating={row.original.avarageRate} />;
     },
   },
-
   {
-    accessorKey: "region",
-    header: "Region",
-  },
-  {
-    accessorKey: "city",
-    header: "City",
-  },
-  {
-    accessorKey: "barangay",
-    header: "Barangay",
-  },
-  {
-    accessorKey: "blk",
-    header: "Blk",
+    accessorKey: "address",
+    header: "Address",
+    cell: ({ row }) => {
+      const { region, city } = row.original;
+      return `${region}, ${city}`;
+    },
   },
   {
     id: "actions",
