@@ -15,12 +15,30 @@ export enum Availability {
   Break = "on-break",
 }
 
+export enum AppointmentStatus {
+  Cancelled = "cancelled",
+  Completed = "completed",
+  Waiting = "waiting",
+  Pending = "pending",
+}
+
 export enum ServiceCategory {
   SemiPermanentMakeUp = "Semi-Permanent Make-Up",
   FacialAndLaserTreatments = "Facial & Laser Treatments",
   WaxingServices = "Waxing Services",
   DiodeLaserHairRemoval = "Diode Laser Hair Removal",
   Others = "Others",
+}
+
+export enum PaymentMethod {
+  Cash = "cash",
+  Xendit = "xendit",
+}
+
+export enum PaymentStatus {
+  Completed = "completed",
+  Partial = "partial",
+  Pending = "pending"
 }
 
 export type Branch = {
@@ -69,5 +87,18 @@ export type Voucher = {
   voucherCode: string;
   discountAmount: number;
   quantity: number;
-  
-}
+};
+
+export type Appointment = {
+  appointmentId: string;
+  slotNumber: number;
+  userName: string;
+  branchName: string;
+  serviceName: string;
+  aestheticianName: string;
+  paymentMethod: PaymentMethod;
+  toPay: string;
+  paymentStatus: PaymentStatus;
+  voucherCode: string;
+  appointmentStatus: AppointmentStatus;
+};

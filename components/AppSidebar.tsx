@@ -21,12 +21,12 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { general, analytics, managements } from "@/lib/constants";
-import { Power, ChevronRight } from "lucide-react";
+import {  ChevronRight, LogOut } from "lucide-react";
 
 export function AppSidebar() {
   const pathname = usePathname();
   return (
-    <Sidebar collapsible="offcanvas">
+    <Sidebar collapsible="icon">
       <SidebarContent className="flex flex-col">
         <SidebarHeader className="flex items-center">
           <Logo mainSize="text-4xl" size="text-xl" href="#" />
@@ -42,7 +42,7 @@ export function AppSidebar() {
 
 const AnalyticsGroup = ({ pathname }: { pathname: string }) => {
   return (
-    <SidebarGroup>
+    <SidebarGroup >
       <SidebarGroupLabel>Analytics</SidebarGroupLabel>
       <SidebarGroupContent>
         {analytics.map((item) => (
@@ -140,7 +140,7 @@ const SFooter = () => {
         <SidebarMenuItem>
           <SidebarMenuButton asChild className="text-red-400">
             <Link href={"/"}>
-              <Power />
+              <LogOut />
               <span>Logout</span>
             </Link>
           </SidebarMenuButton>
