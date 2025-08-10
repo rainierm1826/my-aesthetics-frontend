@@ -1,4 +1,6 @@
 import { DataTable } from "@/components/DataTable";
+import DropDownBranch from "@/components/DropDownBranch";
+import DropDownServiceCategory from "@/components/DropDownServiceCategory";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
 import { Button } from "@/components/ui/button";
@@ -126,8 +128,14 @@ export default async function ServicePage() {
     <OwnerWrapper title="Manage Services">
       <div className="">
         <DataTable columns={serviceColumn} data={data}>
-          <SearchInput placeholder="Search service by name..." />
-          <Button>New Service</Button>
+          <div className="flex justify-between">
+            <div className="flex gap-3 w-full">
+              <SearchInput placeholder="Search by name..." />
+              <DropDownBranch />
+              <DropDownServiceCategory />
+            </div>
+            <Button>New Service</Button>
+          </div>
         </DataTable>
       </div>
     </OwnerWrapper>

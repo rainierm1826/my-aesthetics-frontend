@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/DataTable";
+import DropDownBranch from "@/components/DropDownBranch";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
 import { Button } from "@/components/ui/button";
@@ -43,8 +44,13 @@ export default async function AdminPage() {
     <OwnerWrapper title="Manage Admins">
       <div className="">
         <DataTable columns={adminColumn} data={data}>
-          <SearchInput placeholder="Search by admin name..." />
-          <Button>New Admin</Button>
+          <div className="flex justify-between">
+            <div className="flex gap-3 w-full">
+              <SearchInput placeholder="Search by admin name..." />
+              <DropDownBranch />
+            </div>
+            <Button>New Admin</Button>
+          </div>
         </DataTable>
       </div>
     </OwnerWrapper>

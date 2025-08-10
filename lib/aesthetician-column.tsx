@@ -27,7 +27,7 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
   },
   {
     accessorKey: "branchName",
-    header: "Branch Name",
+    header: "Works At",
   },
   {
     accessorKey: "experience",

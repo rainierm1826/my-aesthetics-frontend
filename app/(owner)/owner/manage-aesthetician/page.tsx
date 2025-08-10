@@ -1,4 +1,7 @@
 import { DataTable } from "@/components/DataTable";
+import DropDownAvailability from "@/components/DropDownAvailability";
+import DropDownBranch from "@/components/DropDownBranch";
+import DropDownSex from "@/components/DropDownSex";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
 import { Button } from "@/components/ui/button";
@@ -137,8 +140,15 @@ export default async function AestheticianPage() {
     <OwnerWrapper title="Manage Aestheticians">
       <div className="">
         <DataTable columns={aestheticianColumn} data={data}>
-          <SearchInput placeholder="Search by aesthetician name..." />
-          <Button>New Aesthetician</Button>
+          <div className="flex justify-between">
+            <div className="flex gap-3 w-full">
+              <SearchInput placeholder="Search by name..." />
+              <DropDownBranch />
+              <DropDownAvailability/>
+              <DropDownSex/>
+            </div>
+            <Button className="rounded-sm">Add Aesthetician</Button>
+          </div>
         </DataTable>
       </div>
     </OwnerWrapper>

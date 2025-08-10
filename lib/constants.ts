@@ -6,6 +6,7 @@ import {
   VenetianMask,
   MapPin,
   Brush,
+  BadgePercent,
 } from "lucide-react";
 
 export const general = [
@@ -59,5 +60,10 @@ export const managements = [
     title: "Administrator",
     url: "/owner/manage-admin",
     icon: ShieldUser,
+  },
+  {
+    title: "Voucher",
+    url: "/owner/manage-voucher",
+    icon: BadgePercent,
   },
 ];

@@ -4,6 +4,7 @@ import { branchColumns } from "@/lib/branch-columns";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import { Button } from "@/components/ui/button";
 import SearchInput from "@/components/SearchInput";
+import DropDownBranch from "@/components/DropDownBranch";
 
 async function getData(): Promise<Branch[]> {
   return [
@@ -48,8 +49,13 @@ export default async function BranchPage() {
     <OwnerWrapper title="Manage Branches">
       <div className="">
         <DataTable columns={branchColumns} data={data}>
-          <SearchInput placeholder="Search by branch name..." />
-          <Button>New Branch</Button>
+          <div className="flex justify-between">
+            <div className="flex gap-3 w-full">
+              <SearchInput placeholder="Search by name..." />
+              <DropDownBranch />
+            </div>
+            <Button>New Branch</Button>
+          </div>
         </DataTable>
       </div>
     </OwnerWrapper>

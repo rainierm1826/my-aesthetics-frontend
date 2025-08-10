@@ -64,3 +64,10 @@ export type Service = {
   discountPercentage: number;
   image: string;
 };
+
+export type Voucher = {
+  voucherCode: string;
+  discountAmount: number;
+  quantity: number;
+  
+}

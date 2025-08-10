@@ -4,6 +4,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -20,6 +21,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ReactNode, useState } from "react";
@@ -27,11 +29,19 @@ import type {
   VisibilityState,
   Table as ReactTableType,
 } from "@tanstack/react-table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  children?: ReactNode; // For Add button, search, etc.
+  children?: ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -54,13 +64,14 @@ export function DataTable<TData, TValue>({
     state: { columnVisibility },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   function ColumnToggle({ table }: { table: ReactTableType<TData> }) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">
+          <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0">
             Columns <ChevronDown />
           </Button>
         </DropdownMenuTrigger>
@@ -90,11 +101,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="">
-      {/* Actions row */}
-      <div className="flex justify-between mb-5 w-full">
-        <div className="flex gap-2 w-full">{children}</div>
-        <ColumnToggle table={table} />
-      </div>
+      {/* action table*/}
+      <div className="mb-5">{children}</div>
 
       {/* Table */}
       <div className="overflow-hidden border-1">
@@ -146,6 +154,56 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      <div className="my-5 flex justify-between">
+        <DataTablePagination />
+        <div className="flex gap-3">
+          <DataTableEntries />
+          <ColumnToggle table={table} />
+        </div>
+      </div>
     </div>
   );
 }
+
+const DataTablePagination = () => {
+  return (
+    <Pagination className="flex justify-start">
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href="#" className="text-[#7C7C7C]"/>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink
+            href="#"
+            className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0"
+          >
+            1
+          </PaginationLink>
+          <PaginationLink href="#">2</PaginationLink>
+          <PaginationLink href="#">3</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext href="#" className="text-[#7C7C7C]"/>
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  );
+};
+
+const DataTableEntries = () => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0">
+          Show Entries <ChevronDown />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>10</DropdownMenuItem>
+        <DropdownMenuItem>15</DropdownMenuItem>
+        <DropdownMenuItem>20</DropdownMenuItem>
+        <DropdownMenuItem>25</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
