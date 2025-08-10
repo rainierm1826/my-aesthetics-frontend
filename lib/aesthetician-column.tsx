@@ -42,7 +42,9 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
       return (
         <Badge
           className={`text-white rounded-full ${
-            e == "Professional" ? "bg-green-500" : "bg-gray-500"
+            e == "Professional"
+              ? "bg-green-700 text-green-100"
+              : "bg-gray-100 text-gray-700"
           }`}
         >
           {e}
@@ -66,13 +68,13 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
         <Badge
           className={`text-white rounded-full ${
             a == "Available"
-              ? "bg-green-500"
+              ? "bg-green-100 text-green-700"
               : a == "Working"
-              ? "bg-yellow-400"
+              ? "bg-yellow-100 text-yellow-500"
               : a == "Off-duty"
-              ? "bg-red-500"
+              ? "bg-red-100 text-red-700"
               : a == "On-break"
-              ? "bg-orange-400"
+              ? "bg-orange-100 text-orange-500"
               : ""
           }`}
         >
