@@ -1,3 +1,4 @@
+import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownBranch from "@/components/DropDownBranch";
 import OwnerWrapper from "@/components/OwnerWrapper";
@@ -43,6 +44,12 @@ export default async function AdminPage() {
   return (
     <OwnerWrapper title="Manage Admins">
       <div className="">
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+        </div>
         <DataTable columns={adminColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">

@@ -1,4 +1,6 @@
+import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
+import DatePagination from "@/components/DatePagination";
 import DropDownAppointmentStatus from "@/components/DropDownAppointmentStatus";
 import DropDownBranch from "@/components/DropDownBranch";
 import OwnerWrapper from "@/components/OwnerWrapper";
@@ -153,6 +155,15 @@ export default async function AppointmentsPage() {
   return (
     <OwnerWrapper title="Manage Appointments">
       <div>
+        <div className="mb-5 flex">
+          <DatePagination />
+        </div>
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+        </div>
         <DataTable columns={appointmentColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">

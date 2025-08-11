@@ -1,3 +1,4 @@
+import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownBranch from "@/components/DropDownBranch";
 import DropDownServiceCategory from "@/components/DropDownServiceCategory";
@@ -127,6 +128,12 @@ export default async function ServicePage() {
   return (
     <OwnerWrapper title="Manage Services">
       <div className="">
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+        </div>
         <DataTable columns={serviceColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">

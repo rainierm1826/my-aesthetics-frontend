@@ -1,3 +1,4 @@
+import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownAvailability from "@/components/DropDownAvailability";
 import DropDownBranch from "@/components/DropDownBranch";
@@ -139,13 +140,19 @@ export default async function AestheticianPage() {
   return (
     <OwnerWrapper title="Manage Aestheticians">
       <div className="">
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+        </div>
         <DataTable columns={aestheticianColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
               <SearchInput placeholder="Search by name..." />
               <DropDownBranch />
-              <DropDownAvailability/>
-              <DropDownSex/>
+              <DropDownAvailability />
+              <DropDownSex />
             </div>
             <Button className="rounded-sm">Add Aesthetician</Button>
           </div>

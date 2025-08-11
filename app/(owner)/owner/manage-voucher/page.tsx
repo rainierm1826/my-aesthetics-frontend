@@ -1,3 +1,4 @@
+import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
@@ -26,6 +27,12 @@ export default async function VoucherPage() {
   return (
     <OwnerWrapper title="Manage Vouchers">
       <div>
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+        </div>
         <DataTable columns={voucherColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">

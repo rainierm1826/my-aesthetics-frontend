@@ -5,6 +5,7 @@ import OwnerWrapper from "@/components/OwnerWrapper";
 import { Button } from "@/components/ui/button";
 import SearchInput from "@/components/SearchInput";
 import DropDownBranch from "@/components/DropDownBranch";
+import DashboardCard from "@/components/DashboardCard";
 
 async function getData(): Promise<Branch[]> {
   return [
@@ -48,6 +49,12 @@ export default async function BranchPage() {
   return (
     <OwnerWrapper title="Manage Branches">
       <div className="">
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+          <DashboardCard />
+        </div>
         <DataTable columns={branchColumns} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
