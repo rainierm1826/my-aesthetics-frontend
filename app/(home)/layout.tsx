@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import { Inter } from "next/font/google";
 import "../globals.css";
+import Footer from "@/components/Footer";
 
 const inter = Inter({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={`${inter.className} `}>
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

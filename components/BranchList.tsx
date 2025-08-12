@@ -23,7 +23,6 @@ const BranchList = () => {
         <BranchCard />
         <BranchCard />
         <BranchCard />
-        <BranchCard />
       </div>
     </div>
   );
