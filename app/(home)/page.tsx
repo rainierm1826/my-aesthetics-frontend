@@ -1,4 +1,6 @@
+import AestheticianList from "@/components/AestheticianList";
 import BookNowButton from "@/components/BookNowButton";
+import BranchList from "@/components/BranchList";
 import ServiceList from "@/components/ServiceList";
 import SignUpButton from "@/components/SignUpButton";
 import { Tinos } from "next/font/google";
@@ -10,7 +12,7 @@ const tinos = Tinos({
 
 export default function Home() {
   return (
-    <div className="">
+    <div className="container">
       {/* hero section */}
       <section className="h-[calc(100vh-60px-50px)] bg-[#fffcf9]">
         <div className="grid grid-cols-2 place-content-center h-full px-4">
@@ -30,7 +32,7 @@ export default function Home() {
             </p>
             <div className="flex gap-3 mt-5">
               <SignUpButton />
-              <BookNowButton />
+              <BookNowButton size="" />
             </div>
           </div>
 
@@ -48,6 +50,12 @@ export default function Home() {
       {/* services */}
       <section className="mt-[70px] bg-white my-5">
         <ServiceList />
+      </section>
+      <section className="bg-gradient-to-tr from-[#fdfaf0] to-white my-5 pb-5">
+        <AestheticianList />
+      </section>
+      <section className="bg-white my-5">
+        <BranchList/>
       </section>
     </div>
   );
