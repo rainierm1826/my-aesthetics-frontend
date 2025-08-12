@@ -17,11 +17,11 @@ import FacebookLogo from "@/public/facebook-svgrepo-com.svg";
 import GoogleLogo from "@/public/google-color-svgrepo-com.svg";
 import { useRouter } from "next/navigation";
 
-const BookNowButton = () => {
+const BookNowButton = ({size}:{size:string}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"default"}>Book Now</Button>
+        <Button variant={"default"} className={`${size}`}>Book Now</Button>
       </DialogTrigger>
       <DialogContent className="grid grid-cols-2" style={{ maxWidth: "800px" }}>
         <div></div>

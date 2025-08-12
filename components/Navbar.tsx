@@ -19,7 +19,7 @@ const Navbar = () => {
 
         <div className="flex gap-3">
           <SignUpButton />
-          <BookNowButton />
+          <BookNowButton size=""/>
         </div>
       </nav>
     </header>
