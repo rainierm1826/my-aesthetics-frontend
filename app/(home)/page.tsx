@@ -51,7 +51,7 @@ export default function Home() {
       <section className="mt-[70px] bg-white my-5">
         <ServiceList />
       </section>
-      <section className="bg-gradient-to-tr from-[#fdfaf0] to-white my-5 pb-5">
+      <section className="bg-gradient-to-tr from-[#fdfaf0] to-white my-10 pb-5">
         <AestheticianList />
       </section>
       <section className="bg-white my-5">

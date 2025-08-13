@@ -8,7 +8,7 @@ import { Tags } from "lucide-react";
 
 const ServicesCard = () => {
   return (
-    <Card className="group overflow-hidden border-none bg-white shadow-sm pt-0 gap-2">
+    <Card className="group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <CardContent className="p-0">
         {/* Image Container */}
         <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -16,7 +16,7 @@ const ServicesCard = () => {
             alt="Ombre Shading Eyebrows service"
             src="/services1.webp"
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
           {/* Discount Badge */}
           <Badge className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
