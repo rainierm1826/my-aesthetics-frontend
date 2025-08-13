@@ -6,9 +6,9 @@ import { RatingStar } from "./RatingStar";
 import { Badge } from "./ui/badge";
 import { Tags } from "lucide-react";
 
-const ServicesCard = () => {
+const ServicesCard = ({ action }: { action?: boolean }) => {
   return (
-    <Card className="group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <Card className="pt-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <CardContent className="p-0">
         {/* Image Container */}
         <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -52,9 +52,11 @@ const ServicesCard = () => {
       </CardContent>
 
       {/* Action Section */}
-      <div className="px-4">
-        <BookNowButton size="w-full" />
-      </div>
+      {action && (
+        <div className="px-4">
+          <BookNowButton size="w-full" />
+        </div>
+      )}
     </Card>
   );
 };

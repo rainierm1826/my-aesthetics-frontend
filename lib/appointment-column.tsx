@@ -57,7 +57,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      return <ActionCell appointment={row.original} />;
+      return <ActionCell data={row.original} />;
     },
   },
 ];

@@ -2,7 +2,7 @@
 
 import { Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 import {
   DropdownMenu,
@@ -22,21 +22,56 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Appointment } from "@/lib/types";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
-const ActionCell = ({ appointment }: { appointment: Appointment }) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
+type ActionCellProps<T> = {
+  data: T;
+  getId?: (data: T) => string;
+  onEdit?: (data: T) => void;
+  onDelete?: (data: T) => void;
+  onMoreInfo?: (data: T) => void;
+  onPreview?: (data: T) => void;
+  infoDialog?: ReactNode;
+  previewDialog?: ReactNode;
+};
+
+function ActionCell<T>({
+  data,
+  getId,
+  onEdit,
+  onDelete,
+  onMoreInfo,
+  infoDialog,
+  onPreview,
+  previewDialog,
+}: ActionCellProps<T>) {
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
+  const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleMoreInfoClick = () => {
+    setDropdownOpen(false);
+    setTimeout(() => setOpenMoreInfoDialog(true), 100);
+  };
+
+  const handlePreviewClick = () => {
+    setDropdownOpen(false);
+    setTimeout(() => setOpenPreviewDialog(true), 100);
+  };
 
   const handleDeleteClick = () => {
     setDropdownOpen(false);
-    setTimeout(() => setDialogOpen(true), 100);
+    setTimeout(() => setOpenDeleteDialog(true), 100);
   };
 
   const handleDelete = () => {
-    console.log("Deleting appointment:", appointment.appointmentId);
-    setDialogOpen(false);
+    if (onDelete) onDelete(data);
+    setOpenDeleteDialog(false);
   };
+
   return (
     <>
       <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
@@ -52,43 +87,93 @@ const ActionCell = ({ appointment }: { appointment: Appointment }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-blue-400 hover:text-blue-500">
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-red-400 hover:text-red-500"
-            onSelect={handleDeleteClick}
-          >
-            Delete
-          </DropdownMenuItem>
-          <DropdownMenuItem className="">
-            More Info
-          </DropdownMenuItem>
+
+          {onEdit && (
+            <DropdownMenuItem
+              className="text-blue-400 hover:text-blue-500"
+              onSelect={() => onEdit(data)}
+            >
+              Edit
+            </DropdownMenuItem>
+          )}
+
+          {onDelete && (
+            <DropdownMenuItem
+              className="text-red-400 hover:text-red-500"
+              onSelect={handleDeleteClick}
+            >
+              Delete
+            </DropdownMenuItem>
+          )}
+
+          {onMoreInfo && (
+            <DropdownMenuItem onSelect={handleMoreInfoClick}>
+              More Info
+            </DropdownMenuItem>
+          )}
+
+          {onPreview && (
+            <DropdownMenuItem onSelect={handlePreviewClick}>
+              Preview
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              appointment and remove the data from your servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-red-500 text-white hover:bg-red-400"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* More Info Dialog */}
+      {onMoreInfo && (
+        <Dialog open={openMoreInfoDialog} onOpenChange={setOpenMoreInfoDialog}>
+          <DialogContent>
+            <VisuallyHidden>
+              <DialogHeader>
+                <DialogTitle></DialogTitle>
+              </DialogHeader>
+            </VisuallyHidden>
+            {infoDialog}
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Preview Dialog */}
+      {onPreview && (
+        <Dialog open={openPreviewDialog} onOpenChange={setOpenPreviewDialog}>
+          <DialogContent className="w-auto">
+            <VisuallyHidden>
+              <DialogHeader>
+                <DialogTitle></DialogTitle>
+              </DialogHeader>
+            </VisuallyHidden>
+            {previewDialog}
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Delete Dialog */}
+      {onDelete && (
+        <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete{" "}
+                {getId ? `item with ID ${getId(data)}` : "this item"} and remove
+                it from your servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-red-500 text-white hover:bg-red-400"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </>
   );
-};
+}
 
 export default ActionCell;

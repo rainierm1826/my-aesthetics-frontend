@@ -20,9 +20,9 @@ const BranchList = () => {
         schedule your appointment hassle-free.
       </p>
       <div className="flex flex-wrap flex-1 gap-8 justify-center mt-10">
-        <BranchCard />
-        <BranchCard />
-        <BranchCard />
+        <BranchCard action/>
+        <BranchCard action/>
+        <BranchCard action/>
       </div>
     </div>
   );

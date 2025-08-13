@@ -2,19 +2,10 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Aesthetician } from "./types";
-import { Ellipsis } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { RatingStar } from "@/components/RatingStar";
+import ActionCell from "@/components/ActionCell";
+import AestheticianCard from "@/components/AestheticianCard";
 
 export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
   {
@@ -105,32 +96,16 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
   },
   {
     id: "actions",
-    cell: () => {
+    cell: ({ row }) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="focus-visible:border-0">
-            <Button
-              size={"icon"}
-              variant={"ghost"}
-              className="hover:text-[#7C7C7C] hover:bg-transparent"
-            >
-              <Ellipsis />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-blue-400 hover:text-blue-500 hover:bg-transparent">
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-400 hover:text-red-500 hover:bg-transparent">
-              Delete
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-gray-700 hover:text-gray-900 hover:bg-transparent">
-              Preview
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ActionCell
+          data={row.original}
+          getId={(u) => u.firstName}
+          onEdit={(u) => console.log("Edit user", u)}
+          onDelete={(u) => console.log("Delete user", u.firstName)}
+          onPreview={(a) => console.log("More info", a)}
+          previewDialog={<AestheticianCard/>}
+        />
       );
     },
   },

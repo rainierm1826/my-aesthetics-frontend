@@ -18,14 +18,14 @@ const AestheticianList = () => {
         Simply browse through our extensive list of trusted aestheticians.
       </p>
       <div className="flex flex-wrap flex-1 gap-8 justify-center mt-10">
-        <AestheticianCard />
-        <AestheticianCard />
-        <AestheticianCard />
-        <AestheticianCard />
-        <AestheticianCard />
-        <AestheticianCard />
-        <AestheticianCard />
-        <AestheticianCard />
+        <AestheticianCard action/>
+        <AestheticianCard action/>
+        <AestheticianCard action/>
+        <AestheticianCard action/>
+        <AestheticianCard action/>
+        <AestheticianCard action/>
+        <AestheticianCard action/>
+        <AestheticianCard action/>
       </div>
     </div>
   );
