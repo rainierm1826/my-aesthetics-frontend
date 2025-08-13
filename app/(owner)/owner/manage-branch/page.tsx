@@ -2,9 +2,9 @@ import { DataTable } from "@/components/DataTable";
 import { Branch } from "@/lib/types";
 import { branchColumns } from "@/lib/branch-columns";
 import OwnerWrapper from "@/components/OwnerWrapper";
-import { Button } from "@/components/ui/button";
 import SearchInput from "@/components/SearchInput";
 import DashboardCard from "@/components/DashboardCard";
+import AddBranch from "@/components/AddBranch";
 
 async function getData(): Promise<Branch[]> {
   return [
@@ -57,9 +57,9 @@ export default async function BranchPage() {
         <DataTable columns={branchColumns} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by name..." size="w-1/2"/>
+              <SearchInput placeholder="Search by name..." size="w-1/2" />
             </div>
-            <Button>New Branch</Button>
+            <AddBranch />
           </div>
         </DataTable>
       </div>

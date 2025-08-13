@@ -36,8 +36,8 @@ export const branchColumns: ColumnDef<Branch>[] = [
           getId={(u) => u.branchName}
           onEdit={(u) => console.log("Edit user", u)}
           onDelete={(u) => console.log("Delete user", u.branchName)}
-          onMoreInfo={(a) => console.log("More info", a)}
-          infoDialog={<BranchCard/>}
+          onPreview={(a) => console.log("More info", a)}
+          previewDialog={<BranchCard />}
         />
       );
     },

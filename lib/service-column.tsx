@@ -73,8 +73,8 @@ export const serviceColumn: ColumnDef<Service>[] = [
           getId={(u) => u.serviceName}
           onEdit={(u) => console.log("Edit user", u)}
           onDelete={(u) => console.log("Delete user", u.serviceName)}
-          onMoreInfo={(a) => console.log("More info", a)}
-          infoDialog={<ServicesCard />}
+          onPreview={(a) => console.log("More info", a)}
+          previewDialog={<ServicesCard />}
         />
       );
     },
