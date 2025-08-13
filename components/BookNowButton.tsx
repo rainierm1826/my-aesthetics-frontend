@@ -71,7 +71,7 @@ const SignInForm = () => {
           </p>
         </div>
         <Button
-          className="w-full mt-5"
+          className={`w-full mt-5 bg-gradient-to-r from-[#d9c67a] to-[#f0e4b3] text-white font-semibold hover:opacity-90 transition-opacity`}
           type="button"
           onClick={() => router.push("/owner/dashboard/appointments")}
         >

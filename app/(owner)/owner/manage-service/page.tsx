@@ -137,7 +137,7 @@ export default async function ServicePage() {
         <DataTable columns={serviceColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by name..." />
+              <SearchInput placeholder="Search by name..." size="w-1/2"/>
               <DropDownBranch />
               <DropDownServiceCategory />
             </div>

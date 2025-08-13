@@ -167,7 +167,7 @@ export default async function AppointmentsPage() {
         <DataTable columns={appointmentColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by appointment id..." />
+              <SearchInput placeholder="Search by appointment id..." size="w-1/2"/>
               <DropDownBranch />
               <DropDownAppointmentStatus />
             </div>

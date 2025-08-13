@@ -149,7 +149,7 @@ export default async function AestheticianPage() {
         <DataTable columns={aestheticianColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by name..." size="w-3/4"/>
+              <SearchInput placeholder="Search by name..." size="w-1/2" />
               <DropDownBranch />
               <DropDownAvailability />
               <DropDownSex />

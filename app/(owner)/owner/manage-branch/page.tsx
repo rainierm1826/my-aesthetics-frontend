@@ -4,7 +4,6 @@ import { branchColumns } from "@/lib/branch-columns";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import { Button } from "@/components/ui/button";
 import SearchInput from "@/components/SearchInput";
-import DropDownBranch from "@/components/DropDownBranch";
 import DashboardCard from "@/components/DashboardCard";
 
 async function getData(): Promise<Branch[]> {
@@ -58,8 +57,7 @@ export default async function BranchPage() {
         <DataTable columns={branchColumns} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by name..." />
-              <DropDownBranch />
+              <SearchInput placeholder="Search by name..." size="w-1/2"/>
             </div>
             <Button>New Branch</Button>
           </div>

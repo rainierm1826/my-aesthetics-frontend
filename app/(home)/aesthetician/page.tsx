@@ -1,10 +1,8 @@
 import AestheticianCard from "@/components/AestheticianCard";
 import DropDownAvailability from "@/components/DropDownAvailability";
 import DropDownBranch from "@/components/DropDownBranch";
-import DropDownServiceCategory from "@/components/DropDownServiceCategory";
 import DropDownSex from "@/components/DropDownSex";
 import SearchInput from "@/components/SearchInput";
-import ServicesCard from "@/components/ServicesCard";
 
 import { Tinos } from "next/font/google";
 
@@ -38,7 +36,7 @@ export default function AestheticianPage() {
             <div className="flex gap-4 flex-shrink-0">
               <DropDownBranch />
               <DropDownAvailability />
-              <DropDownSex/>
+              <DropDownSex />
             </div>
           </div>
         </div>

@@ -53,7 +53,7 @@ export default async function AdminPage() {
         <DataTable columns={adminColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by admin name..." />
+              <SearchInput placeholder="Search by admin name..." size="w-1/2"/>
               <DropDownBranch />
             </div>
             <Button>New Admin</Button>
