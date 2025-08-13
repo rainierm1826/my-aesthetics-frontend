@@ -1,9 +1,9 @@
+import AddAdmin from "@/components/AddAdmin";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownBranch from "@/components/DropDownBranch";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
-import { Button } from "@/components/ui/button";
 import { adminColumn } from "@/lib/admin-column";
 import { Admin } from "@/lib/types";
 
@@ -56,7 +56,7 @@ export default async function AdminPage() {
               <SearchInput placeholder="Search by admin name..." size="w-1/2"/>
               <DropDownBranch />
             </div>
-            <Button>New Admin</Button>
+            <AddAdmin/>
           </div>
         </DataTable>
       </div>

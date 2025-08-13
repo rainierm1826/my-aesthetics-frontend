@@ -1,10 +1,10 @@
+import AddService from "@/components/AddService";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownBranch from "@/components/DropDownBranch";
 import DropDownServiceCategory from "@/components/DropDownServiceCategory";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
-import { Button } from "@/components/ui/button";
 import { serviceColumn } from "@/lib/service-column";
 import { Service, ServiceCategory } from "@/lib/types";
 
@@ -137,11 +137,11 @@ export default async function ServicePage() {
         <DataTable columns={serviceColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by name..." size="w-1/2"/>
+              <SearchInput placeholder="Search by name..." size="w-1/2" />
               <DropDownBranch />
               <DropDownServiceCategory />
             </div>
-            <Button>New Service</Button>
+            <AddService />
           </div>
         </DataTable>
       </div>

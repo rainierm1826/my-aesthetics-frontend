@@ -1,28 +1,26 @@
 import React from "react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { ChevronDown } from "lucide-react";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 const DropDownServiceCategory = () => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0">
-          Category <ChevronDown />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>Semi-Permanent Make-Up</DropdownMenuItem>
-        <DropdownMenuItem>Facial & Laser Treatments</DropdownMenuItem>
-        <DropdownMenuItem>Waxing Services</DropdownMenuItem>
-        <DropdownMenuItem>Diode Laser Hair Removal</DropdownMenuItem>
-        <DropdownMenuItem>Others</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Select>
+      <SelectTrigger>
+        <SelectValue placeholder="Select a category" />
+      </SelectTrigger>
+      <SelectContent >
+        <SelectItem value="1">Semi-Permanent Make-Up</SelectItem>
+        <SelectItem value="2">Facial & Laser Treatments</SelectItem>
+        <SelectItem value="3"> Waxing Services</SelectItem>
+        <SelectItem value="4">Diode Laser Hair Removal</SelectItem>
+        <SelectItem value="5">Others</SelectItem>
+      </SelectContent>
+    </Select>
   );
 };
 

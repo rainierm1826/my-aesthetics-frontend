@@ -4,7 +4,7 @@ import { Input } from "./ui/input";
 
 const SearchInput = ({placeholder, size}:{placeholder:string, size:string}) => {
   return (
-    <div className={`flex items-center ${size} border border-[#7C7C7C] px-2 rounded-sm`}>
+    <div className={`flex items-center ${size} border border-input px-2 rounded-sm`}>
       <Search />
       <Input
         placeholder={placeholder}

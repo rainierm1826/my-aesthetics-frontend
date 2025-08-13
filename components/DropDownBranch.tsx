@@ -1,28 +1,25 @@
 import React from "react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { ChevronDown } from "lucide-react";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const DropDownBranch = () => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0">
-          Branch <ChevronDown />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>Batangas City Branch</DropdownMenuItem>
-        <DropdownMenuItem>Lipa City Branch</DropdownMenuItem>
-        <DropdownMenuItem>Sto Tomas Branch</DropdownMenuItem>
-        <DropdownMenuItem>Lemery Branch</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Select>
+      <SelectTrigger>
+        <SelectValue placeholder="Select a branch" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="1">Batangas City Branch</SelectItem>
+        <SelectItem value="2">Lipa City Branch</SelectItem>
+        <SelectItem value="3">Sto Tomas Branch</SelectItem>
+        <SelectItem value="4">Lemery City Branch</SelectItem>
+      </SelectContent>
+    </Select>
   );
 };
 

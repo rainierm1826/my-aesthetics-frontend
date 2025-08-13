@@ -1,27 +1,25 @@
 import React from "react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { ChevronDown } from "lucide-react";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 const DropDownAppointmentStatus = () => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0">
-          Appointment Status <ChevronDown />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>Completed</DropdownMenuItem>
-        <DropdownMenuItem>Waiting</DropdownMenuItem>
-        <DropdownMenuItem>Pending</DropdownMenuItem>
-        <DropdownMenuItem>Cancelled</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Select>
+      <SelectTrigger>
+        <SelectValue placeholder="Select a status" />
+      </SelectTrigger>
+      <SelectContent align="end">
+        <SelectItem value="1">Completed</SelectItem>
+        <SelectItem value="1">Waiting</SelectItem>
+        <SelectItem value="1">Pending</SelectItem>
+        <SelectItem value="1">Cancelled</SelectItem>
+      </SelectContent>
+    </Select>
   );
 };
 

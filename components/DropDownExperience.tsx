@@ -7,18 +7,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const DropDownSex = () => {
+const DropDownExperience = () => {
   return (
     <Select>
       <SelectTrigger>
-        <SelectValue placeholder="Select sex" />
+        <SelectValue placeholder="Select experience" />
       </SelectTrigger>
       <SelectContent align="end">
-        <SelectItem value="1">Male</SelectItem>
-        <SelectItem value="2">Female</SelectItem>
+        <SelectItem value="1">Pro</SelectItem>
+        <SelectItem value="2">Regular</SelectItem>
       </SelectContent>
     </Select>
   );
 };
 
-export default DropDownSex;
+export default DropDownExperience;

@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, X } from "lucide-react";
+import { MapPin, Upload, X } from "lucide-react";
 import Image from "next/image";
 
 type BranchForm = {
@@ -73,7 +73,10 @@ const AddBranch = () => {
       </DialogTrigger>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Branch</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5" />
+            Add New Branch
+          </DialogTitle>
           <DialogDescription>
             Create a new branch by filling in the details below.
           </DialogDescription>
@@ -88,6 +91,49 @@ const AddBranch = () => {
               value={formData.branchName}
               onChange={(e) => handleInputChange("branchName", e.target.value)}
             />
+          </div>
+
+          {/* image input and preview */}
+          <div className="space-y-2">
+            <Label htmlFor="branch-image">Branch Image</Label>
+
+            {!imagePreview ? (
+              <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                <p className="text-sm text-gray-600 mb-2">
+                  Click to upload branch image
+                </p>
+                <p className="text-xs text-gray-400">
+                  PNG, JPG, GIF up to 10MB
+                </p>
+                <Input
+                  id="branch-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </div>
+            ) : (
+              <div className="relative">
+                <div className="relative h-48 w-full border rounded-lg overflow-hidden">
+                  <Image
+                    src={imagePreview}
+                    alt="Branch preview"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={removeImage}
+                  className="absolute -top-4 -right-4 p-1 rounded-full "
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="space-y-3">
@@ -152,50 +198,6 @@ const AddBranch = () => {
                 onChange={(e) => handleInputChange("lot", e.target.value)}
               />
             </div>
-          </div>
-
-          {/* Branch Image */}
-          <div className="space-y-2">
-            <Label htmlFor="branch-image">Branch Image</Label>
-
-            {!imagePreview ? (
-              <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 mb-2">
-                  Click to upload branch image
-                </p>
-                <p className="text-xs text-gray-400">
-                  PNG, JPG, GIF up to 10MB
-                </p>
-                <Input
-                  id="branch-image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-              </div>
-            ) : (
-              <div className="relative">
-                <div className="relative h-48 w-full border rounded-lg overflow-hidden">
-                  <Image
-                    src={imagePreview}
-                    alt="Branch preview"
-                    fill
-                    sizes="(max-width: 640px) 100vw, 400px"
-                    className="object-cover"
-                  />
-                </div>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={removeImage}
-                  className="absolute -top-4 -right-4 p-1 rounded-full "
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
           </div>
 
           {/* Action Buttons */}

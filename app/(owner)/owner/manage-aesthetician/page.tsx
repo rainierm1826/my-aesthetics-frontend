@@ -1,11 +1,12 @@
+import AddAesthetician from "@/components/AddAesthetician";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownAvailability from "@/components/DropDownAvailability";
 import DropDownBranch from "@/components/DropDownBranch";
+import DropDownExperience from "@/components/DropDownExperience";
 import DropDownSex from "@/components/DropDownSex";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
-import { Button } from "@/components/ui/button";
 import { aestheticianColumn } from "@/lib/aesthetician-column";
 import { Aesthetician, Availability, Experience, Sex } from "@/lib/types";
 
@@ -149,12 +150,13 @@ export default async function AestheticianPage() {
         <DataTable columns={aestheticianColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by name..." size="w-1/2" />
+              <SearchInput placeholder="Search by name..." size="w-1/3" />
               <DropDownBranch />
+              <DropDownExperience />
               <DropDownAvailability />
               <DropDownSex />
             </div>
-            <Button className="rounded-sm">Add Aesthetician</Button>
+            <AddAesthetician />
           </div>
         </DataTable>
       </div>

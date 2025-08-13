@@ -1,8 +1,8 @@
+import AddVoucher from "@/components/AddVoucher";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
-import { Button } from "@/components/ui/button";
 import { Voucher } from "@/lib/types";
 import { voucherColumn } from "@/lib/voucher-column";
 
@@ -36,9 +36,12 @@ export default async function VoucherPage() {
         <DataTable columns={voucherColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by voucher code..." size="w-1/2"/>
+              <SearchInput
+                placeholder="Search by voucher code..."
+                size="w-1/2"
+              />
             </div>
-            <Button>New Voucher</Button>
+            <AddVoucher />
           </div>
         </DataTable>
       </div>
