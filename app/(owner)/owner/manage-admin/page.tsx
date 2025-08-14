@@ -1,4 +1,4 @@
-import AddAdmin from "@/components/AddAdmin";
+import AdminForm from "@/components/AdminForm";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownBranch from "@/components/DropDownBranch";
@@ -53,10 +53,15 @@ export default async function AdminPage() {
         <DataTable columns={adminColumn} data={data}>
           <div className="flex justify-between">
             <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by admin name..." size="w-1/2"/>
+              <SearchInput placeholder="Search by admin name..." size="w-1/2" />
               <DropDownBranch />
             </div>
-            <AddAdmin/>
+            <AdminForm
+              formTitle="Add Admin"
+              formDescription="Add a new admin by filling in the details below."
+              buttonLabel="Create Admin"
+              dialogButtonLabel="New Admin"
+            />
           </div>
         </DataTable>
       </div>

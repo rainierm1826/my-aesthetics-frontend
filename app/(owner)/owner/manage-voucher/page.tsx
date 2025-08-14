@@ -1,4 +1,4 @@
-import AddVoucher from "@/components/AddVoucher";
+import AddVoucher from "@/components/VoucherForm";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import OwnerWrapper from "@/components/OwnerWrapper";

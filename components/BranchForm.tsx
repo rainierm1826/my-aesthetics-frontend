@@ -37,7 +37,7 @@ interface FormBranch {
   lot?: string;
   image?: File | null;
   buttonLabel: string;
-  dialogButtonLabel: string | ReactNode;
+  dialogButtonLabel?: string | ReactNode;
 }
 
 const BranchForm: React.FC<FormBranch> = ({

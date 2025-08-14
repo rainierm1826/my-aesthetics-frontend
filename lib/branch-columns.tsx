@@ -42,10 +42,9 @@ export const branchColumns: ColumnDef<Branch>[] = [
           editDialog={
             <BranchForm
               renderDialog={false}
-              formTitle="Edit Branch"
-              formDescription="Update a existing branch by filling in the details below."
+              formTitle="Edit Admin"
+              formDescription="Update a existing admin by filling in the details below."
               buttonLabel="Update"
-              dialogButtonLabel=""
               barangay={row.original.barangay}
               city={row.original.city}
               branchName={row.original.branchName}
