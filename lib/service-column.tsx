@@ -6,6 +6,7 @@ import { RatingStar } from "@/components/RatingStar";
 import { Badge } from "@/components/ui/badge";
 import ActionCell from "@/components/ActionCell";
 import ServicesCard from "@/components/ServicesCard";
+import ServiceForm from "@/components/ServiceForm";
 
 export const serviceColumn: ColumnDef<Service>[] = [
   {
@@ -75,6 +76,20 @@ export const serviceColumn: ColumnDef<Service>[] = [
           onDelete={(u) => console.log("Delete user", u.serviceName)}
           onPreview={(a) => console.log("More info", a)}
           previewDialog={<ServicesCard />}
+          editDialog={
+            <ServiceForm
+              renderDialog={false}
+              formTitle="Edit Branch"
+              formDescription="Update a existing service by filling in the details below."
+              buttonLabel="Update"
+              dialogButtonLabel=""
+              category={row.original.category}
+              serviceName={row.original.serviceName}
+              price={row.original.finalPrice.toString()}
+              isOnSale={row.original.isSale}
+              discount={row.original.discountPercentage.toString()}
+            />
+          }
         />
       );
     },

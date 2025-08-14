@@ -1,4 +1,3 @@
-import AddService from "@/components/AddService";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownBranch from "@/components/DropDownBranch";
@@ -7,6 +6,7 @@ import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
 import { serviceColumn } from "@/lib/service-column";
 import { Service, ServiceCategory } from "@/lib/types";
+import ServiceForm from "@/components/ServiceForm";
 
 async function getData(): Promise<Service[]> {
   return [
@@ -141,7 +141,13 @@ export default async function ServicePage() {
               <DropDownBranch />
               <DropDownServiceCategory />
             </div>
-            <AddService />
+            <ServiceForm
+              formTitle="Add New Service"
+              formDescription="Fill in the details below to add a new service, including name, price, category, and any discounts. You can also upload an image to help customers recognize it instantly."
+              renderDialog={true}
+              dialogButtonLabel="New Service"
+              buttonLabel="Create Service"
+            />
           </div>
         </DataTable>
       </div>

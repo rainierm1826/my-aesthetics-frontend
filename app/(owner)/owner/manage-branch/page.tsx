@@ -4,7 +4,7 @@ import { branchColumns } from "@/lib/branch-columns";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
 import DashboardCard from "@/components/DashboardCard";
-import ClientBranchForm from "@/components/ClientBranchForm";
+import BranchForm from "@/components/BranchForm";
 
 async function getData(): Promise<Branch[]> {
   return [
@@ -59,7 +59,7 @@ export default async function BranchPage() {
             <div className="flex gap-3 w-full">
               <SearchInput placeholder="Search by name..." size="w-1/2" />
             </div>
-            <ClientBranchForm
+            <BranchForm
               dialogButtonLabel="New Branch"
               buttonLabel="Add Branch"
               formDescription="Create a new branch by filling in the details below."

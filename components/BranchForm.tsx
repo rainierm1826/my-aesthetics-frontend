@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, memo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -92,7 +92,8 @@ const BranchForm: React.FC<FormBranch> = ({
     if (fileInput) fileInput.value = "";
   };
 
-  const FormContent = () => (
+  // Extract form content as JSX variable instead of function
+  const formContent = (
     <>
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
@@ -238,17 +239,13 @@ const BranchForm: React.FC<FormBranch> = ({
           <Button>{dialogButtonLabel}</Button>
         </DialogTrigger>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-          <FormContent />
+          {formContent}
         </DialogContent>
       </Dialog>
     );
   }
 
-  return (
-    <div className="">
-      <FormContent />
-    </div>
-  );
+  return <div>{formContent}</div>;
 };
 
-export default BranchForm;
+export default memo(BranchForm);
