@@ -1,10 +1,10 @@
-import AddVoucher from "@/components/VoucherForm";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
 import { Voucher } from "@/lib/types";
 import { voucherColumn } from "@/lib/voucher-column";
+import VoucherForm from "@/components/VoucherForm";
 
 async function getData(): Promise<Voucher[]> {
   return [
@@ -41,7 +41,12 @@ export default async function VoucherPage() {
                 size="w-1/2"
               />
             </div>
-            <AddVoucher />
+            <VoucherForm
+              dialogButtonLabel="New Voucher"
+              buttonLabel="Add Voucher"
+              formDescription="Create a new voucher by filling in the details below."
+              formTitle="Add New Voucher"
+            />
           </div>
         </DataTable>
       </div>

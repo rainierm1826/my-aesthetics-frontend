@@ -2,16 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Voucher } from "./types";
-import { Ellipsis } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import ActionCell from "@/components/ActionCell";
+import VoucherForm from "@/components/VoucherForm";
 
 export const voucherColumn: ColumnDef<Voucher>[] = [
   {
@@ -31,29 +23,28 @@ export const voucherColumn: ColumnDef<Voucher>[] = [
   },
   {
     id: "actions",
-    cell: () => {
+    cell: ({ row }) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="focus-visible:border-0">
-            <Button
-              size={"icon"}
-              variant={"ghost"}
-              className="hover:text-[#7C7C7C] hover:bg-transparent"
-            >
-              <Ellipsis />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-blue-400 hover:text-blue-500 hover:bg-transparent">
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-400 hover:text-red-500 hover:bg-transparent">
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ActionCell
+          data={row.original}
+          getId={(u) => u.voucherCode}
+          onEdit={(u) => console.log("Edit user", u)}
+          onDelete={(u) => console.log("Delete user", u.voucherCode)}
+          editDialog={
+            <VoucherForm
+              renderDialog={false}
+              buttonLabel="Update Voucher"
+              formDescription="Update a existing voucher by filling in the details below."
+              formTitle="Update Voucher"
+              discountAmount={row.original.discountAmount.toString()}
+              quantity={row.original.quantity.toString()}
+              minimumSpend={"1500"}
+              discountType="percentage"
+              validFrom="2025-08-14"
+              validUntil="2025-12-31"
+            />
+          }
+        />
       );
     },
   },
