@@ -5,6 +5,7 @@ import { Branch } from "./types";
 import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import BranchCard from "@/components/BranchCard";
+import BranchForm from "@/components/BranchForm";
 
 export const branchColumns: ColumnDef<Branch>[] = [
   {
@@ -38,6 +39,21 @@ export const branchColumns: ColumnDef<Branch>[] = [
           onDelete={(u) => console.log("Delete user", u.branchName)}
           onPreview={(a) => console.log("More info", a)}
           previewDialog={<BranchCard />}
+          editDialog={
+            <BranchForm
+              renderDialog={false}
+              formTitle="Edit Branch"
+              formDescription="Update a existing branch by filling in the details below."
+              buttonLabel="Update"
+              dialogButtonLabel=""
+              barangay={row.original.barangay}
+              city={row.original.city}
+              branchName={row.original.branchName}
+              lot={row.original.blk}
+              province={row.original.city}
+              region={row.original.region}
+            />
+          }
         />
       );
     },

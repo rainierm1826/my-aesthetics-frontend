@@ -35,6 +35,7 @@ type ActionCellProps<T> = {
   onPreview?: (data: T) => void;
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
+  editDialog?: ReactNode
 };
 
 function ActionCell<T>({
@@ -43,19 +44,26 @@ function ActionCell<T>({
   onEdit,
   onDelete,
   onMoreInfo,
-  infoDialog,
   onPreview,
+  infoDialog,
   previewDialog,
+  editDialog
 }: ActionCellProps<T>) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleMoreInfoClick = () => {
     setDropdownOpen(false);
     setTimeout(() => setOpenMoreInfoDialog(true), 100);
   };
+
+  const handleEditClick = () => {
+    setDropdownOpen(false);
+    setTimeout(() => setOpenEditDialog(true), 100)
+  }
 
   const handlePreviewClick = () => {
     setDropdownOpen(false);
@@ -91,7 +99,7 @@ function ActionCell<T>({
           {onEdit && (
             <DropdownMenuItem
               className="text-blue-400 hover:text-blue-500"
-              onSelect={() => onEdit(data)}
+              onSelect={handleEditClick}
             >
               Edit
             </DropdownMenuItem>
@@ -121,7 +129,7 @@ function ActionCell<T>({
       </DropdownMenu>
 
       {/* More Info Dialog */}
-      {onMoreInfo && (
+      {infoDialog && (
         <Dialog open={openMoreInfoDialog} onOpenChange={setOpenMoreInfoDialog}>
           <DialogContent>
             <VisuallyHidden>
@@ -134,8 +142,22 @@ function ActionCell<T>({
         </Dialog>
       )}
 
+      {/* Edit Dialog */}
+      {editDialog && (
+        <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+            <VisuallyHidden>
+              <DialogHeader>
+                <DialogTitle></DialogTitle>
+              </DialogHeader>
+            </VisuallyHidden>
+            {editDialog}
+          </DialogContent>
+        </Dialog>
+      )}
+
       {/* Preview Dialog */}
-      {onPreview && (
+      {previewDialog && (
         <Dialog open={openPreviewDialog} onOpenChange={setOpenPreviewDialog}>
           <DialogContent className="w-auto">
             <VisuallyHidden>
