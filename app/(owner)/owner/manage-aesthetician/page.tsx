@@ -1,4 +1,4 @@
-import AddAesthetician from "@/components/AddAesthetician";
+import AestheticianForm from "@/components/AestheticianForm";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DropDownAvailability from "@/components/DropDownAvailability";
@@ -156,7 +156,12 @@ export default async function AestheticianPage() {
               <DropDownAvailability />
               <DropDownSex />
             </div>
-            <AddAesthetician />
+            <AestheticianForm
+              formTitle="Add Aesthetician"
+              formDescription="Fill in the aesthetician’s name, contact number, experience, gender, and branch. Add a profile photo to complete their profile."
+              dialogButtonLabel="New Aesthetician"
+              buttonLabel="Create Aesthetician"
+            />
           </div>
         </DataTable>
       </div>

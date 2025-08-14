@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import AestheticianCard from "@/components/AestheticianCard";
+import AestheticianForm from "@/components/AestheticianForm";
 
 export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
   {
@@ -104,7 +105,22 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
           onEdit={(u) => console.log("Edit user", u)}
           onDelete={(u) => console.log("Delete user", u.firstName)}
           onPreview={(a) => console.log("More info", a)}
-          previewDialog={<AestheticianCard/>}
+          previewDialog={<AestheticianCard />}
+          editDialog={
+            <AestheticianForm
+              renderDialog={false}
+              formTitle="Edit Aesthetician"
+              formDescription="Fill in the aesthetician’s name, contact number, experience, gender, and branch. Add a profile photo to complete their profile."
+              buttonLabel="Update Aesthetician"
+              firstName={row.original.firstName}
+              lastName={row.original.lastName}
+              middleInitial={row.original.middleInitial}
+              phoneNumber={row.original.phoneNumber}
+              experience={row.original.experience}
+              sex={row.original.sex}
+              branchName={row.original.branchName}
+            />
+          }
         />
       );
     },
