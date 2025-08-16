@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "lucide-react";
+import Link from "next/link";
 
 const OwnerNavbar = ({ title }: { title: string }) => {
   return (
