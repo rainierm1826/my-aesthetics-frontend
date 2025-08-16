@@ -151,20 +151,24 @@ const SFooter = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className="w-full">
                 <div className="flex items-center gap-3">
-                  <ProfilePicture/>
+                  <ProfilePicture />
                   <div className="space-y-0.5 ">
-                    <p className="text-xs font-semibold whitespace-nowrap">Rainier R. Marasigan</p>
+                    <p className="text-xs font-semibold whitespace-nowrap">
+                      Rainier R. Marasigan
+                    </p>
                     <p className="text-xs text-[#7C7C7C] text-left">Owner</p>
                   </div>
                   <div className="flex justify-end w-full">
-                    <Plus className="h-4 w-4"/>
+                    <Plus className="h-4 w-4" />
                   </div>
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="min-w-[200px]">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={"/owner/profile"}>Profile</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

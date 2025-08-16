@@ -1,9 +1,10 @@
 import OwnerWrapper from "@/components/OwnerWrapper";
+import UserForm from "@/components/UserForm";
 
-export default function SettingsPage() {
+export default function ProfilePage() {
   return (
     <OwnerWrapper title="Settings">
-      <p>settings</p>
+      <UserForm />
     </OwnerWrapper>
   );
 }
