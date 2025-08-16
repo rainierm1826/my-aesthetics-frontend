@@ -143,7 +143,7 @@ export default async function ServicePage() {
             </div>
             <ServiceForm
               formTitle="Add New Service"
-              formDescription="Fill in the details below to add a new service, including name, price, category, and any discounts. You can also upload an image to help customers recognize it instantly."
+              formDescription="Fill in the details below to add a new service to help customers recognize it instantly."
               renderDialog={true}
               dialogButtonLabel="New Service"
               buttonLabel="Create Service"

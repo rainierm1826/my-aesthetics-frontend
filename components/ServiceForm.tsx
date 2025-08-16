@@ -17,6 +17,7 @@ import { Brush, Upload, X } from "lucide-react";
 import Image from "next/image";
 import DropDownBranch from "./DropDownBranch";
 import DropDownServiceCategory from "./DropDownServiceCategory";
+import { Textarea } from "./ui/textarea";
 
 type InitialServiceProps = {
   serviceName: string;
@@ -180,6 +181,16 @@ const ServiceForm: React.FC<FormService> = ({
               </Button>
             </div>
           )}
+        </div>
+
+        {/* description */}
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            placeholder="Give a short description"
+            className="min-h-[150px]"
+            id="description"
+          />
         </div>
 
         {/* Price and Discount Row */}

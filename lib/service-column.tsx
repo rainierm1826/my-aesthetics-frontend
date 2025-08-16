@@ -85,7 +85,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
               dialogButtonLabel=""
               category={row.original.category}
               serviceName={row.original.serviceName}
-              price={row.original.finalPrice.toString()}
+              price={row.original.originalPrice.toString()}
               isOnSale={row.original.isSale}
               discount={row.original.discountPercentage.toString()}
             />
