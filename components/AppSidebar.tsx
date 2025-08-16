@@ -20,8 +20,17 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { general, analytics, managements } from "@/lib/constants";
-import {  ChevronRight, LogOut } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
+import ProfilePicture from "./ProfilePicture";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -42,7 +51,7 @@ export function AppSidebar() {
 
 const AnalyticsGroup = ({ pathname }: { pathname: string }) => {
   return (
-    <SidebarGroup >
+    <SidebarGroup>
       <SidebarGroupLabel>Analytics</SidebarGroupLabel>
       <SidebarGroupContent>
         {analytics.map((item) => (
@@ -138,11 +147,27 @@ const SFooter = () => {
     <SidebarFooter className="mt-auto">
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton asChild className="text-red-400">
-            <Link href={"/"}>
-              <LogOut />
-              <span>Logout</span>
-            </Link>
+          <SidebarMenuButton asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="w-full">
+                <div className="flex items-center gap-3">
+                  <ProfilePicture/>
+                  <div className="space-y-0.5 ">
+                    <p className="text-xs font-semibold whitespace-nowrap">Rainier R. Marasigan</p>
+                    <p className="text-xs text-[#7C7C7C] text-left">Owner</p>
+                  </div>
+                  <div className="flex justify-end w-full">
+                    <Plus className="h-4 w-4"/>
+                  </div>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="min-w-[200px]">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
