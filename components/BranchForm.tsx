@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState, memo } from "react";
+import { useState, memo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,39 +14,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MapPin, Upload, X } from "lucide-react";
 import Image from "next/image";
+import { BranchFormProps, BranchFormState } from "@/lib/types";
+import { patchBranch, postBranch } from "@/api/branch";
+import { fileToBase64 } from "@/lib/function";
 
-type InitialBranchProps = {
-  branchName: string;
-  region: string;
-  province: string;
-  city: string;
-  barangay: string;
-  lot: string;
-  image: File | null;
-};
-
-interface FormBranch {
-  renderDialog?: boolean;
-  formTitle: string;
-  formDescription: string;
-  branchName?: string;
-  region?: string;
-  province?: string;
-  city?: string;
-  barangay?: string;
-  lot?: string;
-  image?: File | null;
-  buttonLabel: string;
-  dialogButtonLabel?: string | ReactNode;
-}
-
-const BranchForm: React.FC<FormBranch> = ({
+const BranchForm: React.FC<BranchFormProps> = ({
   renderDialog = true,
+  method,
   dialogButtonLabel,
   buttonLabel,
   formDescription,
   formTitle,
   barangay,
+  branchId,
   branchName,
   city,
   image,
@@ -54,20 +34,83 @@ const BranchForm: React.FC<FormBranch> = ({
   province,
   region,
 }) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [formData, setFormData] = useState<InitialBranchProps>({
-    branchName: branchName || "",
-    region: region || "",
-    province: province || "",
-    city: city || "",
-    barangay: barangay || "",
-    lot: lot || "",
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    image ?? null
+  );
+  const [formData, setFormData] = useState<BranchFormState>({
     image: image || null,
+    branch_name: branchName || "",
+    address: {
+      region: region || "",
+      province: province || "",
+      city: city || "",
+      barangay: barangay || "",
+      lot: lot || "",
+    },
   });
 
-  type TextField = Exclude<keyof InitialBranchProps, "image">;
-  const handleInputChange = (field: TextField, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleSubmit = async () => {
+    if (method === "post") {
+      let imageBase64 = "";
+
+      if (formData.image instanceof File) {
+        imageBase64 = await fileToBase64(formData.image);
+      } else if (typeof formData.image === "string") {
+        imageBase64 = formData.image;
+      }
+
+      const payload = {
+        branch_name: formData.branch_name,
+        image: imageBase64,
+        address: {
+          region: formData.address.region,
+          province: formData.address.province,
+          city: formData.address.city,
+          barangay: formData.address.barangay,
+          lot: formData.address.lot,
+        },
+      };
+      await postBranch(payload);
+    }
+    if (method === "patch") {
+      let imageBase64 = "";
+
+      if (formData.image instanceof File) {
+        imageBase64 = await fileToBase64(formData.image);
+      } else if (typeof formData.image === "string") {
+        imageBase64 = formData.image;
+      }
+
+      const payload = {
+        branch_name: formData.branch_name,
+        branch_id: branchId,
+        image: imageBase64,
+        address: {
+          region: formData.address.region,
+          province: formData.address.province,
+          city: formData.address.city,
+          barangay: formData.address.barangay,
+          lot: formData.address.lot,
+        },
+      };
+      console.log(payload)
+      const r = await patchBranch(payload);
+      console.log(r)
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    if (field === "branch_name") {
+      setFormData((prev) => ({ ...prev, branch_name: value }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [field]: value,
+        },
+      }));
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +135,6 @@ const BranchForm: React.FC<FormBranch> = ({
     if (fileInput) fileInput.value = "";
   };
 
-  // Extract form content as JSX variable instead of function
   const formContent = (
     <>
       <DialogHeader>
@@ -109,8 +151,8 @@ const BranchForm: React.FC<FormBranch> = ({
           <Input
             id="branch-name"
             placeholder="Enter branch name"
-            value={formData.branchName}
-            onChange={(e) => handleInputChange("branchName", e.target.value)}
+            value={formData.branch_name}
+            onChange={(e) => handleInputChange("branch_name", e.target.value)}
           />
         </div>
 
@@ -165,7 +207,7 @@ const BranchForm: React.FC<FormBranch> = ({
             <Input
               id="region"
               placeholder="Enter region"
-              value={formData.region}
+              value={formData.address.region}
               onChange={(e) => handleInputChange("region", e.target.value)}
             />
           </div>
@@ -177,7 +219,7 @@ const BranchForm: React.FC<FormBranch> = ({
             <Input
               id="province"
               placeholder="Enter province"
-              value={formData.province}
+              value={formData.address.province}
               onChange={(e) => handleInputChange("province", e.target.value)}
             />
           </div>
@@ -189,7 +231,7 @@ const BranchForm: React.FC<FormBranch> = ({
             <Input
               id="city"
               placeholder="Enter city"
-              value={formData.city}
+              value={formData.address.city}
               onChange={(e) => handleInputChange("city", e.target.value)}
             />
           </div>
@@ -201,7 +243,7 @@ const BranchForm: React.FC<FormBranch> = ({
             <Input
               id="barangay"
               placeholder="Enter barangay"
-              value={formData.barangay}
+              value={formData.address.barangay}
               onChange={(e) => handleInputChange("barangay", e.target.value)}
             />
           </div>
@@ -213,7 +255,7 @@ const BranchForm: React.FC<FormBranch> = ({
             <Input
               id="lot"
               placeholder="Enter lot/street address"
-              value={formData.lot}
+              value={formData.address.lot}
               onChange={(e) => handleInputChange("lot", e.target.value)}
             />
           </div>
@@ -224,7 +266,7 @@ const BranchForm: React.FC<FormBranch> = ({
           <Button type="button" variant="outline" className="flex-1">
             Cancel
           </Button>
-          <Button type="button" className="flex-1">
+          <Button type="button" className="flex-1" onClick={handleSubmit}>
             {buttonLabel}
           </Button>
         </div>

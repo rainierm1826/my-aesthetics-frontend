@@ -31,15 +31,17 @@ type ActionCellProps<T> = {
   getId?: (data: T) => string;
   onEdit?: (data: T) => void;
   onDelete?: (data: T) => void;
+  deleteFn?: (id: string) => Promise<void>;
   onMoreInfo?: (data: T) => void;
   onPreview?: (data: T) => void;
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
-  editDialog?: ReactNode
+  editDialog?: ReactNode;
 };
 
 function ActionCell<T>({
   data,
+  deleteFn,
   getId,
   onEdit,
   onDelete,
@@ -47,13 +49,14 @@ function ActionCell<T>({
   onPreview,
   infoDialog,
   previewDialog,
-  editDialog
+  editDialog,
 }: ActionCellProps<T>) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleMoreInfoClick = () => {
     setDropdownOpen(false);
@@ -62,8 +65,8 @@ function ActionCell<T>({
 
   const handleEditClick = () => {
     setDropdownOpen(false);
-    setTimeout(() => setOpenEditDialog(true), 100)
-  }
+    setTimeout(() => setOpenEditDialog(true), 100);
+  };
 
   const handlePreviewClick = () => {
     setDropdownOpen(false);
@@ -75,9 +78,23 @@ function ActionCell<T>({
     setTimeout(() => setOpenDeleteDialog(true), 100);
   };
 
-  const handleDelete = () => {
-    if (onDelete) onDelete(data);
-    setOpenDeleteDialog(false);
+  const handleDelete = async () => {
+    if (!getId || isDeleting || !deleteFn) return;
+
+    setIsDeleting(true);
+    const itemId = getId(data);
+
+    try {
+      await deleteFn(itemId); // <-- call generic delete function
+
+      if (onDelete) onDelete(data); // optional callback
+
+      setOpenDeleteDialog(false);
+      console.log(`Successfully deleted item with ID: ${itemId}`);
+    } catch (error) {
+      console.error("Delete failed:", error);
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -183,12 +200,15 @@ function ActionCell<T>({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isDeleting}>
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
-                className="bg-red-500 text-white hover:bg-red-400"
+                disabled={isDeleting}
+                className="bg-red-500 text-white hover:bg-red-400 disabled:opacity-50"
               >
-                Delete
+                {isDeleting ? "Deleting..." : "Delete"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

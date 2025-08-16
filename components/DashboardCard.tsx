@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartArea, Info } from "lucide-react";
 
-const DashboardCard = () => {
+const DashboardCard = ({}) => {
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
       <CardHeader className="w-full">

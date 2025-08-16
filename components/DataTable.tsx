@@ -53,9 +53,13 @@ export function DataTable<TData, TValue>({
     phoneNumber: false,
     sex: false,
     barangay: false,
-    blk: false,
     isSale: false,
     discountPercentage: false,
+    branch_id: false,
+    region: false,
+    province: false,
+    city: false,
+    lot: false,
   });
 
   const table = useReactTable({
@@ -170,7 +174,7 @@ const DataTablePagination = () => {
     <Pagination className="flex justify-start">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" className="text-[#7C7C7C]"/>
+          <PaginationPrevious href="#" className="text-[#7C7C7C]" />
         </PaginationItem>
         <PaginationItem>
           <PaginationLink
@@ -183,7 +187,7 @@ const DataTablePagination = () => {
           <PaginationLink href="#">3</PaginationLink>
         </PaginationItem>
         <PaginationItem>
-          <PaginationNext href="#" className="text-[#7C7C7C]"/>
+          <PaginationNext href="#" className="text-[#7C7C7C]" />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
