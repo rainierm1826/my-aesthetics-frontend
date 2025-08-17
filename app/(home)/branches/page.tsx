@@ -1,4 +1,4 @@
-import AestheticianCard from "@/components/AestheticianCard";
+import { getAllBranches } from "@/api/branch";
 import BranchCard from "@/components/BranchCard";
 import SearchInput from "@/components/SearchInput";
 
@@ -9,10 +9,11 @@ const tinos = Tinos({
   subsets: ["latin"],
 });
 
-export default function BranchesPage() {
+export default async function BranchesPage() {
+  const branches = await getAllBranches();
   return (
     <main>
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto py-12 ">
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1
@@ -35,12 +36,22 @@ export default function BranchesPage() {
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center">
-            <BranchCard />
-            <BranchCard />
-            <BranchCard />
-          </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 px-4">
+          {branches.branch.map((branch) => (
+            <BranchCard
+              key={branch.branch_id}
+              action
+              branchName={branch.branch_name}
+              image={branch.image}
+              status={branch.status}
+              barangay={branch.address.barangay}
+              lot={branch.address.lot}
+              city={branch.address.city}
+              province={branch.address.province}
+              rating={branch.avarage_rate}
+            />
+          ))}
         </div>
       </div>
     </main>

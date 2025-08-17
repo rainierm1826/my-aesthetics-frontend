@@ -9,8 +9,24 @@ import clsx from "clsx";
 const BranchCard = ({
   className,
   action,
+  branchName,
+  status,
+  image,
+  barangay,
+  province,
+  city,
+  lot,
+  rating,
 }: {
   className?: string;
+  image: string;
+  branchName: string;
+  status: string;
+  rating: number;
+  barangay: string;
+  province: string;
+  city: string;
+  lot: string;
   action?: boolean;
 }) => {
   return (
@@ -21,19 +37,21 @@ const BranchCard = ({
       )}
     >
       <CardContent className="p-0 flex flex-col h-full">
-        {/* Branch Image Container - Reduced height */}
         <div className="relative w-full aspect-[16/8] flex-shrink-0 overflow-hidden">
           <Image
             alt="Glow Beauty Studio - Lipa Branch"
-            src="/branch1.webp"
+            src={image}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
 
           {/* Status Badge */}
-          <div className="absolute top-2 left-2 flex items-center gap-1 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-            Open Now
+          <div
+            className={`absolute top-2 left-2 flex items-center gap-1 ${
+              status == "active" ? "bg-green-500" : "bg-red-500"
+            } text-white text-xs font-semibold px-2 py-1 rounded-full`}
+          >
+            {status == "active" ? "Open" : "Closed"}
           </div>
         </div>
 
@@ -44,18 +62,15 @@ const BranchCard = ({
             <h3 className="font-bold text-gray-900 text-base leading-tight">
               MY Aesthetics Brow Studio
             </h3>
-            <p className="text-xs font-medium text-primary">
-              Batangas City Branch
-            </p>
+            <p className="text-xs font-medium text-primary">{branchName}</p>
 
             <div className="flex items-center gap-2 w-full">
               <div className="flex items-center gap-1 w-full">
-                <RatingStar rating={5} />
-                <span className="font-semibold text-gray-900 text-sm">4.7</span>
+                <RatingStar rating={rating} />
+                <span className="font-semibold text-gray-900 text-sm">
+                  {rating}
+                </span>
               </div>
-              <span className="text-xs text-gray-500 whitespace-nowrap">
-                (156 reviews)
-              </span>
               <span className="text-xs bg-yellow-50 text-yellow-700 px-1.5 py-0.5 rounded-full whitespace-nowrap">
                 Top Rated
               </span>
@@ -66,9 +81,9 @@ const BranchCard = ({
           <div className="flex items-start gap-2">
             <MapPin className="w-3 h-3 text-gray-400 mt-0.5 flex-shrink-0" />
             <div className="text-xs text-gray-600 leading-relaxed">
-              123 JP Rizal Avenue, Poblacion
+              {`${lot}, ${barangay}`}
               <br />
-              Lipa City, Batangas 4217
+              {`${city}, ${province}`}
             </div>
           </div>
 

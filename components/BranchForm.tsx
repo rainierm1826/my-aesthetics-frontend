@@ -17,6 +17,8 @@ import Image from "next/image";
 import { BranchFormProps, BranchFormState } from "@/lib/types";
 import { patchBranch, postBranch } from "@/api/branch";
 import { fileToBase64 } from "@/lib/function";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const BranchForm: React.FC<BranchFormProps> = ({
   renderDialog = true,
@@ -25,8 +27,8 @@ const BranchForm: React.FC<BranchFormProps> = ({
   buttonLabel,
   formDescription,
   formTitle,
-  barangay,
   branchId,
+  barangay,
   branchName,
   city,
   image,
@@ -49,53 +51,65 @@ const BranchForm: React.FC<BranchFormProps> = ({
     },
   });
 
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: async (payload: unknown) => postBranch(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branch"] });
+      toast("Branch has been created.");
+      setFormData({
+        image: null,
+        branch_name: "",
+        address: { region: "", province: "", city: "", barangay: "", lot: "" },
+      });
+      setImagePreview(null);
+    },
+    onError: (error) => {
+      toast(error.message);
+      console.log(error);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async (payload: unknown) => patchBranch(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branch"] });
+      toast("Branch has been updated.");
+    },
+    onError: (error) => {
+      toast(error.message);
+      console.log(error);
+    },
+  });
+
+  const isLoading = createMutation.isPending || updateMutation.isPending;
+
   const handleSubmit = async () => {
+    let imageBase64 = "";
+    if (formData.image instanceof File) {
+      imageBase64 = await fileToBase64(formData.image);
+    } else if (typeof formData.image === "string") {
+      imageBase64 = formData.image;
+    }
+
+    const payload = {
+      branch_name: formData.branch_name,
+      image: imageBase64,
+      address: {
+        region: formData.address.region,
+        province: formData.address.province,
+        city: formData.address.city,
+        barangay: formData.address.barangay,
+        lot: formData.address.lot,
+      },
+    };
+
     if (method === "post") {
-      let imageBase64 = "";
-
-      if (formData.image instanceof File) {
-        imageBase64 = await fileToBase64(formData.image);
-      } else if (typeof formData.image === "string") {
-        imageBase64 = formData.image;
-      }
-
-      const payload = {
-        branch_name: formData.branch_name,
-        image: imageBase64,
-        address: {
-          region: formData.address.region,
-          province: formData.address.province,
-          city: formData.address.city,
-          barangay: formData.address.barangay,
-          lot: formData.address.lot,
-        },
-      };
-      await postBranch(payload);
+      createMutation.mutate(payload);
     }
     if (method === "patch") {
-      let imageBase64 = "";
-
-      if (formData.image instanceof File) {
-        imageBase64 = await fileToBase64(formData.image);
-      } else if (typeof formData.image === "string") {
-        imageBase64 = formData.image;
-      }
-
-      const payload = {
-        branch_name: formData.branch_name,
-        branch_id: branchId,
-        image: imageBase64,
-        address: {
-          region: formData.address.region,
-          province: formData.address.province,
-          city: formData.address.city,
-          barangay: formData.address.barangay,
-          lot: formData.address.lot,
-        },
-      };
-      console.log(payload)
-      const r = await patchBranch(payload);
-      console.log(r)
+      updateMutation.mutate({...payload, branch_id: branchId});
     }
   };
 
@@ -266,7 +280,12 @@ const BranchForm: React.FC<BranchFormProps> = ({
           <Button type="button" variant="outline" className="flex-1">
             Cancel
           </Button>
-          <Button type="button" className="flex-1" onClick={handleSubmit}>
+          <Button
+            type="button"
+            className="flex-1"
+            onClick={handleSubmit}
+            disabled={isLoading}
+          >
             {buttonLabel}
           </Button>
         </div>

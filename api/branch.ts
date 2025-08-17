@@ -1,4 +1,4 @@
-import { BranchListResponse, BranchParams, BranchResponse, DeleteResponse } from "@/lib/types";
+import { BranchListResponse, BranchResponse, DeleteResponse } from "@/lib/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -34,7 +34,7 @@ export async function postBranch(data: unknown): Promise<BranchResponse> {
 }
 
 export async function patchBranch(
-  params: BranchParams
+  data: unknown
 ): Promise<BranchResponse> {
   try {
     const response = await fetch(`${backendUrl}/branch`, {
@@ -42,15 +42,17 @@ export async function patchBranch(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(params),
+      body: JSON.stringify(data),
     });
 
     if (!response.status) {
       throw new Error(`error: ${response.status}`);
     }
     const result: BranchResponse = await response.json();
+    console.log(result)
     return result;
   } catch (error) {
+    console.log(error)
     throw error;
   }
 }

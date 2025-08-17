@@ -14,6 +14,7 @@ export type Branch = {
   branch_name: string;
   avarage_rate: number;
   image: string;
+  status: "active" | "close";
   address: Address;
   created_at?: string;
   updated_at?: string;
@@ -64,7 +65,7 @@ export interface BranchFormProps {
   method: "post" | "patch";
   formTitle: string;
   formDescription: string;
-  branchId: string;
+  branchId?: string;
   branchName?: string;
   region?: string;
   province?: string;
