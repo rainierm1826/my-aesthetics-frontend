@@ -1,19 +1,11 @@
-import { getAllBranches } from "@/api/branch";
-import BranchCard from "@/components/BranchCard";
+import BranchList from "@/components/BranchList";
 import SearchInput from "@/components/SearchInput";
-
-import { Tinos } from "next/font/google";
-
-const tinos = Tinos({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
+import { tinos } from "@/components/fonts/fonts";
 
 export default async function BranchesPage() {
-  const branches = await getAllBranches();
   return (
     <main>
-      <div className="container mx-auto py-12 ">
+      <div className="container mx-auto py-8 ">
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1
@@ -29,7 +21,7 @@ export default async function BranchesPage() {
         </div>
 
         {/* Actions Section */}
-        <div className="max-w-4xl mx-auto mb-16">
+        <div className="max-w-4xl mx-auto mb-8">
           <div className="flex flex-col lg:flex-row items-center justify-center">
             <div className="flex-1 max-w-md w-full mr-4 mb-5 sm:mb-0">
               <SearchInput placeholder="Search by name..." size="w-full" />
@@ -37,22 +29,7 @@ export default async function BranchesPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 px-4">
-          {branches.branch.map((branch) => (
-            <BranchCard
-              key={branch.branch_id}
-              action
-              branchName={branch.branch_name}
-              image={branch.image}
-              status={branch.status}
-              barangay={branch.address.barangay}
-              lot={branch.address.lot}
-              city={branch.address.city}
-              province={branch.address.province}
-              rating={branch.avarage_rate}
-            />
-          ))}
-        </div>
+        <BranchList />
       </div>
     </main>
   );

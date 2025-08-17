@@ -1,4 +1,9 @@
-import { BranchListResponse, BranchResponse, DeleteResponse } from "@/lib/types";
+import {
+  BranchListResponse,
+  BranchResponse,
+  DeleteResponse,
+  GetBranchesParams,
+} from "@/lib/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -33,9 +38,7 @@ export async function postBranch(data: unknown): Promise<BranchResponse> {
   }
 }
 
-export async function patchBranch(
-  data: unknown
-): Promise<BranchResponse> {
+export async function patchBranch(data: unknown): Promise<BranchResponse> {
   try {
     const response = await fetch(`${backendUrl}/branch`, {
       method: "PATCH",
@@ -49,17 +52,26 @@ export async function patchBranch(
       throw new Error(`error: ${response.status}`);
     }
     const result: BranchResponse = await response.json();
-    console.log(result)
+    console.log(result);
     return result;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw error;
   }
 }
 
-export async function getAllBranches(): Promise<BranchListResponse> {
+export async function getAllBranches({
+  search = "",
+  page = 1,
+  limit = 12,
+}: GetBranchesParams = {}): Promise<BranchListResponse> {
+  const query = new URLSearchParams();
+  if (search) query.set("search", search);
+  query.set("page", String(page));
+  query.set("limit", String(limit));
+
   try {
-    const response = await fetch(`${backendUrl}/branch`, {
+    const response = await fetch(`${backendUrl}/branch?${query.toString()}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -76,8 +88,9 @@ export async function getAllBranches(): Promise<BranchListResponse> {
   }
 }
 
-
-export async function deleteBranch(branch_id:{branch_id:string}): Promise<DeleteResponse> {
+export async function deleteBranch(branch_id: {
+  branch_id: string;
+}): Promise<DeleteResponse> {
   try {
     const response = await fetch(`${backendUrl}/branch`, {
       method: "DELETE",

@@ -3,14 +3,7 @@ import BookNowButton from "@/components/BookNowButton";
 import BranchList from "@/components/BranchList";
 import ServiceList from "@/components/ServiceList";
 import SignUpButton from "@/components/SignUpButton";
-import { Tinos } from "next/font/google";
-
-const tinos = Tinos({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
-
-
+import { tinos } from "@/components/fonts/fonts";
 
 export default function Home() {
   return (
@@ -56,8 +49,22 @@ export default function Home() {
       <section className="bg-gradient-to-tr from-[#fdfaf0] to-white my-10 pb-5">
         <AestheticianList />
       </section>
-      <section className="bg-white my-5">
-        <BranchList/>
+      <section className="bg-white my-5 ">
+        <div className="flex justify-center flex-col w-full mx-auto">
+          <h3
+            className={`${tinos.className} text-4xl font-bold text-center mb-2`}
+          >
+            Top Rated Branches
+          </h3>
+          <p className={`text-[#7C7C7C] text-center text-sm`}>
+            Simply browse through our extensive list of trusted aestheticians,
+            <br />
+            schedule your appointment hassle-free.
+          </p>
+          <div className="mt-8">
+            <BranchList />
+          </div>
+        </div>
       </section>
     </div>
   );

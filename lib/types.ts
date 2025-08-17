@@ -36,6 +36,13 @@ export interface BranchResponse {
   status: boolean;
 }
 
+export type GetBranchesParams = {
+  search?: string;
+  page?: number;
+  limit?: number;
+};
+
+
 export type DeleteResponse = {
   message: string;
   status: boolean;
