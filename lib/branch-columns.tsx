@@ -41,12 +41,9 @@ export const branchColumns: ColumnDef<Branch>[] = [
 
       return (
         <ActionCell
-          data={branch}
-          getId={(b) => b.branch_id}
-          onEdit={(b) => console.log("Edit branch", b.branch_id)}
-          onDelete={(b) => console.log("Delete branch", b.branch_id)}
-          onPreview={(b) => console.log("More info", b.branch_id)}
+          id={branch.branch_id}
           previewDialog={<BranchCard />}
+          deleteFn={(id: string) => deleteBranch({ branch_id: id })}
           editDialog={
             <BranchForm
               method="patch"

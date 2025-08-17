@@ -25,38 +25,29 @@ import {
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { DeleteResponse } from "@/lib/types";
 
-type ActionCellProps<T> = {
-  data: T;
-  getId?: (data: T) => string;
-  onEdit?: (data: T) => void;
-  onDelete?: (data: T) => void;
-  deleteFn?: (id: string) => Promise<void>;
-  onMoreInfo?: (data: T) => void;
-  onPreview?: (data: T) => void;
+type ActionCellProps = {
+  id: string;
+  deleteFn: (id: string) => Promise<DeleteResponse>;
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
   editDialog?: ReactNode;
 };
 
-function ActionCell<T>({
-  data,
+function ActionCell({
+  id,
   deleteFn,
-  getId,
-  onEdit,
-  onDelete,
-  onMoreInfo,
-  onPreview,
   infoDialog,
   previewDialog,
   editDialog,
-}: ActionCellProps<T>) {
+}: ActionCellProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleMoreInfoClick = () => {
     setDropdownOpen(false);
@@ -79,21 +70,14 @@ function ActionCell<T>({
   };
 
   const handleDelete = async () => {
-    if (!getId || isDeleting || !deleteFn) return;
-
-    setIsDeleting(true);
-    const itemId = getId(data);
-
     try {
-      await deleteFn(itemId); // <-- call generic delete function
-
-      if (onDelete) onDelete(data); // optional callback
-
-      setOpenDeleteDialog(false);
-      console.log(`Successfully deleted item with ID: ${itemId}`);
+      setLoading(true)
+      const result = await deleteFn(id);
+      console.log(result);
+      setLoading(false)
     } catch (error) {
-      console.error("Delete failed:", error);
-      setIsDeleting(false);
+      setLoading(true)
+      console.log(error);
     }
   };
 
@@ -113,38 +97,33 @@ function ActionCell<T>({
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
-          {onEdit && (
-            <DropdownMenuItem
-              className="text-blue-400 hover:text-blue-500"
-              onSelect={handleEditClick}
-            >
-              Edit
-            </DropdownMenuItem>
-          )}
+          <DropdownMenuItem
+            className="text-blue-400 hover:text-blue-500"
+            onSelect={handleEditClick}
+          >
+            Edit
+          </DropdownMenuItem>
 
-          {onDelete && (
-            <DropdownMenuItem
-              className="text-red-400 hover:text-red-500"
-              onSelect={handleDeleteClick}
-            >
-              Delete
-            </DropdownMenuItem>
-          )}
+          <DropdownMenuItem
+            className="text-red-400 hover:text-red-500"
+            onSelect={handleDeleteClick}
+          >
+            Delete
+          </DropdownMenuItem>
 
-          {onMoreInfo && (
+          {infoDialog && (
             <DropdownMenuItem onSelect={handleMoreInfoClick}>
               More Info
             </DropdownMenuItem>
           )}
 
-          {onPreview && (
+          {previewDialog && (
             <DropdownMenuItem onSelect={handlePreviewClick}>
               Preview
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-
       {/* More Info Dialog */}
       {infoDialog && (
         <Dialog open={openMoreInfoDialog} onOpenChange={setOpenMoreInfoDialog}>
@@ -158,7 +137,6 @@ function ActionCell<T>({
           </DialogContent>
         </Dialog>
       )}
-
       {/* Edit Dialog */}
       {editDialog && (
         <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
@@ -172,7 +150,6 @@ function ActionCell<T>({
           </DialogContent>
         </Dialog>
       )}
-
       {/* Preview Dialog */}
       {previewDialog && (
         <Dialog open={openPreviewDialog} onOpenChange={setOpenPreviewDialog}>
@@ -186,34 +163,27 @@ function ActionCell<T>({
           </DialogContent>
         </Dialog>
       )}
-
-      {/* Delete Dialog */}
-      {onDelete && (
-        <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete{" "}
-                {getId ? `item with ID ${getId(data)}` : "this item"} and remove
-                it from your servers.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={isDeleting}>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="bg-red-500 text-white hover:bg-red-400 disabled:opacity-50"
-              >
-                {isDeleting ? "Deleting..." : "Delete"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete data
+              from your servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={loading}
+              className="bg-red-500 text-white hover:bg-red-400 disabled:opacity-50"
+            >
+              {loading ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
