@@ -1,15 +1,18 @@
-import { dehydrate, QueryClient } from "@tanstack/react-query";
-import { HydrationBoundary } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import DashboardCard from "@/components/DashboardCard";
 import { getAllBranches } from "@/api/branch";
-import BranchClient from "@/components/BranchClient";
+import BranchTable from "@/components/BranchTable";
 
 export default async function BranchPage() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["branch"],
-    queryFn: getAllBranches,
+    queryFn: () => getAllBranches(),
   });
 
   const dehydratedState = dehydrate(queryClient);
@@ -23,9 +26,11 @@ export default async function BranchPage() {
         <DashboardCard />
       </div>
 
-      <HydrationBoundary state={dehydratedState}>
-        <BranchClient />
-      </HydrationBoundary>
+      <div>
+        <HydrationBoundary state={dehydratedState}>
+          <BranchTable />
+        </HydrationBoundary>
+      </div>
     </OwnerWrapper>
   );
 }

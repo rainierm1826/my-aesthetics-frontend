@@ -1,9 +1,9 @@
 import {
   BranchListResponse,
   BranchResponse,
-  DeleteResponse,
   GetBranchesParams,
-} from "@/lib/types";
+} from "@/lib/branch-types";
+import { DeleteResponse } from "@/lib/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -16,9 +16,6 @@ export async function postBranch(data: unknown): Promise<BranchResponse> {
         "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
       );
     }
-
-    console.log("Sending JSON data:", data);
-
     const response = await fetch(`${backendUrl}/branch`, {
       method: "POST",
       headers: {
@@ -30,7 +27,6 @@ export async function postBranch(data: unknown): Promise<BranchResponse> {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
     const result: BranchResponse = await response.json();
     return result;
   } catch (error) {
@@ -52,7 +48,6 @@ export async function patchBranch(data: unknown): Promise<BranchResponse> {
       throw new Error(`error: ${response.status}`);
     }
     const result: BranchResponse = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);
@@ -61,30 +56,34 @@ export async function patchBranch(data: unknown): Promise<BranchResponse> {
 }
 
 export async function getAllBranches({
-  search = "",
+  query = "",
   page = 1,
   limit = 12,
 }: GetBranchesParams = {}): Promise<BranchListResponse> {
-  const query = new URLSearchParams();
-  if (search) query.set("search", search);
-  query.set("page", String(page));
-  query.set("limit", String(limit));
+  const params = new URLSearchParams();
+  if (query) params.set("query", query);
+  params.set("page", String(page));
+  params.set("limit", String(limit));
 
+  console.log(`${backendUrl}/branch?${params.toString()}`);
   try {
-    const response = await fetch(`${backendUrl}/branch?${query.toString()}`, {
+    const res = await fetch(`${backendUrl}/branch?${params.toString()}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    if (!response.status) {
-      throw new Error(`error: ${response.status}`);
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
     }
-    const result: BranchListResponse = await response.json();
+
+    const result: BranchListResponse = await res.json();
     return result;
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    // rethrow so callers (React Query) can handle it
+    throw err;
   }
 }
 

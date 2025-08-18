@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import type { Branch } from "./types";
+import type { Branch } from "./branch-types";
 import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import BranchCard from "@/components/BranchCard";
@@ -41,8 +41,20 @@ export const branchColumns: ColumnDef<Branch>[] = [
 
       return (
         <ActionCell
+          queryKey="branch"
           id={branch.branch_id}
-          previewDialog={<BranchCard />}
+          previewDialog={
+            <BranchCard
+              rating={branch.avarage_rate}
+              status={branch.status}
+              barangay={address.barangay}
+              city={address.city}
+              branchName={branch.branch_name}
+              lot={address.lot}
+              province={address.province}
+              image={branch.image}
+            />
+          }
           deleteFn={(id: string) => deleteBranch({ branch_id: id })}
           editDialog={
             <BranchForm

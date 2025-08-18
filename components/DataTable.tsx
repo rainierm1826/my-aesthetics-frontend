@@ -47,7 +47,6 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  children,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     phoneNumber: false,
@@ -105,8 +104,6 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="">
-      {/* action table*/}
-      <div className="mb-5">{children}</div>
 
       {/* Table */}
       <div className="overflow-hidden border-1">

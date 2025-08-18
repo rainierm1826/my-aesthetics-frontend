@@ -9,80 +9,12 @@ export type Address = {
   updated_at?: string;
 };
 
-export type Branch = {
-  branch_id: string;
-  branch_name: string;
-  avarage_rate: number;
-  image: string;
-  status: "active" | "close";
-  address: Address;
-  created_at?: string;
-  updated_at?: string;
-};
-
-export interface BranchListResponse {
-  branch: Branch[];
-  has_next: boolean;
-  has_prev: boolean;
-  message: string;
-  pages: number;
-  status: boolean;
-  total: number;
-}
-
-export interface BranchResponse {
-  branch: Branch;
-  message: string;
-  status: boolean;
-}
-
-export type GetBranchesParams = {
-  search?: string;
-  page?: number;
-  limit?: number;
-};
-
 
 export type DeleteResponse = {
   message: string;
   status: boolean;
 };
 
-export type BranchParams = {
-  branch_name?: string;
-  image?: string;
-  address?: Address;
-};
-
-export type BranchFormState = {
-  branch_name: string;
-  image: File | string | null;
-  address: {
-    region: string;
-    province: string;
-    city: string;
-    barangay: string;
-    lot: string;
-  };
-};
-
-export interface BranchFormProps {
-  deleteFn?: (id: string) => Promise<DeleteResponse>;
-  renderDialog?: boolean;
-  method: "post" | "patch";
-  formTitle: string;
-  formDescription: string;
-  branchId?: string;
-  branchName?: string;
-  region?: string;
-  province?: string;
-  city?: string;
-  barangay?: string;
-  lot?: string;
-  image?: string;
-  buttonLabel: string;
-  dialogButtonLabel?: string | React.ReactNode;
-}
 
 export enum Sex {
   Male = "male",

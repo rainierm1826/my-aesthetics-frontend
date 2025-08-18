@@ -1,26 +1,22 @@
+"use client";
+
 import React from "react";
 import BranchCard from "./BranchCard";
 import { getAllBranches } from "@/api/branch";
+import { useQuery } from "@tanstack/react-query";
+import { Branch, BranchListResponse } from "@/lib/branch-types";
 
-type BranchesListProps = {
-  searchParams?: { [key: string]: string | string[] | undefined };
-};
+const BranchList = () => {
+  const { data } = useQuery<BranchListResponse, Error>({
+    queryKey: ["branch"],
+    queryFn: () => getAllBranches(),
+  });
 
-const BranchList = async ({ searchParams }: BranchesListProps) => {
-  const getOne = (v: string | string[] | undefined) =>
-    Array.isArray(v) ? v[0] : v;
-
-  const filters = {
-    search: getOne(searchParams?.search) ?? "",
-    page: Number(getOne(searchParams?.page) ?? 1) || 1,
-    limit: Number(getOne(searchParams?.limit) ?? 10) || 10,
-  };
-
-  const branches = await getAllBranches(filters);
+  const branches: Branch[] = data?.branch ?? [];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 justify-center px-4 gap-3">
-      {branches.branch.map((branch) => (
+      {branches.map((branch) => (
         <BranchCard
           key={branch.branch_id}
           action

@@ -26,10 +26,13 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DeleteResponse } from "@/lib/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 type ActionCellProps = {
   id: string;
   deleteFn: (id: string) => Promise<DeleteResponse>;
+  queryKey: string;
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
   editDialog?: ReactNode;
@@ -37,6 +40,7 @@ type ActionCellProps = {
 
 function ActionCell({
   id,
+  queryKey,
   deleteFn,
   infoDialog,
   previewDialog,
@@ -47,7 +51,6 @@ function ActionCell({
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleMoreInfoClick = () => {
     setDropdownOpen(false);
@@ -69,16 +72,22 @@ function ActionCell({
     setTimeout(() => setOpenDeleteDialog(true), 100);
   };
 
-  const handleDelete = async () => {
-    try {
-      setLoading(true)
-      const result = await deleteFn(id);
-      console.log(result);
-      setLoading(false)
-    } catch (error) {
-      setLoading(true)
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: (id:string) => deleteFn(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      toast("Branch has been deleted.");
+    },
+    onError: (error) => {
+      toast(error.message);
       console.log(error);
-    }
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate(id);
   };
 
   return (
@@ -173,13 +182,13 @@ function ActionCell({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
-              disabled={loading}
+              onClick={() => handleDelete(id)}
+              disabled={deleteMutation.isPending}
               className="bg-red-500 text-white hover:bg-red-400 disabled:opacity-50"
             >
-              {loading ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

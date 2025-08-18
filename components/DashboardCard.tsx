@@ -4,7 +4,7 @@ import { ChartArea, Info } from "lucide-react";
 
 const DashboardCard = ({}) => {
   return (
-    <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
+    <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef] border-none">
       <CardHeader className="w-full">
         <CardTitle className="flex gap-2 whitespace-nowrap items-center text-sm font-normal ">
           <span>

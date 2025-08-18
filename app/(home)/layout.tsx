@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import Footer from "@/components/Footer";
+import QueryProvider from "@/provider/QueryProvider";
 
 const inter = Inter({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -22,9 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} `}>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <QueryProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );

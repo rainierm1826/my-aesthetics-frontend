@@ -1,8 +1,22 @@
+import { getAllBranches } from "@/api/branch";
 import BranchList from "@/components/BranchList";
 import SearchInput from "@/components/SearchInput";
 import { tinos } from "@/components/fonts/fonts";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 export default async function BranchesPage() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["branch"],
+    queryFn: () => getAllBranches(),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
+
   return (
     <main>
       <div className="container mx-auto py-8 ">
@@ -19,7 +33,6 @@ export default async function BranchesPage() {
             schedule your appointment hassle-free.
           </p>
         </div>
-
         {/* Actions Section */}
         <div className="max-w-4xl mx-auto mb-8">
           <div className="flex flex-col lg:flex-row items-center justify-center">
@@ -28,8 +41,10 @@ export default async function BranchesPage() {
             </div>
           </div>
         </div>
-
-        <BranchList />
+        {/* list */}
+        <HydrationBoundary state={dehydratedState}>
+          <BranchList />
+        </HydrationBoundary>
       </div>
     </main>
   );
