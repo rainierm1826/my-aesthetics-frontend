@@ -21,7 +21,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ReactNode, useState } from "react";
@@ -31,6 +30,7 @@ import type {
 } from "@tanstack/react-table";
 
 import PaginationComponent from "./PaginationComponent";
+import DataTableEntries from "./DataTableEntries";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -165,20 +165,3 @@ export function DataTable<TData, TValue>({
   );
 }
 
-const DataTableEntries = () => {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0">
-          Show Entries <ChevronDown />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>10</DropdownMenuItem>
-        <DropdownMenuItem>15</DropdownMenuItem>
-        <DropdownMenuItem>20</DropdownMenuItem>
-        <DropdownMenuItem>25</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};

@@ -10,10 +10,11 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { Button } from "./ui/button";
 
 type Props = {
-  pageCount?: number; 
-  windowSize?: number; 
+  pageCount?: number;
+  windowSize?: number;
 };
 
 const PaginationComponent: React.FC<Props> = ({
@@ -25,7 +26,7 @@ const PaginationComponent: React.FC<Props> = ({
   const router = useRouter();
 
   const currentPage = Number(searchParams.get("page") ?? "1");
-  const limit = Number(searchParams.get("limit") ?? "12");
+  const limit = Number(searchParams.get("limit") ?? "10");
 
   const pages = useMemo(() => {
     const total = Math.max(1, pageCount);
@@ -57,14 +58,15 @@ const PaginationComponent: React.FC<Props> = ({
     <Pagination className="flex items-center gap-2">
       <PaginationContent>
         <PaginationItem>
-          <button
+          <Button
+            variant={"ghost"}
             aria-label="Previous page"
             onClick={() => canPrev && updatePage(pages.cur - 1)}
             disabled={!canPrev}
             className="text-[#7C7C7C] disabled:opacity-40"
           >
             <PaginationPrevious />
-          </button>
+          </Button>
         </PaginationItem>
 
         <PaginationItem>
@@ -83,14 +85,15 @@ const PaginationComponent: React.FC<Props> = ({
         </PaginationItem>
 
         <PaginationItem>
-          <button
+          <Button
+            variant={"ghost"}
             aria-label="Next page"
             onClick={() => canNext && updatePage(pages.cur + 1)}
             disabled={!canNext}
             className="text-[#7C7C7C] disabled:opacity-40"
           >
             <PaginationNext />
-          </button>
+          </Button>
         </PaginationItem>
       </PaginationContent>
     </Pagination>
