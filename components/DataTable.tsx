@@ -29,24 +29,22 @@ import type {
   VisibilityState,
   Table as ReactTableType,
 } from "@tanstack/react-table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+
+import PaginationComponent from "./PaginationComponent";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pageCount?: number;
+  windowsSize?: number;
   children?: ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  pageCount,
+  windowsSize,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     phoneNumber: false,
@@ -104,7 +102,6 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="">
-
       {/* Table */}
       <div className="overflow-hidden border-1">
         <Table>
@@ -156,7 +153,9 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="my-5 flex justify-between">
-        <DataTablePagination />
+        <div className="flex justify-start">
+          <PaginationComponent pageCount={pageCount} windowSize={windowsSize} />
+        </div>
         <div className="flex gap-3">
           <DataTableEntries />
           <ColumnToggle table={table} />
@@ -165,31 +164,6 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-
-const DataTablePagination = () => {
-  return (
-    <Pagination className="flex justify-start">
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious href="#" className="text-[#7C7C7C]" />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink
-            href="#"
-            className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0"
-          >
-            1
-          </PaginationLink>
-          <PaginationLink href="#">2</PaginationLink>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" className="text-[#7C7C7C]" />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
-  );
-};
 
 const DataTableEntries = () => {
   return (

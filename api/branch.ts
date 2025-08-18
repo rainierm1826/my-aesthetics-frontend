@@ -56,10 +56,10 @@ export async function patchBranch(data: unknown): Promise<BranchResponse> {
 }
 
 export async function getAllBranches({
-  query = "",
-  page = 1,
-  limit = 12,
-}: GetBranchesParams = {}): Promise<BranchListResponse> {
+  query,
+  page,
+  limit,
+}: GetBranchesParams): Promise<BranchListResponse> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);
   params.set("page", String(page));
@@ -81,9 +81,8 @@ export async function getAllBranches({
 
     const result: BranchListResponse = await res.json();
     return result;
-  } catch (err) {
-    // rethrow so callers (React Query) can handle it
-    throw err;
+  } catch (error) {
+    throw error;
   }
 }
 
