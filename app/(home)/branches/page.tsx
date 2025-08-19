@@ -30,7 +30,7 @@ export default async function BranchesPage({
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["branch"],
+    queryKey: ["branch", "all"],
     queryFn: () => getAllBranches({ query, page, limit }),
   });
 

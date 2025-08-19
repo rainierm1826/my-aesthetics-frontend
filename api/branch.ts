@@ -1,5 +1,6 @@
 import {
   BranchListResponse,
+  BranchNameResponse,
   BranchResponse,
   GetBranchesParams,
 } from "@/lib/branch-types";
@@ -65,7 +66,6 @@ export async function getAllBranches({
   params.set("page", String(page));
   params.set("limit", String(limit));
 
-  console.log(`${backendUrl}/branch?${params.toString()}`);
   try {
     const res = await fetch(`${backendUrl}/branch?${params.toString()}`, {
       method: "GET",
@@ -81,6 +81,25 @@ export async function getAllBranches({
 
     const result: BranchListResponse = await res.json();
     return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getBranchName() {
+  try {
+    const response = await fetch(`${backendUrl}/branch/branch-name`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw Error("Internal error")
+    }
+    const result: BranchNameResponse = await response.json();
+    return result
   } catch (error) {
     throw error;
   }

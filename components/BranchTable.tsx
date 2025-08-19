@@ -18,7 +18,7 @@ export default function BranchTable() {
   const limit = Number(searchParams.get("limit") ?? 10);
 
   const { data, isFetching, isError } = useQuery<BranchListResponse, Error>({
-    queryKey: ["branch", { query, page, limit }],
+    queryKey: ["branch", "all"],
     queryFn: () => getAllBranches({ query, page, limit }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,

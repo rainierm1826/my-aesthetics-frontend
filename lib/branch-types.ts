@@ -21,8 +21,19 @@ export interface BranchListResponse {
   total: number;
 }
 
+export type BranchName = {
+  branch_name: string;
+  branch_id: string;
+};
+
+export interface BranchNameResponse {
+  status: boolean;
+  message: string;
+  branch: BranchName[];
+}
+
 export interface BranchResponse {
-  branch: Branch;
+  branch: Branch[];
   message: string;
   status: boolean;
 }
