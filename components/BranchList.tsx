@@ -2,26 +2,11 @@
 
 import React from "react";
 import BranchCard from "./BranchCard";
-import { getAllBranches } from "@/api/branch";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Branch, BranchListResponse } from "@/lib/branch-types";
-import { useSearchParams } from "next/navigation";
+import { Branch } from "@/lib/branch-types";
+import { useBranches } from "@/hooks/useBranches";
 
 const BranchList = () => {
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query") ?? "";
-  const page = Number(searchParams.get("page") ?? 1);
-  const limit = Number(searchParams.get("limit") ?? 10);
-
-  const { data } = useQuery<BranchListResponse, Error>({
-    queryKey: ["branch", "all"],
-    queryFn: () => getAllBranches({ query, page, limit }),
-    placeholderData: keepPreviousData,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000,
-  });
-
+  const {data} = useBranches()
   const branches: Branch[] = data?.branch ?? [];
 
   return (

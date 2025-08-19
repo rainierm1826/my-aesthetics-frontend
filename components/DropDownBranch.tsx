@@ -11,8 +11,15 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getBranchName } from "@/api/branch";
 import { BranchName, BranchNameResponse } from "@/lib/branch-types";
+import { DropDownProps } from "@/lib/types";
 
-const DropDownBranch = () => {
+const DropDownBranch = ({
+  onValueChange,
+  value,
+  placeholder = "Select branch",
+  includeAllOption = false,
+  allOptionLabel = "All Branches",
+}: DropDownProps) => {
   const { data, isLoading } = useQuery<BranchNameResponse, Error>({
     queryKey: ["branch", "branch-name"],
     queryFn: getBranchName,
@@ -21,19 +28,22 @@ const DropDownBranch = () => {
     staleTime: 60 * 60 * 1000,
   });
 
+  // ✅ use the correct key from your API
   const branches: BranchName[] = data?.branch ?? [];
 
   return (
-    <Select>
+    <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger disabled={isLoading}>
-        <SelectValue
-          placeholder={isLoading ? "Loading..." : "Select a branch"}
-        />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
-        {branches.map((branch) => (
-          <SelectItem key={branch.branch_id} value={branch.branch_id}>
-            {branch.branch_name}
+      <SelectContent align="end">
+        {includeAllOption && (
+          <SelectItem value="all">{allOptionLabel}</SelectItem>
+        )}
+        {branches.map((b) => (
+          // ✅ value should be the id
+          <SelectItem key={b.branch_id} value={b.branch_id}>
+            {b.branch_name}
           </SelectItem>
         ))}
       </SelectContent>

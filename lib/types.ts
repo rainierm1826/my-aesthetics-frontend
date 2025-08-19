@@ -67,19 +67,6 @@ export type Admin = {
   email: string;
 };
 
-export type Aesthetician = {
-  firstName: string;
-  lastName: string;
-  middleInitial: string;
-  branchName: string;
-  sex: Sex;
-  experience: Experience;
-  averageRate: number;
-  availability: Availability;
-  phoneNumber: string;
-  image: string;
-};
-
 export type Service = {
   serviceName: string;
   category: ServiceCategory;
@@ -111,3 +98,11 @@ export type Appointment = {
   voucherCode: string;
   appointmentStatus: AppointmentStatus;
 };
+
+export interface DropDownProps {
+  onValueChange?: (value: string) => void;
+  value: string;
+  placeholder?: string;
+  includeAllOption?: boolean;
+  allOptionLabel?: string;
+}

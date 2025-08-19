@@ -6,18 +6,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DropDownProps } from "@/lib/types";
 
-const DropDownAvailability = () => {
+const DropDownAvailability = ({
+  onValueChange,
+  value,
+  placeholder = "Availability",
+  includeAllOption = false,
+  allOptionLabel = "All Branches",
+}: DropDownProps) => {
+  const availability = [
+    { value: "available", label: "Available" },
+    { value: "working", label: "Working" },
+    { value: "on-break", label: "On Break" },
+    { value: "off-duty", label: "Off Duty" },
+  ];
+
   return (
-    <Select>
+    <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger>
-        <SelectValue placeholder="Select availability" />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="1">Available</SelectItem>
-        <SelectItem value="4">Working</SelectItem>
-        <SelectItem value="3">On Break</SelectItem>
-        <SelectItem value="2">Off Duty</SelectItem>
+      <SelectContent align="end">
+        {includeAllOption && (
+          <SelectItem value="all">{allOptionLabel}</SelectItem>
+        )}
+        {availability.map((a) => (
+          <SelectItem key={a.value} value={a.value}>
+            {a.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

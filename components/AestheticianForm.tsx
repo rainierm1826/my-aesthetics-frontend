@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, ReactNode, useState } from "react";
+import { memo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,33 +17,13 @@ import DropDownSex from "./DropDownSex";
 import DropDownBranch from "./DropDownBranch";
 import DropDownExperience from "./DropDownExperience";
 import Image from "next/image";
+import DropDownAvailability from "./DropDownAvailability";
+import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { patchAesthetician, postAesthetician } from "@/api/aesthetician";
+import { fileToBase64 } from "@/lib/function";
+import { FormAesthetician, InitialAestheticianProps } from "@/lib/aesthetician-types";
 
-type InitialAestheticianProps = {
-  firstName: string;
-  lastName: string;
-  middleInitial: string;
-  phoneNumber: string;
-  experience: string;
-  sex: string;
-  branchName: string;
-  image: File | null;
-};
-
-interface FormAesthetician {
-  renderDialog?: boolean;
-  buttonLabel: string;
-  dialogButtonLabel?: string | ReactNode;
-  formTitle: string;
-  formDescription: string;
-  firstName?: string;
-  lastName?: string;
-  middleInitial?: string;
-  phoneNumber?: string;
-  experience?: string;
-  sex?: string;
-  branchName?: string;
-  image?: File | null;
-}
 
 const AestheticianForm: React.FC<FormAesthetician> = ({
   renderDialog = true,
@@ -51,16 +31,23 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
   buttonLabel,
   formDescription,
   formTitle,
+  aestheticianId,
   firstName,
   lastName,
   middleInitial,
   sex,
   phoneNumber,
-  branchName,
+  branchId,
   experience,
-  image = null,
+  image,
+  availability,
+  method,
 }) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    image ?? null
+  );
+
+
   const [formData, setFormData] = useState<InitialAestheticianProps>({
     firstName: firstName || "",
     lastName: lastName || "",
@@ -68,8 +55,9 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
     phoneNumber: phoneNumber || "",
     experience: experience || "",
     sex: sex || "",
-    branchName: branchName || "",
+    branchId: branchId || "",
     image: image || null,
+    availability: availability || "",
   });
 
   const setField = <K extends keyof InitialAestheticianProps>(
@@ -118,6 +106,88 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
     }
   };
 
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: async (payload: unknown) => postAesthetician(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["aesthetician"],
+        type: "all",
+      });
+      toast("Aesthetician has been created.");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        middleInitial: "",
+        phoneNumber: "",
+        experience: "",
+        sex: "",
+        branchId: "",
+        availability: "",
+        image: null,
+      });
+      setImagePreview(null);
+    },
+    onError: (error) => {
+      toast(error.message);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async (payload: unknown) => patchAesthetician(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["aesthetician"],
+        type: "all",
+      });
+      toast("Aesthetician has been updated.");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        middleInitial: "",
+        phoneNumber: "",
+        experience: "",
+        sex: "",
+        branchId: "",
+        availability: "",
+        image: null,
+      });
+      setImagePreview(null);
+    },
+    onError: (error) => {
+      toast(error.message);
+    },
+  });
+
+  const handleSubmit = async () => {
+    let imageBase64 = "";
+    if (formData.image instanceof File) {
+      imageBase64 = await fileToBase64(formData.image);
+    } else if (typeof formData.image === "string") {
+      imageBase64 = formData.image;
+    }
+
+    const payload = {
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      middle_initial: formData.middleInitial,
+      branch_id: formData.branchId,
+      phone_number: formData.phoneNumber,
+      experience: formData.experience,
+      sex: formData.sex,
+      availability: formData.availability,
+      image: imageBase64,
+    };
+
+    if (method === "post") {
+      createMutation.mutate(payload);
+    }
+    if (method === "patch") {
+      updateMutation.mutate({ ...payload, aesthetician_id: aestheticianId });
+    }
+  };
+
   const formContent = (
     <>
       <DialogHeader>
@@ -128,10 +198,12 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
         <DialogDescription>{formDescription}</DialogDescription>
       </DialogHeader>
 
-      <div className="space-y-4 py-4">
-        {/* Aesthetician Image */}
-        <div className="space-y-2">
-          <Label htmlFor="aesthetician-image">Profile Photo</Label>
+      <div className="space-y-6 py-4">
+        {/* Profile Photo Section */}
+        <div className="space-y-3">
+          <Label htmlFor="aesthetician-image" className="text-sm font-medium">
+            Profile Photo
+          </Label>
 
           {!imagePreview ? (
             <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
@@ -152,11 +224,11 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
               />
             </div>
           ) : (
-            <div className="relative mx-auto w-48">
-              <div className="relative h-48 w-full border rounded-lg overflow-hidden">
+            <div className="relative mx-auto w-32">
+              <div className="relative h-32 w-full border rounded-lg overflow-hidden">
                 <Image
                   src={imagePreview}
-                  alt="Branch preview"
+                  alt="Aesthetician preview"
                   fill
                   className="object-cover"
                 />
@@ -165,19 +237,19 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
                 type="button"
                 variant="secondary"
                 onClick={removeImage}
-                className="absolute -top-4 -right-4 p-1 rounded-full "
+                className="absolute -top-2 -right-2 p-1 rounded-full h-6 w-6"
               >
-                <X className="h-4 w-4" />
+                <X className="h-3 w-3" />
               </Button>
             </div>
           )}
         </div>
 
-        {/* Name Fields */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium">Personal Information</Label>
+        {/* Personal Information Section */}
+        <div className="space-y-4">
+          {/* Name Fields Row */}
           <div className="grid grid-cols-7 gap-3">
-            <div className="space-y-1 col-span-3">
+            <div className="space-y-2 col-span-3">
               <Label htmlFor="first-name" className="text-xs text-gray-600">
                 First Name
               </Label>
@@ -191,7 +263,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
               />
             </div>
 
-            <div className="space-y-1 col-span-3">
+            <div className="space-y-2 col-span-3">
               <Label htmlFor="last-name" className="text-xs text-gray-600">
                 Last Name
               </Label>
@@ -205,7 +277,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
               />
             </div>
 
-            <div className="col-span-1 space-y-1">
+            <div className="col-span-1 space-y-2">
               <Label htmlFor="middle-initial" className="text-xs text-gray-600">
                 M.I
               </Label>
@@ -213,7 +285,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
                 id="middle-initial"
                 placeholder="M"
                 maxLength={1}
-                className="w-full"
+                className="w-full text-center"
                 value={formData.middleInitial}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   handleMiddleInitialChange(e.target.value)
@@ -221,48 +293,67 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
               />
             </div>
           </div>
+
+          {/* Contact & Basic Info Row */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone-number">Phone Number</Label>
+              <Input
+                id="phone-number"
+                placeholder="e.g., +63 912 345 6789"
+                inputMode="tel"
+                value={formData.phoneNumber}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handlePhoneChange(e.target.value)
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Sex</Label>
+              <DropDownSex
+                value={formData.sex}
+                onValueChange={(value) => setField("sex", value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Assigned Branch</Label>
+              <DropDownAvailability
+                value={formData.availability}
+                onValueChange={(value) => setField("availability", value)}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          {/* Phone Number */}
-          <div className="space-y-2">
-            <Label htmlFor="phone-number">Phone Number</Label>
-            <Input
-              id="phone-number"
-              placeholder="e.g., +63 912 345 6789"
-              inputMode="tel"
-              value={formData.phoneNumber}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handlePhoneChange(e.target.value)
-              }
-            />
-          </div>
+        {/* Professional Information Section */}
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Experience Level</Label>
+              <DropDownExperience
+                value={formData.experience}
+                onValueChange={(value) => setField("experience", value)}
+              />
+            </div>
 
-          {/* Experience Dropdown */}
-          <div className="space-y-2">
-            <Label>Experience Level</Label>
-            <DropDownExperience />
-          </div>
-
-          {/* Sex Dropdown */}
-          <div className="space-y-2">
-            <Label>Sex</Label>
-            <DropDownSex />
-          </div>
-
-          {/* Branch Dropdown */}
-          <div className="space-y-2">
-            <Label>Assigned Branch</Label>
-            <DropDownBranch />
+            <div className="space-y-2">
+              <Label>Assigned Branch</Label>
+              <DropDownBranch
+                value={formData.branchId}
+                onValueChange={(value) => setField("branchId", value)}
+              />
+            </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2 pt-4">
+        <div className="flex gap-3 pt-4">
           <Button type="button" variant="outline" className="flex-1">
             Cancel
           </Button>
-          <Button type="button" className="flex-1">
+          <Button type="button" className="flex-1" onClick={handleSubmit}>
             {buttonLabel}
           </Button>
         </div>
@@ -276,7 +367,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
         <DialogTrigger asChild>
           <Button>{dialogButtonLabel}</Button>
         </DialogTrigger>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           {formContent}
         </DialogContent>
       </Dialog>

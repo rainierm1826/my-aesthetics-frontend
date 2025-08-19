@@ -16,23 +16,22 @@ export default async function BranchPage({
     | { [key: string]: string | string[] | undefined }
     | Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  
   const sp = (await searchParams) ?? {};
 
   const getFirst = (v?: string | string[]) =>
     Array.isArray(v) ? v[0] ?? "" : v ?? "";
 
   const rawQuery = getFirst(sp.query);
-  const rawPage = getFirst(sp.page) || "1"; 
-  const rawLimit = getFirst(sp.limit) || "10"; 
+  const rawPage = getFirst(sp.page) || "1";
+  const rawLimit = getFirst(sp.limit) || "10";
 
   const query = rawQuery;
-  const page = Number(rawPage) || 1; 
-  const limit = Number(rawLimit) || 10; 
+  const page = Number(rawPage) || 1;
+  const limit = Number(rawLimit) || 10;
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["branch", "all"],
+    queryKey: ["branch", { query, page, limit }],
     queryFn: () => getAllBranches({ query, page, limit }),
   });
 

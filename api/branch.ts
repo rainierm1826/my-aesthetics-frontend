@@ -120,7 +120,7 @@ export async function deleteBranch(branch_id: {
     if (!response.status) {
       throw new Error(`error: ${response.status}`);
     }
-    const result: BranchListResponse = await response.json();
+    const result: DeleteResponse = await response.json();
     return result;
   } catch (error) {
     throw error;

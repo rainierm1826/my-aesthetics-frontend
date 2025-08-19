@@ -6,16 +6,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DropDownProps } from "@/lib/types";
 
-const DropDownExperience = () => {
+const DropDownExperience = ({
+  onValueChange,
+  value,
+  placeholder = "Select experience",
+  includeAllOption = false,
+  allOptionLabel = "All Experience",
+}: DropDownProps) => {
+
+  const experience = [
+    { value: "pro", label: "Professional" },
+    { value: "regular", label: "Regular" },
+  ]
+
   return (
-    <Select>
+    <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger>
-        <SelectValue placeholder="Select experience" />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent align="end">
-        <SelectItem value="1">Pro</SelectItem>
-        <SelectItem value="2">Regular</SelectItem>
+        {includeAllOption && (
+          <SelectItem value="all">{allOptionLabel}</SelectItem>
+        )}
+        {experience.map((e) => (
+          <SelectItem key={e.value} value={e.value}>
+            {e.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

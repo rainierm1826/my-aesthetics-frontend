@@ -57,6 +57,7 @@ export function DataTable<TData, TValue>({
     province: false,
     city: false,
     lot: false,
+    aesthetician_id: false
   });
 
   const table = useReactTable({

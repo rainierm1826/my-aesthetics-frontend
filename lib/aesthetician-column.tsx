@@ -1,26 +1,25 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Aesthetician } from "./types";
+import { Aesthetician } from "./aesthetician-types";
 import { Badge } from "@/components/ui/badge";
 import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import AestheticianCard from "@/components/AestheticianCard";
 import AestheticianForm from "@/components/AestheticianForm";
+import { deleteAesthetician } from "@/api/aesthetician";
 
 export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
+  { accessorKey: "aesthetician_id", header: "Aesthetician ID" },
   {
     id: "fullName",
     header: "Full Name",
     cell: ({ row }) => {
-      const { firstName, lastName, middleInitial } = row.original;
-      return `${firstName} ${middleInitial}. ${lastName}`;
+      const { first_name, last_name, middle_initial } = row.original;
+      return `${first_name} ${middle_initial}. ${last_name}`;
     },
   },
-  {
-    accessorKey: "branchName",
-    header: "Works At",
-  },
+  { accessorKey: "branch.branch_name", id: "branch_name", header: "Works At" },
   {
     accessorKey: "experience",
     header: "Experience",
@@ -34,12 +33,12 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
       return (
         <Badge
           className={`text-white rounded-full ${
-            e == "Professional"
+            e == "Pro"
               ? "bg-green-100 text-green-700"
               : "bg-gray-100 text-gray-700"
           }`}
         >
-          {e}
+          {e == "Pro" ? "Professional" : "Regular"}
         </Badge>
       );
     },
@@ -77,10 +76,10 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
   },
 
   {
-    accessorKey: "avarageRate",
+    accessorKey: "avarage_rate",
     header: "Avarage Rate",
     cell: ({ row }) => {
-      return <RatingStar rating={row.original.averageRate} />;
+      return <RatingStar rating={row.original.average_rate} />;
     },
   },
   {
@@ -98,27 +97,44 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      const {
+        aesthetician_id,
+        availability,
+        branch,
+        experience,
+        first_name,
+        image,
+        last_name,
+        middle_initial,
+        phone_number,
+        sex,
+      } = row.original;
+      const { branch_id } = branch;
+
+
       return (
         <ActionCell
-          data={row.original}
-          getId={(u) => u.firstName}
-          onEdit={(u) => console.log("Edit user", u)}
-          onDelete={(u) => console.log("Delete user", u.firstName)}
-          onPreview={(a) => console.log("More info", a)}
+          deleteFn={(id: string) => deleteAesthetician({ aesthetician_id: id })}
+          queryKey="aesthetician"
+          id={aesthetician_id}
           previewDialog={<AestheticianCard />}
           editDialog={
             <AestheticianForm
+              method="patch"
               renderDialog={false}
               formTitle="Edit Aesthetician"
               formDescription="Fill in the aesthetician’s name, contact number, experience, gender, and branch. Add a profile photo to complete their profile."
               buttonLabel="Update Aesthetician"
-              firstName={row.original.firstName}
-              lastName={row.original.lastName}
-              middleInitial={row.original.middleInitial}
-              phoneNumber={row.original.phoneNumber}
-              experience={row.original.experience}
-              sex={row.original.sex}
-              branchName={row.original.branchName}
+              aestheticianId={aesthetician_id}
+              firstName={first_name}
+              lastName={last_name}
+              middleInitial={middle_initial}
+              phoneNumber={phone_number}
+              experience={experience}
+              sex={sex}
+              branchId={branch_id}
+              image={image}
+              availability={availability}
             />
           }
         />

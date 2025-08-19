@@ -6,16 +6,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DropDownProps } from "@/lib/types";
 
-const DropDownSex = () => {
+
+const DropDownSex = ({
+  onValueChange,
+  value,
+  placeholder = "Select a sex",
+  includeAllOption = false,
+  allOptionLabel = "All Branches",
+}: DropDownProps) => {
+  const sex = [
+    { value: "male", label: "Male" },
+    { value: "female", label: "Female" },
+  ];
   return (
-    <Select>
+    <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger>
-        <SelectValue placeholder="Select sex" />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent align="end">
-        <SelectItem value="1">Male</SelectItem>
-        <SelectItem value="2">Female</SelectItem>
+        {includeAllOption && (
+          <SelectItem value="all">{allOptionLabel}</SelectItem>
+        )}
+        {sex.map((s) => (
+          <SelectItem key={s.value} value={s.value}>
+            {s.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

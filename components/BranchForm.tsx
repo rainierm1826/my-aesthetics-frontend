@@ -56,7 +56,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
   const createMutation = useMutation({
     mutationFn: async (payload: unknown) => postBranch(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["branch"] });
+      queryClient.invalidateQueries({ queryKey: ["branch"], type: "all" });
       toast("Branch has been created.");
       setFormData({
         image: null,
@@ -109,7 +109,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
       createMutation.mutate(payload);
     }
     if (method === "patch") {
-      updateMutation.mutate({...payload, branch_id: branchId});
+      updateMutation.mutate({ ...payload, branch_id: branchId });
     }
   };
 

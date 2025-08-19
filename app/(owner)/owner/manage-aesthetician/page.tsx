@@ -1,142 +1,40 @@
-import AestheticianForm from "@/components/AestheticianForm";
+import { getAllAesthetician } from "@/api/aesthetician";
+import AestheticianTable from "@/components/AestheticianTable";
 import DashboardCard from "@/components/DashboardCard";
-import { DataTable } from "@/components/DataTable";
-import DropDownAvailability from "@/components/DropDownAvailability";
-import DropDownBranch from "@/components/DropDownBranch";
-import DropDownExperience from "@/components/DropDownExperience";
-import DropDownSex from "@/components/DropDownSex";
 import OwnerWrapper from "@/components/OwnerWrapper";
-import SearchInput from "@/components/SearchInput";
-import { aestheticianColumn } from "@/lib/aesthetician-column";
-import { Aesthetician, Availability, Experience, Sex } from "@/lib/types";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-async function getData(): Promise<Aesthetician[]> {
-  return [
-    {
-      firstName: "Sophia",
-      lastName: "Martinez",
-      middleInitial: "J",
-      branchName: "Batangas City Branch",
-      sex: Sex.Female,
-      experience: Experience.Pro,
-      averageRate: 4.9,
-      availability: Availability.Available,
-      phoneNumber: "09170010001",
-      image: "/images/aestheticians/sophia-martinez.jpg",
-    },
-    {
-      firstName: "Ethan",
-      lastName: "Ramirez",
-      middleInitial: "K",
-      branchName: "Lipa City Branch",
-      sex: Sex.Male,
-      experience: Experience.Regular,
-      averageRate: 4.5,
-      availability: Availability.Working,
-      phoneNumber: "09170010002",
-      image: "/images/aestheticians/ethan-ramirez.jpg",
-    },
-    {
-      firstName: "Camille",
-      lastName: "Dela Rosa",
-      middleInitial: "L",
-      branchName: "Sto Tomas Batangas Branch",
-      sex: Sex.Female,
-      experience: Experience.Pro,
-      averageRate: 4.8,
-      availability: Availability.Break,
-      phoneNumber: "09170010003",
-      image: "/images/aestheticians/camille-dela-rosa.jpg",
-    },
-    {
-      firstName: "Liam",
-      lastName: "Mendoza",
-      middleInitial: "A",
-      branchName: "Lemery City Branch",
-      sex: Sex.Male,
-      experience: Experience.Regular,
-      averageRate: 4.3,
-      availability: Availability.OffDuty,
-      phoneNumber: "09170010004",
-      image: "/images/aestheticians/liam-mendoza.jpg",
-    },
-    {
-      firstName: "Isabella",
-      lastName: "Santiago",
-      middleInitial: "M",
-      branchName: "Batangas City Branch",
-      sex: Sex.Female,
-      experience: Experience.Pro,
-      averageRate: 5.0,
-      availability: Availability.Available,
-      phoneNumber: "09170010005",
-      image: "/images/aestheticians/isabella-santiago.jpg",
-    },
-    {
-      firstName: "Noah",
-      lastName: "Reyes",
-      middleInitial: "P",
-      branchName: "Lipa City Branch",
-      sex: Sex.Male,
-      experience: Experience.Regular,
-      averageRate: 4.6,
-      availability: Availability.Working,
-      phoneNumber: "09170010006",
-      image: "/images/aestheticians/noah-reyes.jpg",
-    },
-    {
-      firstName: "Mia",
-      lastName: "Villanueva",
-      middleInitial: "R",
-      branchName: "Sto Tomas Batangas Branch",
-      sex: Sex.Female,
-      experience: Experience.Pro,
-      averageRate: 4.7,
-      availability: Availability.Break,
-      phoneNumber: "09170010007",
-      image: "/images/aestheticians/mia-villanueva.jpg",
-    },
-    {
-      firstName: "Gabriel",
-      lastName: "Cruz",
-      middleInitial: "S",
-      branchName: "Lemery City Branch",
-      sex: Sex.Male,
-      experience: Experience.Pro,
-      averageRate: 4.9,
-      availability: Availability.Available,
-      phoneNumber: "09170010008",
-      image: "/images/aestheticians/gabriel-cruz.jpg",
-    },
-    {
-      firstName: "Chloe",
-      lastName: "Flores",
-      middleInitial: "T",
-      branchName: "Batangas City Branch",
-      sex: Sex.Female,
-      experience: Experience.Regular,
-      averageRate: 4.4,
-      availability: Availability.Working,
-      phoneNumber: "09170010009",
-      image: "/images/aestheticians/chloe-flores.jpg",
-    },
-    {
-      firstName: "Lucas",
-      lastName: "Navarro",
-      middleInitial: "V",
-      branchName: "Lipa City Branch",
-      sex: Sex.Male,
-      experience: Experience.Pro,
-      averageRate: 4.8,
-      availability: Availability.Available,
-      phoneNumber: "09170010010",
-      image: "/images/aestheticians/lucas-navarro.jpg",
-    },
-  ];
-}
+export default async function AestheticianPage({
+  searchParams,
+}: {
+  searchParams?:
+    | { [key: string]: string | string[] | undefined }
+    | Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = (await searchParams) ?? {};
 
-export default async function AestheticianPage() {
-  const data = await getData();
+  const getFirst = (v?: string | string[]) =>
+    Array.isArray(v) ? v[0] ?? "" : v ?? "";
+
+  const rawQuery = getFirst(sp.query);
+  const rawPage = getFirst(sp.page) || "1";
+  const rawLimit = getFirst(sp.limit) || "10";
+
+  const query = rawQuery;
+  const page = Number(rawPage) || 1;
+  const limit = Number(rawLimit) || 10;
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["aesthetician"],
+    queryFn: () => getAllAesthetician({ query, page, limit }),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
 
   return (
     <OwnerWrapper title="Manage Aestheticians">
@@ -147,23 +45,9 @@ export default async function AestheticianPage() {
           <DashboardCard />
           <DashboardCard />
         </div>
-        <DataTable columns={aestheticianColumn} data={data}>
-          <div className="flex justify-between">
-            <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by name..." size="w-1/3" />
-              <DropDownBranch />
-              <DropDownExperience />
-              <DropDownAvailability />
-              <DropDownSex />
-            </div>
-            <AestheticianForm
-              formTitle="Add Aesthetician"
-              formDescription="Fill in the aesthetician’s name, contact number, experience, gender, and branch. Add a profile photo to complete their profile."
-              dialogButtonLabel="New Aesthetician"
-              buttonLabel="Create Aesthetician"
-            />
-          </div>
-        </DataTable>
+        <HydrationBoundary state={dehydratedState}>
+          <AestheticianTable />
+        </HydrationBoundary>
       </div>
     </OwnerWrapper>
   );

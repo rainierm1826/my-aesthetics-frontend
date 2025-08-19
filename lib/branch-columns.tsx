@@ -36,7 +36,7 @@ export const branchColumns: ColumnDef<Branch>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const branch = row.original; // Branch
+      const branch = row.original; 
       const address = branch.address;
 
       return (
