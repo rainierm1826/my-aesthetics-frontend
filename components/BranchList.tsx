@@ -10,7 +10,7 @@ const BranchList = () => {
   const branches: Branch[] = data?.branch ?? [];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 justify-center px-4 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl mx-auto">
       {branches.map((branch) => (
         <BranchCard
           key={branch.branch_id}

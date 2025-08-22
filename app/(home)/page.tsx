@@ -46,7 +46,17 @@ export default function Home() {
       <section className="mt-[70px] bg-white my-5">
         <ServiceList />
       </section>
-      <section className="bg-gradient-to-tr from-[#fdfaf0] to-white my-10 pb-5">
+      <section className="bg-gradient-to-tr from-[#fdfaf0] to-white my-10 py-5">
+        <div className="flex justify-center flex-col w-full mx-auto">
+          <h3
+            className={`${tinos.className} text-4xl font-bold text-center mb-2`}
+          >
+            Choose Your Aesthetician
+          </h3>
+          <p className={`text-[#7C7C7C] text-center text-sm mb-5`}>
+            Simply browse through our extensive list of trusted aestheticians.
+          </p>
+        </div>
         <AestheticianList />
       </section>
       <section className="bg-white my-5 ">

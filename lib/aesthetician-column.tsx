@@ -64,12 +64,12 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
               ? "bg-yellow-100 text-yellow-500"
               : a == "Off-duty"
               ? "bg-red-100 text-red-700"
-              : a == "On-break"
+              : a == "Break"
               ? "bg-orange-100 text-orange-500"
               : ""
           }`}
         >
-          {a}
+          {a == "Break" ? "On-break" : a}
         </Badge>
       );
     },
@@ -108,16 +108,16 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
         middle_initial,
         phone_number,
         sex,
+        average_rate,
       } = row.original;
       const { branch_id } = branch;
-
 
       return (
         <ActionCell
           deleteFn={(id: string) => deleteAesthetician({ aesthetician_id: id })}
+          deleteMessage="Aesthetician has been deleted."
           queryKey="aesthetician"
           id={aesthetician_id}
-          previewDialog={<AestheticianCard />}
           editDialog={
             <AestheticianForm
               method="patch"
@@ -135,6 +135,18 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
               branchId={branch_id}
               image={image}
               availability={availability}
+            />
+          }
+          previewDialog={
+            <AestheticianCard
+              firstName={first_name}
+              lastName={last_name}
+              middleInitial={middle_initial}
+              image={image}
+              availability={availability}
+              experience={experience}
+              rating={average_rate}
+              action={false}
             />
           }
         />

@@ -73,3 +73,14 @@ export interface FormAesthetician {
   image?: string;
   availability?: string;
 }
+
+export type AestheticianCardProps = {
+  action?: boolean;
+  image: string;
+  experience: "pro" | "regular" | string;
+  firstName: string;
+  lastName: string;
+  middleInitial: string;
+  rating: number;
+  availability: "available" | "working" | "off-duty" | "on-break" | string;
+};

@@ -1,17 +1,44 @@
-import AestheticianCard from "@/components/AestheticianCard";
+import { getAllAesthetician } from "@/api/aesthetician";
+import AestheticianList from "@/components/AestheticianList";
 import DropDownAvailability from "@/components/DropDownAvailability";
 import DropDownBranch from "@/components/DropDownBranch";
 import DropDownSex from "@/components/DropDownSex";
 import SearchInput from "@/components/SearchInput";
+import { tinos } from "@/components/fonts/fonts";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-import { Tinos } from "next/font/google";
+export default async function AestheticianPage({
+  searchParams,
+}: {
+  searchParams?:
+    | { [key: string]: string | string[] | undefined }
+    | Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = (await searchParams) ?? {};
 
-const tinos = Tinos({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
+  const getFirst = (v?: string | string[]) =>
+    Array.isArray(v) ? v[0] ?? "" : v ?? "";
 
-export default function AestheticianPage() {
+  const rawQuery = getFirst(sp.query);
+  const rawPage = getFirst(sp.page) || "1";
+  const rawLimit = getFirst(sp.limit) || "10";
+
+  const query = rawQuery;
+  const page = Number(rawPage) || 1;
+  const limit = Number(rawLimit) || 10;
+
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["branch", "all"],
+    queryFn: () => getAllAesthetician({ query, page, limit }),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
+
   return (
     <main>
       <div className="container mx-auto px-6 py-12">
@@ -42,16 +69,9 @@ export default function AestheticianPage() {
         </div>
 
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
-            <AestheticianCard action/>
-            <AestheticianCard action/>
-            <AestheticianCard action/>
-            <AestheticianCard action/>
-            <AestheticianCard action/>
-            <AestheticianCard action/>
-            <AestheticianCard action/>
-            <AestheticianCard action/>
-          </div>
+          <HydrationBoundary state={dehydratedState}>
+            <AestheticianList />
+          </HydrationBoundary>
         </div>
       </div>
     </main>

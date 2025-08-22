@@ -1,31 +1,30 @@
+"use client";
+
 import React from "react";
 import AestheticianCard from "./AestheticianCard";
-
-import { Tinos } from "next/font/google";
-
-const tinos = Tinos({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
+import { Aesthetician } from "@/lib/aesthetician-types";
+import { useAestheticians } from "@/hooks/useAestheticians";
 
 const AestheticianList = () => {
+  const { data } = useAestheticians();
+  const aestheticians: Aesthetician[] = data?.aesthetician ?? [];
+
   return (
     <div className="flex justify-center flex-col w-full mx-auto">
-      <h3 className={`${tinos.className} text-4xl font-bold text-center mb-2`}>
-        Choose Your Aesthetician
-      </h3>
-      <p className={`text-[#7C7C7C] text-center text-sm`}>
-        Simply browse through our extensive list of trusted aestheticians.
-      </p>
-      <div className="flex flex-wrap flex-1 gap-8 justify-center mt-10">
-        <AestheticianCard action/>
-        <AestheticianCard action/>
-        <AestheticianCard action/>
-        <AestheticianCard action/>
-        <AestheticianCard action/>
-        <AestheticianCard action/>
-        <AestheticianCard action/>
-        <AestheticianCard action/>
+      <div className="grid grid-cols-2 md:grid-cols-4 justify-center px-4 gap-3">
+        {aestheticians.map((aesthetician) => (
+          <AestheticianCard
+            action
+            availability={aesthetician.availability}
+            firstName={aesthetician.first_name}
+            lastName={aesthetician.last_name}
+            middleInitial={aesthetician.middle_initial}
+            experience={aesthetician.experience}
+            image={aesthetician.image}
+            rating={aesthetician.average_rate}
+            key={aesthetician.aesthetician_id}
+          />
+        ))}
       </div>
     </div>
   );

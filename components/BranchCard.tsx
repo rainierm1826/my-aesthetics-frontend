@@ -5,6 +5,7 @@ import { RatingStar } from "./RatingStar";
 import { Clock, MapPin, Phone } from "lucide-react";
 import BookNowButton from "./BookNowButton";
 import clsx from "clsx";
+import { BranchCardProps } from "@/lib/branch-types";
 
 const BranchCard = ({
   className,
@@ -17,18 +18,7 @@ const BranchCard = ({
   city,
   lot,
   rating,
-}: {
-  className?: string;
-  image: string;
-  branchName: string;
-  status: string;
-  rating: number;
-  barangay: string;
-  province: string;
-  city: string;
-  lot: string;
-  action?: boolean;
-}) => {
+}: BranchCardProps) => {
   return (
     <Card
       className={clsx(
@@ -36,10 +26,10 @@ const BranchCard = ({
         className
       )}
     >
-      <CardContent className="p-0 flex flex-col h-full">
+      <CardContent className="p-0 flex flex-col h-full min-w-[300px]">
         <div className="relative w-full aspect-[16/8] flex-shrink-0 overflow-hidden">
           <Image
-            alt="Glow Beauty Studio - Lipa Branch"
+            alt={branchName}
             src={image}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-110"

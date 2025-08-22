@@ -18,7 +18,7 @@ const DropDownAvailability = ({
   const availability = [
     { value: "available", label: "Available" },
     { value: "working", label: "Working" },
-    { value: "on-break", label: "On Break" },
+    { value: "break", label: "On Break" },
     { value: "off-duty", label: "Off Duty" },
   ];
 

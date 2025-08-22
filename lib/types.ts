@@ -101,7 +101,7 @@ export type Appointment = {
 
 export interface DropDownProps {
   onValueChange?: (value: string) => void;
-  value: string;
+  value?: string;
   placeholder?: string;
   includeAllOption?: boolean;
   allOptionLabel?: string;

@@ -36,7 +36,7 @@ export const branchColumns: ColumnDef<Branch>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const branch = row.original; 
+      const branch = row.original;
       const address = branch.address;
 
       return (
@@ -56,6 +56,7 @@ export const branchColumns: ColumnDef<Branch>[] = [
             />
           }
           deleteFn={(id: string) => deleteBranch({ branch_id: id })}
+          deleteMessage="Branch has been deleted."
           editDialog={
             <BranchForm
               method="patch"

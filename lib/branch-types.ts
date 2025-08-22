@@ -73,3 +73,16 @@ export interface BranchFormProps {
   buttonLabel: string;
   dialogButtonLabel?: string | React.ReactNode;
 }
+
+export type BranchCardProps = {
+  className?: string;
+  image: string;
+  branchName: string;
+  status: string;
+  rating: number;
+  barangay: string;
+  province: string;
+  city: string;
+  lot: string;
+  action?: boolean;
+}

@@ -11,10 +11,10 @@ export async function getAllAesthetician({
   query,
   page,
   limit,
-  availability,
-  branch,
-  experience,
-  sex,
+  availability="",
+  branch="",
+  experience="",
+  sex="",
 }: GetAestheticianParams): Promise<AestheticianListResponse> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);

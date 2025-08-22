@@ -31,7 +31,8 @@ import { useBaseMutation } from "@/hooks/useBaseMutation";
 type ActionCellProps = {
   id: string;
   deleteFn: (id: string) => Promise<DeleteResponse>;
-  queryKey: string[];
+  deleteMessage: string;
+  queryKey: string;
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
   editDialog?: ReactNode;
@@ -41,6 +42,7 @@ function ActionCell({
   id,
   queryKey,
   deleteFn,
+  deleteMessage,
   infoDialog,
   previewDialog,
   editDialog,
@@ -71,12 +73,11 @@ function ActionCell({
     setTimeout(() => setOpenDeleteDialog(true), 100);
   };
 
-
   const deleteMutation = useBaseMutation("delete", {
     deleteFn: deleteFn,
     queryKey: queryKey,
     successMessages: {
-      delete: "Branch has been deleted.",
+      delete: deleteMessage,
     },
   });
 
