@@ -17,8 +17,7 @@ import Image from "next/image";
 import { BranchFormProps, BranchFormState } from "@/lib/branch-types";
 import { patchBranch, postBranch } from "@/api/branch";
 import { fileToBase64 } from "@/lib/function";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useBaseMutation } from "@/hooks/useBaseMutation";
 
 const BranchForm: React.FC<BranchFormProps> = ({
   renderDialog = true,
@@ -51,39 +50,33 @@ const BranchForm: React.FC<BranchFormProps> = ({
     },
   });
 
-  const queryClient = useQueryClient();
-
-  const createMutation = useMutation({
-    mutationFn: async (payload: unknown) => postBranch(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["branch"], type: "all" });
-      toast("Branch has been created.");
-      setFormData({
-        image: null,
-        branch_name: "",
-        address: { region: "", province: "", city: "", barangay: "", lot: "" },
-      });
-      setImagePreview(null);
+  const branchMutation = useBaseMutation(method, {
+    createFn: postBranch,
+    updateFn: patchBranch,
+    queryKey: ["branch"],
+    successMessages: {
+      create: "Branch has been created.",
+      update: "Branch has been updated.",
     },
-    onError: (error) => {
-      toast(error.message);
-      console.log(error);
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: async (payload: unknown) => patchBranch(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["branch"] });
-      toast("Branch has been updated.");
-    },
-    onError: (error) => {
-      toast(error.message);
-      console.log(error);
+    onSuccess: (_, method) => {
+      if (method === "post") {
+        setFormData({
+          image: null,
+          branch_name: "",
+          address: {
+            region: "",
+            province: "",
+            city: "",
+            barangay: "",
+            lot: "",
+          },
+        });
+        setImagePreview(null);
+      }
     },
   });
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isLoading = branchMutation.isPending;
 
   const handleSubmit = async () => {
     let imageBase64 = "";
@@ -103,14 +96,9 @@ const BranchForm: React.FC<BranchFormProps> = ({
         barangay: formData.address.barangay,
         lot: formData.address.lot,
       },
+      ...(method === "patch" && { branch_id: branchId }),
     };
-
-    if (method === "post") {
-      createMutation.mutate(payload);
-    }
-    if (method === "patch") {
-      updateMutation.mutate({ ...payload, branch_id: branchId });
-    }
+    branchMutation.mutate(payload);
   };
 
   const handleInputChange = (field: string, value: string) => {

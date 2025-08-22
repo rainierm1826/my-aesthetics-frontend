@@ -26,13 +26,12 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DeleteResponse } from "@/lib/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useBaseMutation } from "@/hooks/useBaseMutation";
 
 type ActionCellProps = {
   id: string;
   deleteFn: (id: string) => Promise<DeleteResponse>;
-  queryKey: string;
+  queryKey: string[];
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
   editDialog?: ReactNode;
@@ -72,17 +71,12 @@ function ActionCell({
     setTimeout(() => setOpenDeleteDialog(true), 100);
   };
 
-  const queryClient = useQueryClient();
 
-  const deleteMutation = useMutation({
-    mutationFn: (id:string) => deleteFn(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKey] });
-      toast("Branch has been deleted.");
-    },
-    onError: (error) => {
-      toast(error.message);
-      console.log(error);
+  const deleteMutation = useBaseMutation("delete", {
+    deleteFn: deleteFn,
+    queryKey: queryKey,
+    successMessages: {
+      delete: "Branch has been deleted.",
     },
   });
 
@@ -182,7 +176,9 @@ function ActionCell({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteMutation.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleDelete(id)}
               disabled={deleteMutation.isPending}
