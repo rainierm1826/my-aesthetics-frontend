@@ -33,22 +33,18 @@ export default async function VoucherPage() {
           <DashboardCard />
           <DashboardCard />
         </div>
-        <DataTable columns={voucherColumn} data={data}>
-          <div className="flex justify-between">
-            <div className="flex gap-3 w-full">
-              <SearchInput
-                placeholder="Search by voucher code..."
-                size="w-1/2"
-              />
-            </div>
-            <VoucherForm
-              dialogButtonLabel="New Voucher"
-              buttonLabel="Add Voucher"
-              formDescription="Create a new voucher by filling in the details below."
-              formTitle="Add New Voucher"
-            />
+        <div className="flex justify-between mb-5">
+          <div className="flex gap-3 w-full">
+            <SearchInput placeholder="Search by voucher code..." size="w-1/2" />
           </div>
-        </DataTable>
+          <VoucherForm
+            dialogButtonLabel="New Voucher"
+            buttonLabel="Add Voucher"
+            formDescription="Create a new voucher by filling in the details below."
+            formTitle="Add New Voucher"
+          />
+        </div>
+        <DataTable columns={voucherColumn} data={data} />
       </div>
     </OwnerWrapper>
   );

@@ -6,19 +6,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DropDownProps } from "@/lib/types";
 
-const DropDownServiceCategory = () => {
+const DropDownServiceCategory = ({
+  onValueChange,
+  value,
+  placeholder = "Select a sex",
+  includeAllOption = false,
+  allOptionLabel = "All Branches",
+}: DropDownProps) => {
+  const categories = [
+    { value: "male", label: "Semi-Permanent Make-Up" },
+    { value: "Facial & Laser Treatments", label: "Facial & Laser Treatments" },
+    { value: "Waxing Services", label: "Waxing Services" },
+    { value: "Diode Laser Hair Removal", label: "Diode Laser Hair Removal" },
+    { value: "Others", label: "Others" },
+  ];
   return (
-    <Select>
+    <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger>
-        <SelectValue placeholder="Select a category" />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent >
-        <SelectItem value="1">Semi-Permanent Make-Up</SelectItem>
-        <SelectItem value="2">Facial & Laser Treatments</SelectItem>
-        <SelectItem value="3"> Waxing Services</SelectItem>
-        <SelectItem value="4">Diode Laser Hair Removal</SelectItem>
-        <SelectItem value="5">Others</SelectItem>
+      <SelectContent align="end">
+        {includeAllOption && (
+          <SelectItem value="all">{allOptionLabel}</SelectItem>
+        )}
+        {categories.map((c) => (
+          <SelectItem key={c.value} value={c.value}>
+            {c.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

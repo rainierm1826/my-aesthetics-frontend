@@ -50,20 +50,19 @@ export default async function AdminPage() {
           <DashboardCard />
           <DashboardCard />
         </div>
-        <DataTable columns={adminColumn} data={data}>
-          <div className="flex justify-between">
-            <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by admin name..." size="w-1/2" />
-              <DropDownBranch />
-            </div>
-            <AdminForm
-              formTitle="Add Admin"
-              formDescription="Add a new admin by filling in the details below."
-              buttonLabel="Create Admin"
-              dialogButtonLabel="New Admin"
-            />
+        <div className="flex justify-between mb-5">
+          <div className="flex gap-3 w-full">
+            <SearchInput placeholder="Search by admin name..." size="w-1/2" />
+            <DropDownBranch />
           </div>
-        </DataTable>
+          <AdminForm
+            formTitle="Add Admin"
+            formDescription="Add a new admin by filling in the details below."
+            buttonLabel="Create Admin"
+            dialogButtonLabel="New Admin"
+          />
+        </div>
+        <DataTable columns={adminColumn} data={data}/>
       </div>
     </OwnerWrapper>
   );
