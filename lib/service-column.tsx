@@ -55,7 +55,10 @@ export const serviceColumn: ColumnDef<Service>[] = [
     accessorKey: "discount_type",
     header: "Discount Type",
     cell: ({ row }) => {
-      return `${row.original.discount_type.charAt(0).toUpperCase() + row.original.discount_type.slice(1)}`;
+      return `${
+        row.original.discount_type.charAt(0).toUpperCase() +
+        row.original.discount_type.slice(1)
+      }`;
     },
   },
   {
@@ -100,13 +103,26 @@ export const serviceColumn: ColumnDef<Service>[] = [
         image,
         discount_type,
         discounted_price,
+        average_rate,
       } = row.original;
 
       return (
         <ActionCell
           id={service_id}
           deleteFn={(id: string) => deleteService({ service_id: id })}
-          previewDialog={<ServicesCard />}
+          previewDialog={
+            <ServicesCard
+              category={category}
+              isSale={is_sale}
+              serviceName={service_name}
+              price={price}
+              discount={discount}
+              discountType={discount_type}
+              discountedPrice={discounted_price}
+              image={image}
+              rating={average_rate}
+            />
+          }
           deleteMessage="Service has been deleted."
           queryKey="service"
           editDialog={
