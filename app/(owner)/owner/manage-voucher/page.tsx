@@ -38,6 +38,7 @@ export default async function VoucherPage() {
             <SearchInput placeholder="Search by voucher code..." size="w-1/2" />
           </div>
           <VoucherForm
+            method="post"
             dialogButtonLabel="New Voucher"
             buttonLabel="Add Voucher"
             formDescription="Create a new voucher by filling in the details below."

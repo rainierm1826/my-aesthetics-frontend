@@ -10,33 +10,32 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Calendar, Gift, Percent, Hash } from "lucide-react";
-import { memo, ReactNode, useState } from "react";
-
-type InitialVoucherProps = {
-  discountType: "percentage" | "fixed" | string;
-  discountAmount: number;
-  minimumSpend: number;
-  quantity: number;
-  validFrom: string;
-  validUntil: string;
-};
+import { memo, ReactNode } from "react";
+import DropDownDiscountType from "./DropDownDiscountType";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { voucherFormSchema, VoucherFormValues } from "@/schema/voucherSchema";
+import { useBaseMutation } from "@/hooks/useBaseMutation";
+import { patchVoucher, postVoucher } from "@/api/voucher";
+import { Form } from "./ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 
 interface FormVoucher {
+  method: "post" | "patch";
   renderDialog?: boolean;
+  voucherCode?: string;
   formTitle: string;
   formDescription: string;
   buttonLabel: string;
   dialogButtonLabel?: string | ReactNode;
-  discountType?: "percentage" | "fixed" | string;
+  discountType?: string;
   discountAmount?: number;
   minimumSpend?: number;
   quantity?: number;
@@ -46,6 +45,8 @@ interface FormVoucher {
 
 const VoucherForm: React.FC<FormVoucher> = ({
   renderDialog = true,
+  method,
+  voucherCode,
   formTitle,
   formDescription,
   dialogButtonLabel,
@@ -57,44 +58,52 @@ const VoucherForm: React.FC<FormVoucher> = ({
   validUntil,
   minimumSpend,
 }) => {
-  const [formData, setFormData] = useState<InitialVoucherProps>({
-    discountType: discountType || "",
-    discountAmount: discountAmount || 0,
-    minimumSpend: minimumSpend || 0,
-    quantity: quantity || 0,
-    validFrom: validFrom || "",
-    validUntil: validUntil || "",
+  const form = useForm<VoucherFormValues>({
+    resolver: zodResolver(voucherFormSchema),
+    defaultValues: {
+      discount_type: discountType ?? "",
+      discount_amount: discountAmount ?? 1,
+      minimum_spend: minimumSpend ?? 0,
+      quantity: quantity ?? 1,
+      valid_from: validFrom ?? "",
+      valid_until: validUntil ?? "",
+    },
   });
 
-  const handleInputChange = <K extends keyof InitialVoucherProps>(
-    field: K,
-    value: InitialVoucherProps[K]
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  const { control, handleSubmit, reset, watch } = form;
+  const discountTypeValue = watch("discount_type");
 
-  const handleDiscountAmountChange = (value: number) => {
-    if (formData.discountType === "percentage") {
-      if (value === 0 || (/^\d*$/.test(value.toString()) && value <= 100)) {
-        handleInputChange("discountAmount", value);
+  const voucherMutation = useBaseMutation(method, {
+    createFn: postVoucher,
+    updateFn: patchVoucher,
+    queryKey: ["voucher"],
+    successMessages: {
+      create: "Voucher has been created.",
+      update: "Voucher has been updated.",
+    },
+    onSuccess: (_, m) => {
+      if (m === "post") {
+        reset({
+          discount_type: "",
+          discount_amount: 1,
+          minimum_spend: 0,
+          quantity: 1,
+          valid_from: "",
+          valid_until: "",
+        });
       }
-    } else {
-      if (value === 0 || /^\d*\.?\d*$/.test(value.toString())) {
-        handleInputChange("discountAmount", value);
-      }
-    }
-  };
+    },
+  });
 
-  const handleQuantityChange = (value: number) => {
-    if (value === 0 || (/^\d+$/.test(value.toString()) && value > 0)) {
-      handleInputChange("quantity", value);
-    }
-  };
+  const isLoading = voucherMutation.isPending;
 
-  const handleMinimumSpendChange = (value: number) => {
-    if (value === 0 || /^\d*\.?\d*$/.test(value.toString())) {
-      handleInputChange("minimumSpend", value);
-    }
+  const onSubmit = async (values: VoucherFormValues) => {
+    console.log(values);
+    const payload = {
+      ...values,
+      ...(method === "patch" && { voucher_code: voucherCode }),
+    };
+    voucherMutation.mutate(payload);
   };
 
   const formContent = (
@@ -107,141 +116,230 @@ const VoucherForm: React.FC<FormVoucher> = ({
         <DialogDescription>{formDescription}</DialogDescription>
       </DialogHeader>
 
-      <div className="space-y-4 py-4">
-        {/* Discount Type & Amount */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium">Discount Details</Label>
-          {/* Discount Type */}
-          <div className="grid grid-cols-2">
-            <div className="space-y-1">
-              <Label htmlFor="discount-type" className="text-xs text-gray-600">
-                Discount Type
-              </Label>
-              <Select
-                value={formData.discountType}
-                onValueChange={(value: string) => {
-                  handleInputChange("discountType", value);
-                  handleInputChange("discountAmount", 0);
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-4 py-4">
+            <FormLabel className="text-sm font-medium">
+              Discount Details
+            </FormLabel>
+
+            {/* Discount Type & Amount */}
+            <div className="grid grid-cols-2">
+              <FormField
+                control={control}
+                name="discount_type"
+                render={({ field }) => (
+                  <div className="space-y-1">
+                    <FormLabel
+                      htmlFor="discount-type"
+                      className="text-xs text-gray-600"
+                    >
+                      Discount Type
+                    </FormLabel>
+                    <DropDownDiscountType
+                      value={field.value}
+                      onValueChange={(v: string) => field.onChange(v)}
+                    />
+                  </div>
+                )}
+              />
+              <FormField
+                control={control}
+                name="discount_amount" 
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-gray-600">
+                      Discount
+                      {discountTypeValue === "percentage"
+                        ? " Percentage"
+                        : " Amount"}
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                          {discountTypeValue === "percentage" ? (
+                            <Percent className="h-4 w-4 text-gray-400" />
+                          ) : (
+                            <span className="text-gray-400 text-sm">₱</span>
+                          )}
+                        </div>
+                        <Input
+                          id="discount-amount"
+                          type="number"
+                          min={discountTypeValue === "percentage" ? 1 : 0.01}
+                          max={
+                            discountTypeValue === "percentage" ? 100 : undefined
+                          }
+                          step={discountTypeValue === "percentage" ? 1 : 0.01}
+                          placeholder={
+                            discountTypeValue === "percentage" ? "10" : "100.00"
+                          }
+                          className="pl-8"
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === ""
+                                ? undefined
+                                : Number(e.target.value)
+                            )
+                          }
+                          disabled={!discountTypeValue}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Minimum Spend & Quantity */}
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={control}
+                name="minimum_spend"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-gray-600">
+                      Minimum Spend
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                          <span className="text-gray-400 text-sm">₱</span>
+                        </div>
+                        <Input
+                          id="minimum-spend"
+                          type="number"
+                          placeholder="0.00"
+                          className="pl-8"
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === ""
+                                ? undefined
+                                : Number(e.target.value)
+                            )
+                          }
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="quantity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-gray-600">
+                      Quantity
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                          <Hash className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <Input
+                          id="quantity"
+                          type="number"
+                          min={1}
+                          placeholder="1"
+                          className="pl-8"
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === ""
+                                ? undefined
+                                : Number(e.target.value)
+                            )
+                          }
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Valid From & Valid Until */}
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              <FormField
+                control={control}
+                name="valid_from"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-gray-600">
+                      Valid From
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                          <Calendar className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <Input
+                          id="valid-from"
+                          type="date"
+                          className="pl-9"
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="valid_until"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-gray-600">
+                      Valid Until
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                          <Calendar className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <Input
+                          id="valid-until"
+                          type="date"
+                          className="pl-9"
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  reset();
                 }}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select discount type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="percentage">Percentage (%)</SelectItem>
-                  <SelectItem value="fixed">Fixed Amount (₱)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Discount Amount */}
-            <div className="space-y-1">
-              <Label
-                htmlFor="discount-amount"
-                className="text-xs text-gray-600"
-              >
-                Discount
-                {formData.discountType === "percentage"
-                  ? "Percentage"
-                  : "Amount"}
-              </Label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                  {formData.discountType === "percentage" ? (
-                    <Percent className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <span className="text-gray-400 text-sm">₱</span>
-                  )}
-                </div>
-                <Input
-                  id="discount-amount"
-                  placeholder={
-                    formData.discountType === "percentage" ? "10" : "100.00"
-                  }
-                  className="pl-8"
-                  value={formData.discountAmount}
-                  onChange={(e) =>
-                    handleDiscountAmountChange(parseFloat(e.target.value))
-                  }
-                  disabled={!formData.discountType}
-                />
-              </div>
+                Cancel
+              </Button>
+              <Button type="submit" className="flex-1" disabled={isLoading}>
+                {isLoading ? "Saving..." : buttonLabel}
+              </Button>
             </div>
           </div>
-        </div>
-
-        {/* Minimum Spend & Quantity */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-2">
-            <Label htmlFor="minimum-spend">Min. Spend (₱)</Label>
-            <Input
-              id="minimum-spend"
-              placeholder="0.00"
-              value={formData.minimumSpend}
-              onChange={(e) =>
-                handleMinimumSpendChange(parseFloat(e.target.value))
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="quantity">Quantity</Label>
-            <div className="relative">
-              <Hash className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                id="quantity"
-                placeholder="100"
-                className="pl-8"
-                value={formData.quantity}
-                onChange={(e) =>
-                  handleQuantityChange(parseFloat(e.target.value))
-                }
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Validity Period */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            Validity Period
-          </Label>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label htmlFor="valid-from" className="text-xs text-gray-600">
-                Valid From
-              </Label>
-              <Input
-                id="valid-from"
-                type="date"
-                value={formData.validFrom}
-                onChange={(e) => handleInputChange("validFrom", e.target.value)}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="valid-until" className="text-xs text-gray-600">
-                Valid Until
-              </Label>
-              <Input
-                id="valid-until"
-                type="date"
-                value={formData.validUntil}
-                onChange={(e) =>
-                  handleInputChange("validUntil", e.target.value)
-                }
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-2 pt-4">
-          <Button variant="outline" className="flex-1">
-            Cancel
-          </Button>
-          <Button className="flex-1">{buttonLabel}</Button>
-        </div>
-      </div>
+        </form>
+      </Form>
     </>
   );
 

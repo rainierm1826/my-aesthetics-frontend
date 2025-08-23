@@ -35,7 +35,6 @@ import { fileToBase64 } from "@/lib/function";
 import DropDownDiscountType from "./DropDownDiscountType";
 import { ServiceFormProps } from "@/lib/service-type";
 
-
 const ServiceForm: React.FC<ServiceFormProps> = ({
   renderDialog = true,
   method,
@@ -189,12 +188,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
             name="service_name"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel
-                  htmlFor="service-name"
-                  className="text-xs text-gray-600"
-                >
-                  Service Name
-                </FormLabel>
+                <FormLabel htmlFor="service-name">Service Name</FormLabel>
                 <FormControl>
                   <Input
                     id="service-name"
@@ -264,12 +258,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
             name="description"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel
-                  htmlFor="description"
-                  className="text-xs text-gray-600"
-                >
-                  Description
-                </FormLabel>
+                <FormLabel htmlFor="description">Description</FormLabel>
                 <FormControl>
                   <Textarea
                     id="description"
@@ -283,106 +272,105 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
             )}
           />
 
-          {/* price */}
-          <FormField
-            control={control}
-            name="price"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel htmlFor="price" className="text-xs text-gray-600">
-                  Price
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    id="price"
-                    type="number"
-                    inputMode="decimal"
-                    placeholder="0.00"
-                    value={field.value ?? 0}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value === "" ? "" : e.target.valueAsNumber || 0
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* category  and price*/}
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={control}
+              name="category"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel htmlFor="category">Category</FormLabel>
+                  <FormControl>
+                    <DropDownServiceCategory
+                      value={field.value ?? ""}
+                      onValueChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel htmlFor="price">Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="price"
+                      type="number"
+                      inputMode="decimal"
+                      placeholder="0.00"
+                      value={field.value ?? 0}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value === ""
+                            ? ""
+                            : e.target.valueAsNumber || 0
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          {/* discount type */}
-          <FormField
-            control={control}
-            name="discount_type"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel className="text-xs text-gray-600">
-                  Discount Type
-                </FormLabel>
-                <FormControl>
-                  <DropDownDiscountType
-                    value={field.value ?? ""}
-                    onValueChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* discount type and discount */}
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={control}
+              name="discount_type"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Discount Type</FormLabel>
+                  <FormControl>
+                    <DropDownDiscountType
+                      value={field.value ?? ""}
+                      onValueChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* discount */}
-          <FormField
-            control={control}
-            name="discount"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel htmlFor="discount" className="text-xs text-gray-600">
-                  Discount{" "}
-                  {discountTypeValue === "percentage"
-                    ? "(%)"
-                    : discountTypeValue === "fixed"
-                    ? "(₱)"
-                    : ""}
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    id="discount"
-                    type="number"
-                    inputMode="decimal"
-                    placeholder="0.00"
-                    value={field.value ?? 0}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value === "" ? "" : e.target.valueAsNumber || 0
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* category */}
-          <FormField
-            control={control}
-            name="category"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel htmlFor="category" className="text-xs text-gray-600">
-                  Category
-                </FormLabel>
-                <FormControl>
-                  <DropDownServiceCategory
-                    value={field.value ?? ""}
-                    onValueChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={control}
+              name="discount"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel htmlFor="discount">
+                    Discount{" "}
+                    {discountTypeValue === "percentage"
+                      ? "(%)"
+                      : discountTypeValue === "fixed"
+                      ? "(₱)"
+                      : ""}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="discount"
+                      type="number"
+                      inputMode="decimal"
+                      placeholder="0.00"
+                      value={field.value ?? 0}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value === ""
+                            ? ""
+                            : e.target.valueAsNumber || 0
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* branch */}
           <FormField
@@ -390,7 +378,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
             name="branch_id"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel className="text-xs text-gray-600">Branch</FormLabel>
+                <FormLabel>Branch</FormLabel>
                 <FormControl>
                   <DropDownBranch
                     value={field.value ?? ""}

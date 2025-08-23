@@ -69,7 +69,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
       sex: sex || "",
       branch_id: branchId || "",
       image: image || null,
-      availability: availability || "",
+      availability: availability || "available",
     },
   });
 
@@ -112,21 +112,13 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
     } else if (typeof img === "string") {
       imageBase64 = img;
     }
-
     const payload = {
-      first_name: values.first_name,
-      last_name: values.last_name,
-      middle_initial: values.middle_initial,
-      branch_id: values.branch_id,
-      phone_number: values.phone_number,
-      experience: values.experience,
-      sex: values.sex,
-      availability: values.availability,
+      ...values,
       image: imageBase64,
       ...(method === "patch" && { aesthetician_id: aestheticianId }),
     };
 
-    aestheticianMutation.mutate(payload);
+    aestheticianMutation.mutate(payload)
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

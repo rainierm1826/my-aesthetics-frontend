@@ -8,17 +8,16 @@ import {
 } from "@/components/ui/select";
 import { DropDownProps } from "@/lib/types";
 
-
 const DropDownDiscountType = ({
   onValueChange,
   value,
-  placeholder = "Select a sex",
+  placeholder = "Select a discount type",
   includeAllOption = false,
   allOptionLabel = "All Branches",
 }: DropDownProps) => {
   const discountType = [
-    { value: "percentage", label: "Percentage" },
-    { value: "fixed", label: "Fixed" },
+    { value: "percentage", label: "Percentage (%)" },
+    { value: "fixed", label: "Fixed (₱)" },
   ];
   return (
     <Select value={value} onValueChange={onValueChange}>
