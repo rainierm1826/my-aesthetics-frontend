@@ -11,12 +11,20 @@ import { deleteService } from "@/api/service";
 
 export const serviceColumn: ColumnDef<Service>[] = [
   {
+    accessorKey: "service_id",
+    header: "Service ID",
+  },
+  {
     accessorKey: "service_name",
     header: "Service Name",
   },
   {
     accessorKey: "category",
     header: "Category",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
   },
   {
     accessorKey: "average_rate",
@@ -26,7 +34,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
     },
   },
   {
-    accessorKey: "isSale",
+    accessorKey: "is_sale",
     header: "Sale",
     cell: ({ row }) => {
       const { is_sale } = row.original;
@@ -47,11 +55,11 @@ export const serviceColumn: ColumnDef<Service>[] = [
     accessorKey: "discount_type",
     header: "Discount Type",
     cell: ({ row }) => {
-      return `${row.original.discount_type}`;
+      return `${row.original.discount_type.charAt(0).toUpperCase() + row.original.discount_type.slice(1)}`;
     },
   },
   {
-    accessorKey: "discountPercentage",
+    accessorKey: "discount",
     header: "Discount",
     cell: ({ row }) => {
       return row.original.discount_type === "percentage"
@@ -93,7 +101,6 @@ export const serviceColumn: ColumnDef<Service>[] = [
         discount_type,
         discounted_price,
       } = row.original;
-
 
       return (
         <ActionCell
