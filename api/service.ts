@@ -87,13 +87,13 @@ export async function getAllService({
   }
 }
 
-export async function deleteService(branch_id: {
-  branch_id: string;
+export async function deleteService(service_id: {
+  service_id: string;
 }): Promise<DeleteResponse> {
   try {
     const response = await fetch(`${backendUrl}/service`, {
       method: "DELETE",
-      body: JSON.stringify(branch_id),
+      body: JSON.stringify(service_id),
       headers: {
         "Content-Type": "application/json",
       },

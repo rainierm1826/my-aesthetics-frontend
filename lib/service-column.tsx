@@ -1,16 +1,17 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Service } from "./types";
+import { Service } from "./service-types";
 import { RatingStar } from "@/components/RatingStar";
 import { Badge } from "@/components/ui/badge";
 import ActionCell from "@/components/ActionCell";
 import ServicesCard from "@/components/ServicesCard";
 import ServiceForm from "@/components/ServiceForm";
+import { deleteService } from "@/api/service";
 
 export const serviceColumn: ColumnDef<Service>[] = [
   {
-    accessorKey: "serviceName",
+    accessorKey: "service_name",
     header: "Service Name",
   },
   {
@@ -18,48 +19,59 @@ export const serviceColumn: ColumnDef<Service>[] = [
     header: "Category",
   },
   {
-    accessorKey: "avarageRate",
+    accessorKey: "average_rate",
     header: "Avarage Rate",
     cell: ({ row }) => {
-      return <RatingStar rating={row.original.averageRate} />;
+      return <RatingStar rating={row.original.average_rate} />;
     },
   },
   {
     accessorKey: "isSale",
     header: "Sale",
     cell: ({ row }) => {
-      const { isSale } = row.original;
+      const { is_sale } = row.original;
       return (
         <Badge
           className={`rounded-full ${
-            isSale ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"
+            is_sale
+              ? "bg-green-100 text-green-700"
+              : "bg-gray-100 text-gray-700"
           }`}
         >
-          {isSale ? "Yes" : "No"}
+          {is_sale ? "Yes" : "No"}
         </Badge>
       );
+    },
+  },
+  {
+    accessorKey: "discount_type",
+    header: "Discount Type",
+    cell: ({ row }) => {
+      return `${row.original.discount_type}`;
     },
   },
   {
     accessorKey: "discountPercentage",
     header: "Discount",
     cell: ({ row }) => {
-      return `${row.original.discountPercentage}%`;
+      return row.original.discount_type === "percentage"
+        ? `${row.original.discount}%`
+        : `₱${row.original.discount}`;
     },
   },
   {
     accessorKey: "price",
     header: "Price",
     cell: ({ row }) => {
-      const { originalPrice, isSale, finalPrice } = row.original;
+      const { price, is_sale, discounted_price } = row.original;
       return (
         <p>
-          {isSale && (
+          {is_sale && (
             <span className="line-through decoration- text-[#7C7C7C]">
-              ₱{originalPrice}
+              ₱{price}
             </span>
           )}{" "}
-          ₱{finalPrice}
+          ₱{discounted_price}
         </p>
       );
     },
@@ -68,26 +80,46 @@ export const serviceColumn: ColumnDef<Service>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      const {
+        service_id,
+        service_name,
+        branch_id,
+        category,
+        is_sale,
+        description,
+        price,
+        discount,
+        image,
+        discount_type,
+        discounted_price,
+      } = row.original;
+
+
       return (
         <ActionCell
-          data={row.original}
-          getId={(u) => u.serviceName}
-          onEdit={(u) => console.log("Edit user", u)}
-          onDelete={(u) => console.log("Delete user", u.serviceName)}
-          onPreview={(a) => console.log("More info", a)}
+          id={service_id}
+          deleteFn={(id: string) => deleteService({ service_id: id })}
           previewDialog={<ServicesCard />}
+          deleteMessage="Service has been deleted."
+          queryKey="service"
           editDialog={
             <ServiceForm
+              method="patch"
+              description={description}
+              image={image}
               renderDialog={false}
               formTitle="Edit Branch"
               formDescription="Update a existing service by filling in the details below."
               buttonLabel="Update"
               dialogButtonLabel=""
-              category={row.original.category}
-              serviceName={row.original.serviceName}
-              price={row.original.originalPrice.toString()}
-              isOnSale={row.original.isSale}
-              discount={row.original.discountPercentage.toString()}
+              category={category}
+              serviceName={service_name}
+              price={price}
+              isOnSale={is_sale}
+              discount={discount}
+              branchId={branch_id}
+              discountType={discount_type}
+              priceDiscounted={discounted_price}
             />
           }
         />

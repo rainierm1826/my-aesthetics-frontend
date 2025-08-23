@@ -8,20 +8,17 @@ import {
 } from "@/components/ui/select";
 import { DropDownProps } from "@/lib/types";
 
-const DropDownServiceCategory = ({
+
+const DropDownDiscountType = ({
   onValueChange,
   value,
-  placeholder = "Select a category",
+  placeholder = "Select a sex",
   includeAllOption = false,
   allOptionLabel = "All Branches",
 }: DropDownProps) => {
-
-  const categories = [
-    { value: "Semi-Permanent Make-Up", label: "Semi-Permanent Make-Up" },
-    { value: "Facial & Laser Treatments", label: "Facial & Laser Treatments" },
-    { value: "Waxing Services", label: "Waxing Services" },
-    { value: "Diode Laser Hair Removal", label: "Diode Laser Hair Removal" },
-    { value: "Others", label: "Others" },
+  const discountType = [
+    { value: "percentage", label: "Percentage" },
+    { value: "fixed", label: "Fixed" },
   ];
   return (
     <Select value={value} onValueChange={onValueChange}>
@@ -32,9 +29,9 @@ const DropDownServiceCategory = ({
         {includeAllOption && (
           <SelectItem value="all">{allOptionLabel}</SelectItem>
         )}
-        {categories.map((c) => (
-          <SelectItem key={c.value} value={c.value}>
-            {c.label}
+        {discountType.map((d) => (
+          <SelectItem key={d.value} value={d.value}>
+            {d.label}
           </SelectItem>
         ))}
       </SelectContent>
@@ -42,4 +39,4 @@ const DropDownServiceCategory = ({
   );
 };
 
-export default DropDownServiceCategory;
+export default DropDownDiscountType;

@@ -28,7 +28,6 @@ const DropDownBranch = ({
     staleTime: 60 * 60 * 1000,
   });
 
-  // ✅ use the correct key from your API
   const branches: BranchName[] = data?.branch ?? [];
 
   return (
@@ -41,7 +40,7 @@ const DropDownBranch = ({
           <SelectItem value="all">{allOptionLabel}</SelectItem>
         )}
         {branches.map((b) => (
-          // ✅ value should be the id
+         
           <SelectItem key={b.branch_id} value={b.branch_id}>
             {b.branch_name}
           </SelectItem>

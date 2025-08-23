@@ -1,130 +1,41 @@
 import DashboardCard from "@/components/DashboardCard";
-import { DataTable } from "@/components/DataTable";
-import DropDownBranch from "@/components/DropDownBranch";
-import DropDownServiceCategory from "@/components/DropDownServiceCategory";
 import OwnerWrapper from "@/components/OwnerWrapper";
-import SearchInput from "@/components/SearchInput";
-import { serviceColumn } from "@/lib/service-column";
-import { Service, ServiceCategory } from "@/lib/types";
-import ServiceForm from "@/components/ServiceForm";
 
-async function getData(): Promise<Service[]> {
-  return [
-    {
-      serviceName: "Ombre Brows",
-      category: ServiceCategory.SemiPermanentMakeUp,
-      averageRate: 4.8,
-      branchName: "Ayala Branch",
-      originalPrice: 8000,
-      isSale: true,
-      finalPrice: 6400,
-      discountPercentage: 20,
-      image: "/images/ombre-brows.jpg",
-    },
-    {
-      serviceName: "Microblading",
-      category: ServiceCategory.SemiPermanentMakeUp,
-      averageRate: 4.6,
-      branchName: "SM North Branch",
-      originalPrice: 7500,
-      isSale: false,
-      finalPrice: 7500,
-      discountPercentage: 0,
-      image: "/images/microblading.jpg",
-    },
-    {
-      serviceName: "Diamond Peel",
-      category: ServiceCategory.FacialAndLaserTreatments,
-      averageRate: 4.7,
-      branchName: "BGC Branch",
-      originalPrice: 1500,
-      isSale: true,
-      finalPrice: 1200,
-      discountPercentage: 20,
-      image: "/images/diamond-peel.jpg",
-    },
-    {
-      serviceName: "HydraFacial",
-      category: ServiceCategory.FacialAndLaserTreatments,
-      averageRate: 4.9,
-      branchName: "Ayala Branch",
-      originalPrice: 3500,
-      isSale: true,
-      finalPrice: 2800,
-      discountPercentage: 20,
-      image: "/images/hydrafacial.jpg",
-    },
-    {
-      serviceName: "Underarm Waxing",
-      category: ServiceCategory.WaxingServices,
-      averageRate: 4.5,
-      branchName: "SM North Branch",
-      originalPrice: 500,
-      isSale: false,
-      finalPrice: 500,
-      discountPercentage: 0,
-      image: "/images/underarm-wax.jpg",
-    },
-    {
-      serviceName: "Brazilian Waxing",
-      category: ServiceCategory.WaxingServices,
-      averageRate: 4.7,
-      branchName: "BGC Branch",
-      originalPrice: 1500,
-      isSale: true,
-      finalPrice: 1200,
-      discountPercentage: 20,
-      image: "/images/brazilian-wax.jpg",
-    },
-    {
-      serviceName: "Full Leg Diode Laser",
-      category: ServiceCategory.DiodeLaserHairRemoval,
-      averageRate: 4.8,
-      branchName: "Ayala Branch",
-      originalPrice: 6000,
-      isSale: true,
-      finalPrice: 4800,
-      discountPercentage: 20,
-      image: "/images/full-leg-diode.jpg",
-    },
-    {
-      serviceName: "Upper Lip Diode Laser",
-      category: ServiceCategory.DiodeLaserHairRemoval,
-      averageRate: 4.6,
-      branchName: "SM North Branch",
-      originalPrice: 2000,
-      isSale: false,
-      finalPrice: 2000,
-      discountPercentage: 0,
-      image: "/images/upper-lip-diode.jpg",
-    },
-    {
-      serviceName: "Eyelash Extensions",
-      category: ServiceCategory.Others,
-      averageRate: 4.7,
-      branchName: "BGC Branch",
-      originalPrice: 2500,
-      isSale: true,
-      finalPrice: 2000,
-      discountPercentage: 20,
-      image: "/images/eyelash-extensions.jpg",
-    },
-    {
-      serviceName: "Teeth Whitening",
-      category: ServiceCategory.Others,
-      averageRate: 4.5,
-      branchName: "Ayala Branch",
-      originalPrice: 5000,
-      isSale: false,
-      finalPrice: 5000,
-      discountPercentage: 0,
-      image: "/images/teeth-whitening.jpg",
-    },
-  ];
-}
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { getAllService } from "@/api/service";
+import ServiceTable from "@/components/ServiceTable";
 
-export default async function ServicePage() {
-  const data = await getData();
+export default async function ServicePage({
+  searchParams,
+}: {
+  searchParams?:
+    | { [key: string]: string | string[] | undefined }
+    | Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = (await searchParams) ?? {};
+
+  const getFirst = (v?: string | string[]) =>
+    Array.isArray(v) ? v[0] ?? "" : v ?? "";
+
+  const rawQuery = getFirst(sp.query);
+  const rawPage = getFirst(sp.page) || "1";
+  const rawLimit = getFirst(sp.limit) || "10";
+
+  const query = rawQuery;
+  const page = Number(rawPage) || 1;
+  const limit = Number(rawLimit) || 10;
+
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["service", { query, page, limit }],
+    queryFn: () => getAllService({ query, page, limit }),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
   return (
     <OwnerWrapper title="Manage Services">
       <div className="">
@@ -134,22 +45,10 @@ export default async function ServicePage() {
           <DashboardCard />
           <DashboardCard />
         </div>
-        <DataTable columns={serviceColumn} data={data}>
-          <div className="flex justify-between">
-            <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by name..." size="w-1/2" />
-              <DropDownBranch />
-              <DropDownServiceCategory />
-            </div>
-            <ServiceForm
-              formTitle="Add New Service"
-              formDescription="Fill in the details below to add a new service to help customers recognize it instantly."
-              renderDialog={true}
-              dialogButtonLabel="New Service"
-              buttonLabel="Create Service"
-            />
-          </div>
-        </DataTable>
+
+        <HydrationBoundary state={dehydratedState}>
+          <ServiceTable />
+        </HydrationBoundary>
       </div>
     </OwnerWrapper>
   );

@@ -1,17 +1,20 @@
+import { BranchName } from "./branch-types";
+
 export type Service = {
   service_id: string;
   branch_id: string | null;
-  branch: {
-    branch_name: string | null;
-  };
+  branch: BranchName
   service_name: string;
-  original_price: number;
+  price: number;
   final_price: number;
+  description: string;
   is_sale: boolean;
-  discount_percentage: number;
+  discount_type: "fixed" | "percentage" | string;
+  discount: number;
+  discounted_price: number;
   category: string;
   image: string;
-  avarage_rate: number;
+  average_rate: number;
   created_at: string;
   updated_at: string;
 };
