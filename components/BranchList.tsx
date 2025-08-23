@@ -11,7 +11,7 @@ const BranchList = () => {
   const branches: Branch[] = data?.branch ?? [];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl mx-auto">
+    <div className="grid grid-cols-1 mx-10 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl sm:mx-auto">
       {isLoading
         ? Array.from({ length: 6 }).map((_, index) => (
             <SkeletonCard key={index} />

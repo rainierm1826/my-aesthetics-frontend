@@ -12,7 +12,7 @@ const AestheticianList = () => {
 
   return (
     <div className="flex justify-center flex-col w-full mx-auto">
-      <div className="grid grid-cols-2 md:grid-cols-4 justify-center px-4 gap-3">
+      <div className="grid grid-cols-1 mx-10 md:grid-cols-4 justify-center px-4 gap-3">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <SkeletonCard key={index} />

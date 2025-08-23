@@ -28,7 +28,7 @@ const AestheticianCard = ({
           />
           {/* Pro Badge */}
           <div
-            className={`absolute top-5 right-5 bg-gradient-to-r text-white text-xs font-semibold px-3 py-1 rounded-full ${
+            className={`absolute top-5 right-10 bg-gradient-to-r text-white text-xs font-semibold px-3 py-1 rounded-full ${
               experience == "pro"
                 ? "from-green-500 to-green-200"
                 : "from-gray-700 to gray-500"
