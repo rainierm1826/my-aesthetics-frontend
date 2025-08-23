@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, ReactNode, useState } from "react";
+import { memo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -33,28 +33,10 @@ import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchService, postService } from "@/api/service";
 import { fileToBase64 } from "@/lib/function";
 import DropDownDiscountType from "./DropDownDiscountType";
+import { ServiceFormProps } from "@/lib/service-type";
 
-interface FormService {
-  renderDialog?: boolean;
-  method: "post" | "patch";
-  buttonLabel: string;
-  dialogButtonLabel: string | ReactNode;
-  formTitle: string;
-  formDescription?: string;
-  serviceName?: string;
-  description?: string;
-  branchId?: string | null;
-  serviceId?: string;
-  price?: number;
-  discount?: number;
-  discountType?: string;
-  priceDiscounted?: number;
-  category?: string;
-  isOnSale?: boolean;
-  image?: string;
-}
 
-const ServiceForm: React.FC<FormService> = ({
+const ServiceForm: React.FC<ServiceFormProps> = ({
   renderDialog = true,
   method,
   dialogButtonLabel,
