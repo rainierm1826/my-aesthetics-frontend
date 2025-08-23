@@ -22,7 +22,6 @@ type InitialAdminProps = {
   email: string;
   password: string;
   branchName: string;
-  image: File | null;
 };
 
 interface FormAdmin {
@@ -37,7 +36,6 @@ interface FormAdmin {
   email?: string;
   password?: string;
   branchName?: string;
-  image?: File | null;
 }
 
 const AdminForm: React.FC<FormAdmin> = ({
@@ -52,7 +50,6 @@ const AdminForm: React.FC<FormAdmin> = ({
   email,
   password,
   branchName,
-  image,
 }) => {
   const [formData, setFormData] = useState<InitialAdminProps>({
     firstName: firstName || "",
@@ -60,7 +57,6 @@ const AdminForm: React.FC<FormAdmin> = ({
     middleInitial: middleInitial || "",
     email: email || "",
     branchName: branchName || "",
-    image: image || null,
     password: password || "",
   });
 

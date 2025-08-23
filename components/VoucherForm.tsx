@@ -21,13 +21,11 @@ import {
 import { Calendar, Gift, Percent, Hash } from "lucide-react";
 import { memo, ReactNode, useState } from "react";
 
-type DiscountType = "percentage" | "fixed" | "";
-
 type InitialVoucherProps = {
-  discountType: DiscountType;
-  discountAmount: string;
-  minimumSpend: string;
-  quantity: string;
+  discountType: "percentage" | "fixed" | string;
+  discountAmount: number;
+  minimumSpend: number;
+  quantity: number;
   validFrom: string;
   validUntil: string;
 };
@@ -38,10 +36,10 @@ interface FormVoucher {
   formDescription: string;
   buttonLabel: string;
   dialogButtonLabel?: string | ReactNode;
-  discountType?: DiscountType;
-  discountAmount?: string;
-  minimumSpend?: string;
-  quantity?: string;
+  discountType?: "percentage" | "fixed" | string;
+  discountAmount?: number;
+  minimumSpend?: number;
+  quantity?: number;
   validFrom?: string;
   validUntil?: string;
 }
@@ -61,9 +59,9 @@ const VoucherForm: React.FC<FormVoucher> = ({
 }) => {
   const [formData, setFormData] = useState<InitialVoucherProps>({
     discountType: discountType || "",
-    discountAmount: discountAmount || "",
-    minimumSpend: minimumSpend || "",
-    quantity: quantity || "",
+    discountAmount: discountAmount || 0,
+    minimumSpend: minimumSpend || 0,
+    quantity: quantity || 0,
     validFrom: validFrom || "",
     validUntil: validUntil || "",
   });
@@ -75,26 +73,26 @@ const VoucherForm: React.FC<FormVoucher> = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleDiscountAmountChange = (value: string) => {
+  const handleDiscountAmountChange = (value: number) => {
     if (formData.discountType === "percentage") {
-      if (value === "" || (/^\d*$/.test(value) && parseInt(value) <= 100)) {
+      if (value === 0 || (/^\d*$/.test(value.toString()) && value <= 100)) {
         handleInputChange("discountAmount", value);
       }
     } else {
-      if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      if (value === 0 || /^\d*\.?\d*$/.test(value.toString())) {
         handleInputChange("discountAmount", value);
       }
     }
   };
 
-  const handleQuantityChange = (value: string) => {
-    if (value === "" || (/^\d+$/.test(value) && parseInt(value) > 0)) {
+  const handleQuantityChange = (value: number) => {
+    if (value === 0 || (/^\d+$/.test(value.toString()) && value > 0)) {
       handleInputChange("quantity", value);
     }
   };
 
-  const handleMinimumSpendChange = (value: string) => {
-    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+  const handleMinimumSpendChange = (value: number) => {
+    if (value === 0 || /^\d*\.?\d*$/.test(value.toString())) {
       handleInputChange("minimumSpend", value);
     }
   };
@@ -106,9 +104,7 @@ const VoucherForm: React.FC<FormVoucher> = ({
           <Gift className="h-5 w-5" />
           {formTitle}
         </DialogTitle>
-        <DialogDescription>
-          {formDescription}
-        </DialogDescription>
+        <DialogDescription>{formDescription}</DialogDescription>
       </DialogHeader>
 
       <div className="space-y-4 py-4">
@@ -123,9 +119,9 @@ const VoucherForm: React.FC<FormVoucher> = ({
               </Label>
               <Select
                 value={formData.discountType}
-                onValueChange={(value: DiscountType) => {
+                onValueChange={(value: string) => {
                   handleInputChange("discountType", value);
-                  handleInputChange("discountAmount", "");
+                  handleInputChange("discountAmount", 0);
                 }}
               >
                 <SelectTrigger>
@@ -164,7 +160,9 @@ const VoucherForm: React.FC<FormVoucher> = ({
                   }
                   className="pl-8"
                   value={formData.discountAmount}
-                  onChange={(e) => handleDiscountAmountChange(e.target.value)}
+                  onChange={(e) =>
+                    handleDiscountAmountChange(parseFloat(e.target.value))
+                  }
                   disabled={!formData.discountType}
                 />
               </div>
@@ -180,7 +178,9 @@ const VoucherForm: React.FC<FormVoucher> = ({
               id="minimum-spend"
               placeholder="0.00"
               value={formData.minimumSpend}
-              onChange={(e) => handleMinimumSpendChange(e.target.value)}
+              onChange={(e) =>
+                handleMinimumSpendChange(parseFloat(e.target.value))
+              }
             />
           </div>
           <div className="space-y-2">
@@ -192,7 +192,9 @@ const VoucherForm: React.FC<FormVoucher> = ({
                 placeholder="100"
                 className="pl-8"
                 value={formData.quantity}
-                onChange={(e) => handleQuantityChange(e.target.value)}
+                onChange={(e) =>
+                  handleQuantityChange(parseFloat(e.target.value))
+                }
               />
             </div>
           </div>
