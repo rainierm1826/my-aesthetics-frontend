@@ -128,19 +128,12 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     }
 
     const payload = {
-      service_name: values.service_name,
-      branch_id: values.branch_id,
-      category: values.category,
-      description: values.description,
-      discount: values.discount,
-      discount_type: values.discount_type,
-      is_sale: values.is_sale,
-      price: values.price,
-      image: imageBase64,
+      ...values,
       discounted_price: rawDiscounted,
+      image: imageBase64,
+      branch_id: values.branch_id === "all" ? null : values.branch_id,
       ...(method === "patch" && {
         service_id: serviceId,
-        discounted_price: rawDiscounted,
       }),
     };
 
@@ -381,6 +374,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
                 <FormLabel>Branch</FormLabel>
                 <FormControl>
                   <DropDownBranch
+                    includeAllOption
                     value={field.value ?? ""}
                     onValueChange={field.onChange}
                   />

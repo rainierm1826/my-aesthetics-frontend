@@ -6,3 +6,14 @@ export function fileToBase64(file: File): Promise<string> {
     reader.readAsDataURL(file); // gives "data:image/png;base64,..."
   });
 }
+
+export function toLongDate(strDate: string) {
+  const date = new Date(strDate);
+
+  const formattedDate = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  return formattedDate
+}

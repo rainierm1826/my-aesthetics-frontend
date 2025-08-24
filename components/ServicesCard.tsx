@@ -46,8 +46,7 @@ const ServicesCard = ({
               <span>
                 <Tags className="w-4 h-4" />
               </span>
-              {/* 20% OFF */}
-              {discountType === "percentage" ? `${discount}%` : `₱${discount}`}
+              {discountType === "percentage" ? `${discount}% OFF` : `₱${discount} OFF`}
             </Badge>
           )}
         </div>

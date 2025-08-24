@@ -61,11 +61,15 @@ export async function getAllService({
   query,
   page,
   limit,
+  branch,
 }: GetServiceParams): Promise<ServiceListResponse> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);
   params.set("page", String(page));
   params.set("limit", String(limit));
+  if (branch && branch !== "all") {
+    params.set("branch", String(branch));
+  }
 
   try {
     const res = await fetch(`${backendUrl}/service?${params.toString()}`, {

@@ -1,28 +1,41 @@
 import DashboardCard from "@/components/DashboardCard";
-import { DataTable } from "@/components/DataTable";
 import OwnerWrapper from "@/components/OwnerWrapper";
-import SearchInput from "@/components/SearchInput";
-import { Voucher } from "@/lib/types";
-import { voucherColumn } from "@/lib/voucher-column";
-import VoucherForm from "@/components/VoucherForm";
 
-async function getData(): Promise<Voucher[]> {
-  return [
-    { voucherCode: "WELCOME10", discountAmount: 100, quantity: 50 },
-    { voucherCode: "SUMMER15", discountAmount: 150, quantity: 40 },
-    { voucherCode: "SAVE20", discountAmount: 200, quantity: 30 },
-    { voucherCode: "FREESHIP", discountAmount: 50, quantity: 100 },
-    { voucherCode: "NEWUSER25", discountAmount: 250, quantity: 20 },
-    { voucherCode: "FLASH30", discountAmount: 300, quantity: 10 },
-    { voucherCode: "VIP35", discountAmount: 350, quantity: 5 },
-    { voucherCode: "HOLIDAY40", discountAmount: 400, quantity: 15 },
-    { voucherCode: "BIRTHDAY50", discountAmount: 500, quantity: 8 },
-    { voucherCode: "MEGA60", discountAmount: 600, quantity: 3 },
-  ];
-}
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { getAllVoucher } from "@/api/voucher";
+import VoucherTable from "@/components/VoucherTable";
 
-export default async function VoucherPage() {
-  const data = await getData();
+export default async function VoucherPage({
+  searchParams,
+}: {
+  searchParams?:
+    | { [key: string]: string | string[] | undefined }
+    | Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = (await searchParams) ?? {};
+
+  const getFirst = (v?: string | string[]) =>
+    Array.isArray(v) ? v[0] ?? "" : v ?? "";
+
+  const rawQuery = getFirst(sp.query);
+  const rawPage = getFirst(sp.page) || "1";
+  const rawLimit = getFirst(sp.limit) || "10";
+
+  const query = rawQuery;
+  const page = Number(rawPage) || 1;
+  const limit = Number(rawLimit) || 10;
+
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["branch", { query, page, limit }],
+    queryFn: () => getAllVoucher({ query, page, limit }),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
 
   return (
     <OwnerWrapper title="Manage Vouchers">
@@ -33,19 +46,9 @@ export default async function VoucherPage() {
           <DashboardCard />
           <DashboardCard />
         </div>
-        <div className="flex justify-between mb-5">
-          <div className="flex gap-3 w-full">
-            <SearchInput placeholder="Search by voucher code..." size="w-1/2" />
-          </div>
-          <VoucherForm
-            method="post"
-            dialogButtonLabel="New Voucher"
-            buttonLabel="Add Voucher"
-            formDescription="Create a new voucher by filling in the details below."
-            formTitle="Add New Voucher"
-          />
-        </div>
-        <DataTable columns={voucherColumn} data={data} />
+        <HydrationBoundary state={dehydratedState}>
+          <VoucherTable />
+        </HydrationBoundary>
       </div>
     </OwnerWrapper>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Select,
   SelectContent,
@@ -12,15 +12,25 @@ import { useQuery } from "@tanstack/react-query";
 import { getBranchName } from "@/api/branch";
 import { BranchName, BranchNameResponse } from "@/lib/branch-types";
 import { DropDownProps } from "@/lib/types";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
+
+interface DropDownBranchProps
+  extends Omit<DropDownProps, "value" | "onValueChange"> {
+  onValueChange?: (value: string) => void;
+  value?: string;
+  placeholder?: string;
+  includeAllOption?: boolean;
+  useUrlParams?: boolean;
+}
 
 const DropDownBranch = ({
   onValueChange,
   value,
   placeholder = "Select branch",
   includeAllOption = false,
-  allOptionLabel = "All Branches",
-}: DropDownProps) => {
-  const { data, isLoading } = useQuery<BranchNameResponse, Error>({
+  useUrlParams = false,
+}: DropDownBranchProps) => {
+  const { data, isLoading, error } = useQuery<BranchNameResponse, Error>({
     queryKey: ["branch", "branch-name"],
     queryFn: getBranchName,
     refetchOnMount: false,
@@ -29,22 +39,94 @@ const DropDownBranch = ({
   });
 
   const branches: BranchName[] = data?.branch ?? [];
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+ 
+  const currentBranch = useUrlParams
+    ? searchParams.get("branch") || (includeAllOption ? "all" : "")
+    : value || "";
+
+  const handleValueChange = useCallback(
+    (newValue: string) => {
+      if (useUrlParams) {
+        const params = new URLSearchParams(searchParams.toString());
+
+        if (newValue === "all" && includeAllOption) {
+          params.delete("branch");
+        } else {
+          params.set("branch", newValue);
+        }
+        params.delete("page");
+
+        const newUrl = `${pathname}?${params.toString()}`;
+        router.push(newUrl, { scroll: false });
+      }
+
+      onValueChange?.(newValue);
+    },
+    [
+      useUrlParams,
+      searchParams,
+      pathname,
+      router,
+      includeAllOption,
+      onValueChange,
+    ]
+  );
+
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <Select disabled>
+        <SelectTrigger>
+          <SelectValue placeholder="Loading branches..." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="__loading" disabled>
+            Loading...
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <Select disabled>
+        <SelectTrigger>
+          <SelectValue placeholder="Error loading branches" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="__error" disabled>
+            Failed to load branches
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    );
+  }
 
   return (
-    <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger disabled={isLoading}>
+    <Select value={currentBranch} onValueChange={handleValueChange}>
+      <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent align="end">
-        {includeAllOption && (
-          <SelectItem value="all">{allOptionLabel}</SelectItem>
-        )}
-        {branches.map((b) => (
-         
-          <SelectItem key={b.branch_id} value={b.branch_id}>
-            {b.branch_name}
+        {includeAllOption && <SelectItem value="all">All Branches</SelectItem>}
+
+        {branches.length === 0 ? (
+          <SelectItem value="__no_branches" disabled>
+            No branches available
           </SelectItem>
-        ))}
+        ) : (
+          branches.map((b) => (
+            <SelectItem key={b.branch_id} value={String(b.branch_id)}>
+              {b.branch_name}
+            </SelectItem>
+          ))
+        )}
       </SelectContent>
     </Select>
   );

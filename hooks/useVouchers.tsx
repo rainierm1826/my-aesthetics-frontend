@@ -1,20 +1,19 @@
 "use client"
 
-import { getAllAesthetician } from "@/api/aesthetician";
-import { AestheticianListResponse } from "@/lib/aesthetician-types";
+import { getAllVoucher } from "@/api/voucher";
+import { VoucherListResponse } from "@/lib/voucher-type";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-export function useAestheticians() {
+export function useVouchers() {
   const searchParams = useSearchParams(); 
   const query = searchParams.get("query") ?? "";
-  const branch = searchParams.get("branch") ?? "";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
 
-  return useQuery<AestheticianListResponse, Error>({
-    queryKey: ["aesthetician", {query, limit, page, branch}],
-    queryFn: () => getAllAesthetician({ query, page, limit, branch }),
+  return useQuery<VoucherListResponse, Error>({
+    queryKey: ["voucher", {query, limit, page}],
+    queryFn: () => getAllVoucher({ query, page, limit }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

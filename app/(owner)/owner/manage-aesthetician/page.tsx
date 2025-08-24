@@ -21,17 +21,19 @@ export default async function AestheticianPage({
     Array.isArray(v) ? v[0] ?? "" : v ?? "";
 
   const rawQuery = getFirst(sp.query);
+  const rawBranch = getFirst(sp.query);
   const rawPage = getFirst(sp.page) || "1";
   const rawLimit = getFirst(sp.limit) || "10";
 
   const query = rawQuery;
+  const branch = rawBranch;
   const page = Number(rawPage) || 1;
   const limit = Number(rawLimit) || 10;
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: ["aesthetician"],
-    queryFn: () => getAllAesthetician({ query, page, limit }),
+    queryFn: () => getAllAesthetician({ query, page, limit, branch }),
   });
 
   const dehydratedState = dehydrate(queryClient);

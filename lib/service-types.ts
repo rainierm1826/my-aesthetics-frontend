@@ -39,4 +39,5 @@ export type GetServiceParams = {
   query?: string;
   page?: number;
   limit?: number;
+  branch?:string
 };

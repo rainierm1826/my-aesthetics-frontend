@@ -305,7 +305,7 @@ const VoucherForm: React.FC<FormVoucher> = ({
                     <FormControl>
                       <div className="relative">
                         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                          <Calendar className="h-4 w-4 text-gray-400" />
+                          <Calendar className="h-4 w-4 text-gray-400"/>
                         </div>
                         <Input
                           id="valid-until"

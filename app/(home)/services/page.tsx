@@ -2,7 +2,7 @@ import DropDownBranch from "@/components/DropDownBranch";
 import DropDownServiceCategory from "@/components/DropDownServiceCategory";
 import SearchInput from "@/components/SearchInput";
 import ServiceList from "@/components/ServiceList";
-import {tinos} from "@/components/fonts/fonts"
+import { tinos } from "@/components/fonts/fonts";
 
 export default function ServicesPage() {
   return (
@@ -29,7 +29,7 @@ export default function ServicesPage() {
               <SearchInput placeholder="Search by name..." size="w-full" />
             </div>
             <div className="flex gap-4 flex-shrink-0">
-              <DropDownBranch />
+              <DropDownBranch useUrlParams={true} includeAllOption={true} />
               <DropDownServiceCategory />
             </div>
           </div>

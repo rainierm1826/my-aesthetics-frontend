@@ -15,7 +15,6 @@ export default function ServiceTable() {
   const { data, isFetching, isError } = useServices();
 
   const services: Service[] = data?.service ?? [];
-  console.log(services);
 
   return (
     <>
@@ -23,7 +22,7 @@ export default function ServiceTable() {
         <div className="flex justify-between mb-5">
           <div className="flex gap-3 w-full">
             <SearchInput placeholder="Search by name..." size="w-1/2" />
-            <DropDownBranch />
+            <DropDownBranch useUrlParams={true} includeAllOption={true} />
             <DropDownServiceCategory />
           </div>
           <ServiceForm

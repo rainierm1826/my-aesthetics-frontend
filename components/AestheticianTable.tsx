@@ -32,7 +32,7 @@ const AestheticianTable = () => {
     AestheticianListResponse,
     Error
   >({
-    queryKey: ["aesthetician"],
+    queryKey: ["aesthetician", { query, limit, page, branch }],
     queryFn: () =>
       getAllAesthetician({
         query,
@@ -57,7 +57,7 @@ const AestheticianTable = () => {
         <div className="flex justify-between w-full">
           <div className="flex gap-3 w-full">
             <SearchInput placeholder="Search by name..." size="w-1/3" />
-            <DropDownBranch value="" onValueChange={() => console.log()} />
+            <DropDownBranch useUrlParams={true} includeAllOption={true} />
             <DropDownExperience value="" onValueChange={() => console.log()} />
             <DropDownAvailability
               value=""

@@ -15,7 +15,6 @@ export default function BranchTable() {
   const { data, isFetching, isError } = useBranches()
 
   const branches: Branch[] = data?.branch ?? [];
-  console.log(branches)
 
   return (
     <>

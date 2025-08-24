@@ -40,7 +40,7 @@ export async function patchVoucher(data: unknown): Promise<VoucherResponse> {
       );
     }
     const response = await fetch(`${backendUrl}/voucher`, {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -91,7 +91,7 @@ export async function deleteVoucher(voucher_code: {
   voucher_code: string;
 }): Promise<DeleteResponse> {
   try {
-    const response = await fetch(`${backendUrl}/branch`, {
+    const response = await fetch(`${backendUrl}/voucher`, {
       method: "DELETE",
       body: JSON.stringify(voucher_code),
       headers: {

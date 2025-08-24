@@ -61,7 +61,7 @@ export default async function AestheticianPage({
               <SearchInput placeholder="Search by name..." size="w-full" />
             </div>
             <div className="flex gap-4 flex-shrink-0">
-              <DropDownBranch />
+              <DropDownBranch useUrlParams={true} includeAllOption={true} />
               <DropDownAvailability />
               <DropDownSex />
             </div>
