@@ -9,7 +9,7 @@ export type Account = {
 };
 
 export type SignUpResponse = {
-  admin: Account;
+  user: Account;
   status: boolean;
   message: string;
 };

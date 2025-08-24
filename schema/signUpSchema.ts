@@ -54,6 +54,6 @@ export const signUpAdminFormSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password do not match.",
     path: ["confirmPassword"],
-  });
+  })
 
 export type SignUpAdminFormValues = z.infer<typeof signUpAdminFormSchema>;

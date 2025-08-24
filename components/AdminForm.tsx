@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, memo, ReactNode } from "react";
+import { memo, ReactNode } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,21 +11,29 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import DropDownBranch from "./DropDownBranch";
 import { ShieldUser } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "./ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import {
+  signUpAdminFormSchema,
+  SignUpAdminFormValues,
+} from "@/schema/signUpSchema";
+import { signUp } from "@/api/auth";
+import { useBaseMutation } from "@/hooks/useBaseMutation";
+import { patchAdmin } from "@/api/admin";
 
-type InitialAdminProps = {
-  firstName: string;
-  lastName: string;
-  middleInitial: string;
-  email: string;
-  password: string;
-  branchName: string;
-};
-
-interface FormAdmin {
+interface AdminFormProps {
   renderDialog?: boolean;
+  method: "post" | "patch";
   formTitle: string;
   formDescription: string;
   buttonLabel: string;
@@ -35,53 +43,87 @@ interface FormAdmin {
   middleInitial?: string;
   email?: string;
   password?: string;
-  branchName?: string;
+  branchId?: string;
+  adminId?: string;
 }
 
-const AdminForm: React.FC<FormAdmin> = ({
+const AdminForm: React.FC<AdminFormProps> = ({
   renderDialog = true,
   formTitle,
+  method,
+  buttonLabel,
   formDescription,
   dialogButtonLabel,
-  buttonLabel,
   firstName,
   lastName,
   middleInitial,
   email,
   password,
-  branchName,
+  branchId,
+  adminId,
 }) => {
-  const [formData, setFormData] = useState<InitialAdminProps>({
-    firstName: firstName || "",
-    lastName: lastName || "",
-    middleInitial: middleInitial || "",
-    email: email || "",
-    branchName: branchName || "",
-    password: password || "",
+  const form = useForm<SignUpAdminFormValues>({
+    resolver: zodResolver(signUpAdminFormSchema),
+    defaultValues: {
+      first_name: firstName || "",
+      last_name: lastName || "",
+      middle_initial: middleInitial || "",
+      email: email || "",
+      branch_id: branchId || "",
+      password: password || "",
+    },
   });
 
-  const setField = <K extends keyof InitialAdminProps>(
-    key: K,
-    value: InitialAdminProps[K]
-  ) => setFormData((prev) => ({ ...prev, [key]: value }));
+  const { reset, control, handleSubmit } = form;
 
-  const handleInputChange = <K extends keyof InitialAdminProps>(
-    field: K,
-    value: InitialAdminProps[K]
-  ) => setField(field, value);
+  const signUpAdminMutation = useBaseMutation(method, {
+    createFn: signUp,
+    queryKey: ["account", "admin"],
+    successMessages: {
+      create: "Admin has been created.",
+    },
+    onSuccess: (_, m) => {
+      if (m === "post") {
+        reset({
+          first_name: "",
+          last_name: "",
+          middle_initial: "",
+          email: "",
+          branch_id: "",
+          password: "",
+          confirmPassword: ""
+        });
+      }
+    },
+  });
 
-  const handleMiddleInitialChange = (value: string) => {
-    if (value.length <= 1 && /^[A-Za-z]*$/.test(value)) {
-      setField("middleInitial", value.toUpperCase());
+  const patchAdminMutation = useBaseMutation(method, {
+    updateFn: patchAdmin,
+    queryKey: ["account", "admin"],
+    successMessages: {
+      create: "Admin has been updated.",
+    },
+  });
+
+  const isLoading =
+    signUpAdminMutation.isPending || patchAdminMutation.isPending;
+
+  const onSubmit = async (values: SignUpAdminFormValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...rest } = values;
+    const payload = {
+      ...rest,
+      role_id: "2",
+      ...(method === "patch" && {
+        admin_id: adminId,
+      }),
+    };
+    console.log(payload)
+    if (method == "post") {
+      signUpAdminMutation.mutate(payload);
+    } else {
+      patchAdminMutation.mutate(payload);
     }
-  };
-
-  const handleEmailChange = (value: string) => {
-    setField("email", value.toLowerCase());
-  };
-
-  const handlePasswordChange = (value: string) => {
-    setField("password", value.toLowerCase());
   };
 
   const formContent = (
@@ -93,121 +135,228 @@ const AdminForm: React.FC<FormAdmin> = ({
         <DialogDescription>{formDescription}</DialogDescription>
       </DialogHeader>
 
-      <div className="space-y-4 py-4">
-        <div className="space-y-3">
-          <Label className="text-sm font-medium">Personal Information</Label>
-          <div className="grid grid-cols-7 gap-3">
-            <div className="space-y-1 col-span-3">
-              <Label htmlFor="first-name" className="text-xs text-gray-600">
-                First Name
-              </Label>
-              <Input
-                id="first-name"
-                placeholder="Enter first name"
-                value={formData.firstName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange("firstName", e.target.value)
-                }
-              />
-            </div>
-
-            <div className="space-y-1 col-span-3">
-              <Label htmlFor="last-name" className="text-xs text-gray-600">
-                Last Name
-              </Label>
-              <Input
-                id="last-name"
-                placeholder="Enter last name"
-                value={formData.lastName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange("lastName", e.target.value)
-                }
-              />
-            </div>
-
-            <div className="col-span-1 space-y-1">
-              <Label htmlFor="middle-initial" className="text-xs text-gray-600">
-                M.I
-              </Label>
-              <Input
-                id="middle-initial"
-                placeholder="M"
-                maxLength={1}
-                className="w-full"
-                value={formData.middleInitial}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleMiddleInitialChange(e.target.value)
-                }
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Email and password */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="admin@example.com"
-              value={formData.email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleEmailChange(e.target.value)
-              }
-            />
-          </div>
-
-          <div className="space-y-2 ">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="*******"
-              value={formData.password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handlePasswordChange(e.target.value)
-              }
-            />
-          </div>
-        </div>
-
-        {/* Branch Dropdown */}
-        <div className="space-y-2">
-          <Label>Assigned Branch</Label>
-          <DropDownBranch />
-        </div>
-
-        {/* Admin Permissions Notice */}
-        {renderDialog && (
-          <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
-            <div className="flex items-start gap-2">
-              <div className="w-4 h-4 bg-amber-500 text-white rounded-full flex items-center justify-center text-xs mt-0.5">
-                !
-              </div>
-              <div>
-                <p className="text-sm font-medium text-amber-800">
-                  Admin Privileges
-                </p>
-                <p className="text-xs text-amber-700">
-                  This account will have administrative access to the assigned
-                  branch and can manage services and appointments.
-                </p>
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* forms */}
+          <div className="space-y-4 py-4">
+            {/* personal info */}
+            <div className="space-y-3">
+              <FormLabel className="text-sm font-medium mb-5">
+                Personal Information
+              </FormLabel>
+              <div className="grid grid-cols-7 gap-3">
+                <div className="space-y-1 col-span-3">
+                  <FormField
+                    control={control}
+                    name="first_name"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel
+                          htmlFor="first-name"
+                          className="text-xs text-gray-600"
+                        >
+                          First Name
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            id="first-name"
+                            placeholder="Enter first name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="space-y-1 col-span-3">
+                  <FormField
+                    control={control}
+                    name="last_name"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel
+                          htmlFor="last-name"
+                          className="text-xs text-gray-600"
+                        >
+                          Last Name
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            id="last-name"
+                            placeholder="Enter last name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="space-y-1 col-span-1">
+                  <FormField
+                    control={control}
+                    name="middle_initial"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel
+                          htmlFor="service-name"
+                          className="text-xs text-gray-600"
+                        >
+                          M.I
+                        </FormLabel>
+                        <FormControl>
+                          <Input id="m-i" placeholder="M.I" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 pt-4">
-          <Button type="button" variant="outline" className="flex-1">
-            Cancel
-          </Button>
-          <Button type="button" className="flex-1">
-            {buttonLabel}
-          </Button>
-        </div>
-      </div>
+            {/* account info */}
+            <FormLabel className="text-sm font-medium mb-5 mt-8">
+              Account Information
+            </FormLabel>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <FormField
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel
+                        htmlFor="email"
+                        className="text-xs text-gray-600"
+                      >
+                        Email
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="email"
+                          placeholder="Enter email"
+                          type="email"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="space-y-2">
+                <FormField
+                  control={control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel
+                        htmlFor="password"
+                        className="text-xs text-gray-600"
+                      >
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="password"
+                          placeholder="Enter password"
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <FormField
+                  control={control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel
+                        htmlFor="confirmPassword"
+                        className="text-xs text-gray-600"
+                      >
+                        Confirm
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="confirmPassword"
+                          placeholder="Confirm password"
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="space-y-2">
+                <FormField
+                  control={control}
+                  name="branch_id"
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-xs text-gray-600">
+                        Branch
+                      </FormLabel>
+                      <FormControl>
+                        <DropDownBranch
+                          value={field.value ?? ""}
+                          onValueChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* notice */}
+          {renderDialog && (
+            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 mb-5">
+              <div className="flex items-start gap-2">
+                <div className="w-4 h-4 bg-amber-500 text-white rounded-full flex items-center justify-center text-xs mt-0.5">
+                  !
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-amber-800">
+                    Admin Privileges
+                  </p>
+                  <p className="text-xs text-amber-700">
+                    This account will have administrative access to the assigned
+                    branch and can manage services and appointments.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* action buttons */}
+          <div className="flex gap-2 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1"
+              onClick={() => reset()}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" className="flex-1" disabled={isLoading}>
+              {isLoading ? "Saving..." : buttonLabel}
+            </Button>
+          </div>
+        </form>
+      </Form>
     </>
   );
 

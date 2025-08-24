@@ -1,46 +1,41 @@
-import AdminForm from "@/components/AdminForm";
+import { getAllAdmin } from "@/api/admin";
+import AdminTable from "@/components/AdminTable";
 import DashboardCard from "@/components/DashboardCard";
-import { DataTable } from "@/components/DataTable";
-import DropDownBranch from "@/components/DropDownBranch";
 import OwnerWrapper from "@/components/OwnerWrapper";
-import SearchInput from "@/components/SearchInput";
-import { adminColumn } from "@/lib/admin-column";
-import { Admin } from "@/lib/types";
 
-async function getData(): Promise<Admin[]> {
-  return [
-    {
-      branchName: "Batangas City Branch",
-      firstName: "Abby",
-      lastName: "Mendoza",
-      middleInitial: "A",
-      email: "abby.mendoza@batangasbranch.com",
-    },
-    {
-      branchName: "Lipa City Branch",
-      firstName: "Joanna",
-      lastName: "Ramos",
-      middleInitial: "C",
-      email: "joanna.ramos@lipabranch.com",
-    },
-    {
-      branchName: "Sto Tomas Branch",
-      firstName: "Kristine",
-      lastName: "Dela Cruz",
-      middleInitial: "O",
-      email: "kristine.delacruz@stotomasbranch.com",
-    },
-    {
-      branchName: "Lemery Branch",
-      firstName: "Lyka",
-      lastName: "Rizal",
-      middleInitial: "M",
-      email: "lyka.rizal@lemerybranch.com",
-    },
-  ];
-}
-export default async function AdminPage() {
-  const data = await getData();
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams?:
+    | { [key: string]: string | string[] | undefined }
+    | Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = (await searchParams) ?? {};
+
+  const getFirst = (v?: string | string[]) =>
+    Array.isArray(v) ? v[0] ?? "" : v ?? "";
+
+  const rawQuery = getFirst(sp.query);
+  const rawPage = getFirst(sp.page) || "1";
+  const rawLimit = getFirst(sp.limit) || "10";
+
+  const query = rawQuery;
+  const page = Number(rawPage) || 1;
+  const limit = Number(rawLimit) || 10;
+
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["admin", "account", { query, page, limit }],
+    queryFn: () => getAllAdmin({ query, page, limit }),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
   return (
     <OwnerWrapper title="Manage Admins">
       <div className="">
@@ -50,19 +45,9 @@ export default async function AdminPage() {
           <DashboardCard />
           <DashboardCard />
         </div>
-        <div className="flex justify-between mb-5">
-          <div className="flex gap-3 w-full">
-            <SearchInput placeholder="Search by admin name..." size="w-1/2" />
-            <DropDownBranch />
-          </div>
-          <AdminForm
-            formTitle="Add Admin"
-            formDescription="Add a new admin by filling in the details below."
-            buttonLabel="Create Admin"
-            dialogButtonLabel="New Admin"
-          />
-        </div>
-        <DataTable columns={adminColumn} data={data}/>
+        <HydrationBoundary state={dehydratedState}>
+          <AdminTable />
+        </HydrationBoundary>
       </div>
     </OwnerWrapper>
   );

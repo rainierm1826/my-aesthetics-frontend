@@ -12,8 +12,14 @@ export type Admin = {
   updated_at: string;
 };
 
+export type GetAdminParams = {
+  query?: string;
+  page?: number;
+  limit?: number;
+};
+
 export type AdminResponse = {
-  admin: Admin[];
+  user: Admin[];
   status: boolean;
   message: string;
 };

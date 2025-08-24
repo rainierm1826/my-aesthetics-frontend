@@ -68,7 +68,6 @@ export async function postAesthetician(data: unknown): Promise<AestheticianRespo
 
 export async function patchAesthetician(data: unknown): Promise<AestheticianResponse> {
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     const response = await fetch(`${backendUrl}/aesthetician`, {
       method: "PATCH",
       headers: {

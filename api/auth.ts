@@ -3,6 +3,7 @@ import {
   SignOutResponse,
   SignUpResponse,
 } from "@/lib/auth-type";
+import { DeleteResponse } from "@/lib/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -13,7 +14,7 @@ export async function signUp(data: unknown): Promise<SignUpResponse> {
         "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
       );
     }
-    const response = await fetch(`${backendUrl}/auth/sign-up`, {
+    const response = await fetch(`${backendUrl}/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +40,7 @@ export async function signIn(data: unknown): Promise<SignInResponse> {
         "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
       );
     }
-    const response = await fetch(`${backendUrl}/auth/sign-in`, {
+    const response = await fetch(`${backendUrl}/auth/signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,6 +78,28 @@ export async function signOut(): Promise<SignOutResponse> {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const result: SignOutResponse = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteAdminAccount(admin_id: {
+  admin_id: string;
+}): Promise<DeleteResponse> {
+  try {
+    const response = await fetch(`${backendUrl}/auth/delete-admin`, {
+      method: "DELETE",
+      body: JSON.stringify(admin_id),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.status) {
+      throw new Error(`error: ${response.status}`);
+    }
+    const result: DeleteResponse = await response.json();
     return result;
   } catch (error) {
     throw error;
