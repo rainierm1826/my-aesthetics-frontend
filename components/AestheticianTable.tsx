@@ -32,7 +32,10 @@ const AestheticianTable = () => {
     AestheticianListResponse,
     Error
   >({
-    queryKey: ["aesthetician", { query, limit, page, branch, sex, experience, availability }],
+    queryKey: [
+      "aesthetician",
+      { query, limit, page, branch, sex, experience, availability },
+    ],
     queryFn: () =>
       getAllAesthetician({
         query,
@@ -59,10 +62,7 @@ const AestheticianTable = () => {
             <SearchInput placeholder="Search by name..." size="w-1/3" />
             <DropDownBranch useUrlParams={true} includeAllOption={true} />
             <DropDownExperience useUrlParams={true} includeAllOption={true} />
-            <DropDownAvailability
-              value=""
-              onValueChange={() => console.log()}
-            />
+            <DropDownAvailability useUrlParams={true} includeAllOption={true} />
             <DropDownSex useUrlParams={true} includeAllOption={true} />
           </div>
           <AestheticianForm
