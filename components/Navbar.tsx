@@ -3,6 +3,7 @@ import Logo from "./Logo";
 import Link from "next/link";
 import SignUpButton from "./SignUpButton";
 import BookNowButton from "./BookNowButton";
+import NavbarSheet from "./NavbarSheet";
 
 const Navbar = () => {
   return (
@@ -10,16 +11,20 @@ const Navbar = () => {
       <nav className="flex justify-between items-center h-[60px] px-4">
         {/* logo */}
         <div>
-          <Logo mainSize="text-4xl" size="text-xl" href="/"/>
+          <Logo mainSize="text-4xl" size="text-xl" href="/" />
         </div>
 
         {/* nav links */}
         <NavLinks />
         {/* buttons */}
 
-        <div className="flex gap-3">
+        <div className="md:flex gap-3 hidden">
           <SignUpButton />
-          <BookNowButton size=""/>
+          <BookNowButton size="" />
+        </div>
+
+        <div className="flex md:hidden">
+          <NavbarSheet />
         </div>
       </nav>
     </header>
@@ -28,7 +33,7 @@ const Navbar = () => {
 
 const NavLinks = () => {
   return (
-    <ul className="flex gap-10 text-[#7C7C7C] text-sm">
+    <ul className="md:flex gap-10 text-[#7C7C7C] text-sm hidden">
       <li>
         <Link href={"/services"}>Services</Link>
       </li>

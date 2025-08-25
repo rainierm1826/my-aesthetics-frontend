@@ -16,6 +16,7 @@ export type GetAdminParams = {
   query?: string;
   page?: number;
   limit?: number;
+  branch?: string
 };
 
 export type AdminResponse = {

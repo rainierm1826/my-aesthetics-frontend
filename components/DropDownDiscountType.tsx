@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Select,
   SelectContent,
@@ -7,20 +7,75 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DropDownProps } from "@/lib/types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+interface DropDownDiscountTypeProps
+  extends Omit<DropDownProps, "value" | "onValueChange"> {
+  onValueChange?: (value: string) => void;
+  value?: string;
+  placeholder?: string;
+  includeAllOption?: boolean;
+  allOptionLabel?: string;
+  useUrlParams?: boolean;
+  urlParamKey?: string;
+}
 
 const DropDownDiscountType = ({
   onValueChange,
   value,
-  placeholder = "Select a discount type",
+  placeholder = "Select Discount Type",
   includeAllOption = false,
-  allOptionLabel = "All Branches",
-}: DropDownProps) => {
+  allOptionLabel = "All Discount Type",
+  useUrlParams = false,
+  urlParamKey = "discount-type",
+}: DropDownDiscountTypeProps) => {
   const discountType = [
     { value: "percentage", label: "Percentage (%)" },
     { value: "fixed", label: "Fixed (₱)" },
   ];
+
+  const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const router = useRouter();
+  
+    const currentValue = useUrlParams
+      ? searchParams.get(urlParamKey) || (includeAllOption ? "all" : "")
+      : value || "";
+  
+    const handleValueChange = useCallback(
+      (newValue: string) => {
+        if (useUrlParams) {
+          const params = new URLSearchParams(searchParams.toString());
+  
+          if (newValue === "all" && includeAllOption) {
+            params.delete(urlParamKey);
+          } else {
+            params.set(urlParamKey, newValue);
+          }
+          params.delete("page");
+  
+          const newUrl =
+            params.toString().length > 0
+              ? `${pathname}?${params.toString()}`
+              : pathname;
+  
+          router.push(newUrl, { scroll: false });
+        }
+  
+        onValueChange?.(newValue);
+      },
+      [
+        useUrlParams,
+        searchParams,
+        pathname,
+        router,
+        includeAllOption,
+        urlParamKey,
+        onValueChange,
+      ]
+    );
   return (
-    <Select value={value} onValueChange={onValueChange}>
+    <Select value={currentValue} onValueChange={handleValueChange}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

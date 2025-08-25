@@ -34,6 +34,10 @@ export const voucherColumn: ColumnDef<Voucher>[] = [
       }`;
     },
   },
+  {
+    accessorKey: "quantity",
+    header: "Quantity",
+  },
 
   {
     accessorKey: "valid_from",

@@ -61,9 +61,11 @@ export async function getAllVoucher({
   query,
   page,
   limit,
+  discountType,
 }: GetVoucherParams): Promise<VoucherListResponse> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);
+  params.set("discount-type", discountType);
   params.set("page", String(page));
   params.set("limit", String(limit));
 

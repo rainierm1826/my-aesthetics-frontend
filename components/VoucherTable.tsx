@@ -8,6 +8,7 @@ import { useVouchers } from "@/hooks/useVouchers";
 import { Voucher } from "@/lib/voucher-type";
 import VoucherForm from "./VoucherForm";
 import { voucherColumn } from "@/lib/voucher-column";
+import DropDownDiscountType from "./DropDownDiscountType";
 
 export default function VoucherTable() {
   const { data, isFetching, isError } = useVouchers();
@@ -19,6 +20,7 @@ export default function VoucherTable() {
       <div className="flex justify-between mb-5">
         <div className="flex gap-3 w-full">
           <SearchInput placeholder="Search by code..." size="w-1/2" />
+          <DropDownDiscountType useUrlParams={true} includeAllOption={true} />
         </div>
 
         <VoucherForm

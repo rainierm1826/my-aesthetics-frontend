@@ -50,11 +50,13 @@ export async function getAllAdmin({
   query,
   page,
   limit,
+  branch
 }: GetAdminParams): Promise<AdminListResposne> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);
   params.set("page", String(page));
   params.set("limit", String(limit));
+  params.set("branch", String(branch));
   try {
     const res = await fetch(`${backendUrl}/admin/all?${params.toString()}`, {
       method: "GET",

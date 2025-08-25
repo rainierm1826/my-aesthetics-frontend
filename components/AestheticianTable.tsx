@@ -1,9 +1,7 @@
 "use client";
 
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DataTable } from "@/components/DataTable";
 import SearchInput from "@/components/SearchInput";
-import { useSearchParams } from "next/navigation";
 import SkeletonTable from "./SkeletonTable";
 import { toast } from "sonner";
 import AestheticianForm from "./AestheticianForm";
@@ -11,46 +9,12 @@ import DropDownAvailability from "./DropDownAvailability";
 import DropDownSex from "./DropDownSex";
 import DropDownExperience from "./DropDownExperience";
 import DropDownBranch from "./DropDownBranch";
-import {
-  Aesthetician,
-  AestheticianListResponse,
-} from "@/lib/aesthetician-types";
-import { getAllAesthetician } from "@/api/aesthetician";
+import { Aesthetician } from "@/lib/aesthetician-types";
 import { aestheticianColumn } from "@/lib/aesthetician-column";
+import { useAestheticians } from "@/hooks/useAestheticians";
 
 const AestheticianTable = () => {
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query") ?? "";
-  const page = Number(searchParams.get("page") ?? 1);
-  const limit = Number(searchParams.get("limit") ?? 10);
-  const availability = searchParams.get("availability") ?? "";
-  const sex = searchParams.get("sex") ?? "";
-  const branch = searchParams.get("branch") ?? "";
-  const experience = searchParams.get("experience") ?? "";
-
-  const { data, isFetching, isError } = useQuery<
-    AestheticianListResponse,
-    Error
-  >({
-    queryKey: [
-      "aesthetician",
-      { query, limit, page, branch, sex, experience, availability },
-    ],
-    queryFn: () =>
-      getAllAesthetician({
-        query,
-        page,
-        limit,
-        availability,
-        sex,
-        branch,
-        experience,
-      }),
-    placeholderData: keepPreviousData,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000,
-  });
+  const { data, isFetching, isError } = useAestheticians();
 
   const aesthetician: Aesthetician[] = data?.aesthetician ?? [];
 

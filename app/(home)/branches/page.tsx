@@ -1,6 +1,5 @@
 import { getAllBranches } from "@/api/branch";
 import BranchList from "@/components/BranchList";
-import SearchInput from "@/components/SearchInput";
 import { tinos } from "@/components/fonts/fonts";
 import {
   dehydrate,
@@ -52,17 +51,10 @@ export default async function BranchesPage({
             schedule your appointment hassle-free.
           </p>
         </div>
-        {/* Actions Section */}
-        <div className="max-w-4xl mx-auto mb-8">
-          <div className="flex flex-col lg:flex-row items-center justify-center">
-            <div className="flex-1 max-w-md w-full mr-4 mb-5 sm:mb-0">
-              <SearchInput placeholder="Search by name..." size="w-full" />
-            </div>
-          </div>
-        </div>
+       
         {/* list */}
         <HydrationBoundary state={dehydratedState}>
-          <BranchList />
+          <BranchList action/>
         </HydrationBoundary>
       </div>
     </main>

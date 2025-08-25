@@ -7,13 +7,14 @@ import { useSearchParams } from "next/navigation";
 
 export function useAdmins() {
   const searchParams = useSearchParams(); 
-  const query = searchParams.get("query") ?? "";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
+  const query = searchParams.get("query") ?? "";
+  const branch = searchParams.get("branch") ?? "";
 
   return useQuery<AdminListResposne, Error>({
-    queryKey: ["account", "admin", {query, limit, page}],
-    queryFn: () => getAllAdmin({ query, page, limit }),
+    queryKey: ["account", "admin", {query, limit, page, branch}],
+    queryFn: () => getAllAdmin({ query, page, limit, branch }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

@@ -8,6 +8,7 @@ import { useAdmins } from "@/hooks/useAdmins";
 import { Admin } from "@/lib/admin-type";
 import { adminColumn } from "@/lib/admin-column";
 import AdminForm from "./AdminForm";
+import DropDownBranch from "./DropDownBranch";
 
 export default function AdminTable() {
 
@@ -20,8 +21,8 @@ export default function AdminTable() {
       <div className="flex justify-between mb-5">
         <div className="flex gap-3 w-full">
           <SearchInput placeholder="Search by name..." size="w-1/2" />
+          <DropDownBranch useUrlParams={true} includeAllOption={true}/>
         </div>
-
         <AdminForm
           method="post"
           dialogButtonLabel="New Admin"

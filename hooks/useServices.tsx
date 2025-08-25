@@ -9,12 +9,13 @@ export function useServices() {
   const searchParams = useSearchParams(); 
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? "all";
+  const category = searchParams.get("category") ?? "all";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
 
   return useQuery<ServiceListResponse, Error>({
-    queryKey: ["service", {query, limit, page, branch}],
-    queryFn: () => getAllService({query, limit, page, branch}),
+    queryKey: ["service", {query, limit, page, branch, category}],
+    queryFn: () => getAllService({query, limit, page, branch, category}),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

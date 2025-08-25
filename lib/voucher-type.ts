@@ -30,4 +30,5 @@ export type GetVoucherParams = {
   query?: string;
   page?: number;
   limit?: number;
+  discountType: string
 };

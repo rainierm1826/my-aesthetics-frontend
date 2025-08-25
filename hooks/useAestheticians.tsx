@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { getAllAesthetician } from "@/api/aesthetician";
 import { AestheticianListResponse } from "@/lib/aesthetician-types";
@@ -6,15 +6,30 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 export function useAestheticians() {
-  const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? "";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
+  const availability = searchParams.get("availability") ?? "";
+  const sex = searchParams.get("sex") ?? "";
+  const experience = searchParams.get("experience") ?? "";
 
   return useQuery<AestheticianListResponse, Error>({
-    queryKey: ["aesthetician", {query, limit, page, branch}],
-    queryFn: () => getAllAesthetician({ query, page, limit, branch }),
+    queryKey: [
+      "aesthetician",
+      { query, limit, page, branch, sex, experience, availability },
+    ],
+    queryFn: () =>
+      getAllAesthetician({
+        query,
+        page,
+        limit,
+        availability,
+        sex,
+        branch,
+        experience,
+      }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

@@ -1,10 +1,39 @@
-import DropDownBranch from "@/components/DropDownBranch";
-import DropDownServiceCategory from "@/components/DropDownServiceCategory";
-import SearchInput from "@/components/SearchInput";
+import { getAllService } from "@/api/service";
 import ServiceList from "@/components/ServiceList";
 import { tinos } from "@/components/fonts/fonts";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-export default function ServicesPage() {
+export default async function ServicesPage({
+  searchParams,
+}: {
+  searchParams?:
+    | { [key: string]: string | string[] | undefined }
+    | Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = (await searchParams) ?? {};
+
+  const getFirst = (v?: string | string[]) =>
+    Array.isArray(v) ? v[0] ?? "" : v ?? "";
+
+  const rawQuery = getFirst(sp.query);
+  const rawPage = getFirst(sp.page) || "1";
+  const rawLimit = getFirst(sp.limit) || "10";
+
+  const query = rawQuery;
+  const page = Number(rawPage) || 1;
+  const limit = Number(rawLimit) || 10;
+
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["branch", "all"],
+    queryFn: () => getAllService({ query, page, limit }),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="container mx-auto px-6 my-10">
@@ -21,22 +50,9 @@ export default function ServicesPage() {
             schedule your appointment hassle-free.
           </p>
         </div>
-
-        {/* Actions Section */}
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-col lg:flex-row items-center justify-center">
-            <div className="flex-1 max-w-md w-full mr-4 mb-5 sm:mb-0">
-              <SearchInput placeholder="Search by name..." size="w-full" />
-            </div>
-            <div className="flex gap-4 flex-shrink-0">
-              <DropDownBranch useUrlParams={true} includeAllOption={true} />
-              <DropDownServiceCategory />
-            </div>
-          </div>
-        </div>
-
-        {/* Cards Section */}
-        <ServiceList />
+        <HydrationBoundary state={dehydratedState}>
+          <ServiceList action/>
+        </HydrationBoundary>
       </div>
     </main>
   );

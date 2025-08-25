@@ -62,6 +62,7 @@ export async function getAllService({
   page,
   limit,
   branch,
+  category,
 }: GetServiceParams): Promise<ServiceListResponse> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);
@@ -70,6 +71,19 @@ export async function getAllService({
   if (branch && branch !== "all") {
     params.set("branch", String(branch));
   }
+  if (category && category !== "all") {
+    params.set("category", String(category));
+  }
+  const url = `${backendUrl}/service?${params.toString()}`;
+  console.log("getAllService called with:", {
+    query,
+    page,
+    limit,
+    branch,
+    category,
+  });
+
+  console.log("Fetching services:", url);
 
   try {
     const res = await fetch(`${backendUrl}/service?${params.toString()}`, {

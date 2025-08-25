@@ -1,9 +1,5 @@
 import { getAllAesthetician } from "@/api/aesthetician";
 import AestheticianList from "@/components/AestheticianList";
-import DropDownAvailability from "@/components/DropDownAvailability";
-import DropDownBranch from "@/components/DropDownBranch";
-import DropDownSex from "@/components/DropDownSex";
-import SearchInput from "@/components/SearchInput";
 import { tinos } from "@/components/fonts/fonts";
 import {
   dehydrate,
@@ -54,23 +50,11 @@ export default async function AestheticianPage({
           </p>
         </div>
 
-        {/* Actions Section */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="flex flex-col lg:flex-row items-center justify-center">
-            <div className="flex-1 max-w-md w-full mr-4 mb-5 sm:mb-0">
-              <SearchInput placeholder="Search by name..." size="w-full" />
-            </div>
-            <div className="flex gap-4 flex-shrink-0">
-              <DropDownBranch useUrlParams={true} includeAllOption={true} />
-              <DropDownAvailability />
-              <DropDownSex />
-            </div>
-          </div>
-        </div>
+        
 
         <div className="max-w-7xl mx-auto">
           <HydrationBoundary state={dehydratedState}>
-            <AestheticianList />
+            <AestheticianList action/>
           </HydrationBoundary>
         </div>
       </div>

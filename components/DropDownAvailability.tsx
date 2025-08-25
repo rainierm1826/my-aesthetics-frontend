@@ -27,7 +27,7 @@ const DropDownAvailability = ({
   includeAllOption = false,
   allOptionLabel = "All Availability",
   useUrlParams = false,
-  urlParamKey = "sex",
+  urlParamKey = "availability",
 }: DropDownAvailabilityProps) => {
   const availability = [
     { value: "available", label: "Available" },
