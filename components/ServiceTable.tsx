@@ -23,7 +23,10 @@ export default function ServiceTable() {
           <div className="flex gap-3 w-full">
             <SearchInput placeholder="Search by name..." size="w-1/2" />
             <DropDownBranch useUrlParams={true} includeAllOption={true} />
-            <DropDownServiceCategory />
+            <DropDownServiceCategory
+              useUrlParams={true}
+              includeAllOption={true}
+            />
           </div>
           <ServiceForm
             method="post"
