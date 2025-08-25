@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Appointment } from "./types";
 import { Badge } from "@/components/ui/badge";
-import ActionCell from "@/components/ActionCell";
+// import ActionCell from "@/components/ActionCell";
 
 export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
@@ -54,10 +54,10 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
       );
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      return <ActionCell data={row.original} />;
-    },
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     return <ActionCell data={row.original} />;
+  //   },
+  // },
 ];
