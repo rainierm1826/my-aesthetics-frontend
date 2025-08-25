@@ -1,9 +1,11 @@
+import { Suspense } from "react";
 import AestheticianList from "@/components/AestheticianList";
 import BookNowButton from "@/components/BookNowButton";
 import BranchList from "@/components/BranchList";
 import ServiceList from "@/components/ServiceList";
 import SignUpButton from "@/components/SignUpButton";
 import { tinos } from "@/components/fonts/fonts";
+import SkeletonCard from "@/components/SkeletonCard";
 
 export default function Home() {
   return (
@@ -13,7 +15,9 @@ export default function Home() {
         <div className="grid grid-cols-1  md:grid-cols-2 place-content-center h-full px-4">
           {/*  main text*/}
           <div className="flex flex-col justify-center w-full">
-            <h3 className={`${tinos.className} text-3xl md:text-5xl font-bold text-center md:text-left`}>
+            <h3
+              className={`${tinos.className} text-3xl md:text-5xl font-bold text-center md:text-left`}
+            >
               Flawless Brows,
             </h3>
             <h3
@@ -36,7 +40,9 @@ export default function Home() {
         </div>
         {/* bottom design */}
         <div className="bg-[#BDA658] h-[50px] flex items-center">
-          <p className={`${tinos.className} text-white font-bold py-3 px-4 text-xs md:text-base`}>
+          <p
+            className={`${tinos.className} text-white font-bold py-3 px-4 text-xs md:text-base`}
+          >
             A Personalized Beauty Experience, Crafted Around Your Perfect Brows
           </p>
         </div>
@@ -56,8 +62,19 @@ export default function Home() {
             schedule your appointment hassle-free.
           </p>
         </div>
-        <ServiceList action={false}/>
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-1 place-items-center sm:grid-cols-3 gap-4 justify-center mt-10 w-full sm:mx-auto">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))}
+            </div>
+          }
+        >
+          <ServiceList action={false} />
+        </Suspense>
       </section>
+
       <section className="bg-gradient-to-tr from-[#fdfaf0] to-white my-10 py-5">
         <div className="flex justify-center flex-col w-full mx-auto mb-5">
           <h3
@@ -69,8 +86,19 @@ export default function Home() {
             Simply browse through our extensive list of trusted aestheticians.
           </p>
         </div>
-        <AestheticianList action={false}/>
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-1 mx-10 md:grid-cols-4 justify-center px-4 gap-3">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))}
+            </div>
+          }
+        >
+          <AestheticianList action={false} />
+        </Suspense>
       </section>
+
       <section className="bg-white my-5 ">
         <div className="flex justify-center flex-col w-full mx-auto">
           <h3
@@ -84,7 +112,17 @@ export default function Home() {
             schedule your appointment hassle-free.
           </p>
           <div className="mt-8">
-            <BranchList action={false}/>
+            <Suspense
+              fallback={
+                <div className="grid grid-cols-1 mx-10 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl sm:mx-auto">
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <SkeletonCard key={index} />
+                  ))}
+                </div>
+              }
+            >
+              <BranchList action={false} />
+            </Suspense>
           </div>
         </div>
       </section>
