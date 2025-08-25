@@ -10,9 +10,7 @@ import {
 export default async function AestheticianPage({
   searchParams,
 }: {
-  searchParams?:
-    | { [key: string]: string | string[] | undefined }
-    | Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = (await searchParams) ?? {};
 
@@ -50,11 +48,9 @@ export default async function AestheticianPage({
           </p>
         </div>
 
-        
-
         <div className="max-w-7xl mx-auto">
           <HydrationBoundary state={dehydratedState}>
-            <AestheticianList action/>
+            <AestheticianList action />
           </HydrationBoundary>
         </div>
       </div>

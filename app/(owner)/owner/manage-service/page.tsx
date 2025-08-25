@@ -12,9 +12,7 @@ import ServiceTable from "@/components/ServiceTable";
 export default async function ServicePage({
   searchParams,
 }: {
-  searchParams?:
-    | { [key: string]: string | string[] | undefined }
-    | Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = (await searchParams) ?? {};
 
@@ -30,7 +28,7 @@ export default async function ServicePage({
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["service"],
-    queryFn: () => getAllService({  page, limit }),
+    queryFn: () => getAllService({ page, limit }),
   });
 
   const dehydratedState = dehydrate(queryClient);

@@ -11,19 +11,15 @@ import {
 export default async function AestheticianPage({
   searchParams,
 }: {
-  searchParams?:
-    | { [key: string]: string | string[] | undefined }
-    | Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = (await searchParams) ?? {};
 
   const getFirst = (v?: string | string[]) =>
     Array.isArray(v) ? v[0] ?? "" : v ?? "";
 
-
   const rawPage = getFirst(sp.page) || "1";
   const rawLimit = getFirst(sp.limit) || "10";
-
 
   const page = Number(rawPage) || 1;
   const limit = Number(rawLimit) || 10;
@@ -31,7 +27,7 @@ export default async function AestheticianPage({
 
   await queryClient.prefetchQuery({
     queryKey: ["aesthetician"],
-    queryFn: () => getAllAesthetician({  page, limit }),
+    queryFn: () => getAllAesthetician({ page, limit }),
   });
 
   const dehydratedState = dehydrate(queryClient);

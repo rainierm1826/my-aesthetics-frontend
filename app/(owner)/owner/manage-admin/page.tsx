@@ -12,9 +12,7 @@ import {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams?:
-    | { [key: string]: string | string[] | undefined }
-    | Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = (await searchParams) ?? {};
 

@@ -10,9 +10,7 @@ import {
 export default async function BranchesPage({
   searchParams,
 }: {
-  searchParams?:
-    | { [key: string]: string | string[] | undefined }
-    | Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = (await searchParams) ?? {};
 
@@ -51,10 +49,10 @@ export default async function BranchesPage({
             schedule your appointment hassle-free.
           </p>
         </div>
-       
+
         {/* list */}
         <HydrationBoundary state={dehydratedState}>
-          <BranchList action/>
+          <BranchList action />
         </HydrationBoundary>
       </div>
     </main>

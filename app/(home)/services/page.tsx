@@ -10,9 +10,7 @@ import {
 export default async function ServicesPage({
   searchParams,
 }: {
-  searchParams?:
-    | { [key: string]: string | string[] | undefined }
-    | Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = (await searchParams) ?? {};
 
@@ -51,7 +49,7 @@ export default async function ServicesPage({
           </p>
         </div>
         <HydrationBoundary state={dehydratedState}>
-          <ServiceList action/>
+          <ServiceList action />
         </HydrationBoundary>
       </div>
     </main>

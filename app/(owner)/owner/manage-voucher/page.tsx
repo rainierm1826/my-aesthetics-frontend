@@ -12,9 +12,7 @@ import VoucherTable from "@/components/VoucherTable";
 export default async function VoucherPage({
   searchParams,
 }: {
-  searchParams?:
-    | { [key: string]: string | string[] | undefined }
-    | Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = (await searchParams) ?? {};
 
@@ -22,17 +20,19 @@ export default async function VoucherPage({
     Array.isArray(v) ? v[0] ?? "" : v ?? "";
 
   const rawQuery = getFirst(sp.query);
+  const rawDiscountType = getFirst(sp.query);
   const rawPage = getFirst(sp.page) || "1";
   const rawLimit = getFirst(sp.limit) || "10";
 
   const query = rawQuery;
+  const discountType = rawDiscountType;
   const page = Number(rawPage) || 1;
   const limit = Number(rawLimit) || 10;
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["branch", { query, page, limit }],
-    queryFn: () => getAllVoucher({ query, page, limit }),
+    queryKey: ["voucher", { query, page, limit }],
+    queryFn: () => getAllVoucher({ query, page, limit, discountType }),
   });
 
   const dehydratedState = dehydrate(queryClient);
