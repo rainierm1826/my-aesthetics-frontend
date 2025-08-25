@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/select";
 import { DropDownProps } from "@/lib/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+
+
 interface DropDownSexProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
   onValueChange?: (value: string) => void;
@@ -24,7 +26,7 @@ const DropDownSex = ({
   value,
   placeholder = "Select a sex",
   includeAllOption = false,
-  allOptionLabel = "All",
+  allOptionLabel = "All Sex",
   useUrlParams = false,
   urlParamKey = "sex",
 }: DropDownSexProps) => {
@@ -46,13 +48,11 @@ const DropDownSex = ({
       if (useUrlParams) {
         const params = new URLSearchParams(searchParams.toString());
 
-        // If selecting "all" (and it's enabled), remove from URL
         if (newValue === "all" && includeAllOption) {
           params.delete(urlParamKey);
         } else {
           params.set(urlParamKey, newValue);
         }
-        // Reset pagination or other dependent params if needed
         params.delete("page");
 
         const newUrl =
