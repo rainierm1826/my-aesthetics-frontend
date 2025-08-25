@@ -32,7 +32,7 @@ const AestheticianTable = () => {
     AestheticianListResponse,
     Error
   >({
-    queryKey: ["aesthetician", { query, limit, page, branch }],
+    queryKey: ["aesthetician", { query, limit, page, branch, sex }],
     queryFn: () =>
       getAllAesthetician({
         query,
@@ -63,7 +63,7 @@ const AestheticianTable = () => {
               value=""
               onValueChange={() => console.log()}
             />
-            <DropDownSex value="" onValueChange={() => console.log()} />
+            <DropDownSex useUrlParams={true} includeAllOption={true} />
           </div>
           <AestheticianForm
             method="post"
