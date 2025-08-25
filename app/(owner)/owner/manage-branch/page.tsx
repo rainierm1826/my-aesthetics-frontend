@@ -1,4 +1,3 @@
-// app/(owner)/owner/manage-branch/page.tsx
 import {
   dehydrate,
   HydrationBoundary,
@@ -8,6 +7,8 @@ import OwnerWrapper from "@/components/OwnerWrapper";
 import DashboardCard from "@/components/DashboardCard";
 import { getAllBranches } from "@/api/branch";
 import BranchTable from "@/components/BranchTable";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function BranchPage({
   searchParams,
@@ -45,9 +46,11 @@ export default async function BranchPage({
       </div>
 
       <div>
-        <HydrationBoundary state={dehydratedState}>
-          <BranchTable />
-        </HydrationBoundary>
+        <Suspense fallback={<Skeleton />}>
+          <HydrationBoundary state={dehydratedState}>
+            <BranchTable />
+          </HydrationBoundary>
+        </Suspense>
       </div>
     </OwnerWrapper>
   );

@@ -8,6 +8,8 @@ import {
 } from "@tanstack/react-query";
 import { getAllVoucher } from "@/api/voucher";
 import VoucherTable from "@/components/VoucherTable";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 
 export default async function VoucherPage({
   searchParams,
@@ -46,9 +48,11 @@ export default async function VoucherPage({
           <DashboardCard />
           <DashboardCard />
         </div>
-        <HydrationBoundary state={dehydratedState}>
-          <VoucherTable />
-        </HydrationBoundary>
+        <Suspense fallback={<Skeleton />}>
+          <HydrationBoundary state={dehydratedState}>
+            <VoucherTable />
+          </HydrationBoundary>
+        </Suspense>
       </div>
     </OwnerWrapper>
   );

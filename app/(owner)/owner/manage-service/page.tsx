@@ -8,6 +8,8 @@ import {
 } from "@tanstack/react-query";
 import { getAllService } from "@/api/service";
 import ServiceTable from "@/components/ServiceTable";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function ServicePage({
   searchParams,
@@ -41,10 +43,11 @@ export default async function ServicePage({
           <DashboardCard />
           <DashboardCard />
         </div>
-
-        <HydrationBoundary state={dehydratedState}>
-          <ServiceTable />
-        </HydrationBoundary>
+        <Suspense fallback={<Skeleton />}>
+          <HydrationBoundary state={dehydratedState}>
+            <ServiceTable />
+          </HydrationBoundary>
+        </Suspense>
       </div>
     </OwnerWrapper>
   );

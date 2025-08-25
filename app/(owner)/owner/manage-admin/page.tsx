@@ -2,12 +2,14 @@ import { getAllAdmin } from "@/api/admin";
 import AdminTable from "@/components/AdminTable";
 import DashboardCard from "@/components/DashboardCard";
 import OwnerWrapper from "@/components/OwnerWrapper";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { Suspense } from "react";
 
 export default async function AdminPage({
   searchParams,
@@ -43,9 +45,11 @@ export default async function AdminPage({
           <DashboardCard />
           <DashboardCard />
         </div>
-        <HydrationBoundary state={dehydratedState}>
-          <AdminTable />
-        </HydrationBoundary>
+        <Suspense fallback={<Skeleton />}>
+          <HydrationBoundary state={dehydratedState}>
+            <AdminTable />
+          </HydrationBoundary>
+        </Suspense>
       </div>
     </OwnerWrapper>
   );

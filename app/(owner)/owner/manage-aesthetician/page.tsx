@@ -2,11 +2,13 @@ import { getAllAesthetician } from "@/api/aesthetician";
 import AestheticianTable from "@/components/AestheticianTable";
 import DashboardCard from "@/components/DashboardCard";
 import OwnerWrapper from "@/components/OwnerWrapper";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { Suspense } from "react";
 
 export default async function AestheticianPage({
   searchParams,
@@ -41,9 +43,11 @@ export default async function AestheticianPage({
           <DashboardCard />
           <DashboardCard />
         </div>
-        <HydrationBoundary state={dehydratedState}>
-          <AestheticianTable />
-        </HydrationBoundary>
+        <Suspense fallback={<Skeleton />}>
+          <HydrationBoundary state={dehydratedState}>
+            <AestheticianTable />
+          </HydrationBoundary>
+        </Suspense>
       </div>
     </OwnerWrapper>
   );

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import DashboardCard from "@/components/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DatePagination from "@/components/DatePagination";
@@ -156,7 +157,9 @@ export default async function AppointmentsPage() {
     <OwnerWrapper title="Manage Appointments">
       <div>
         <div className="mb-5 flex">
-          <DatePagination />
+          <Suspense fallback={<div>Loading...</div>}>
+            <DatePagination />
+          </Suspense>
         </div>
         <div className="flex flex-wrap gap-3 mb-5">
           <DashboardCard />
@@ -164,16 +167,27 @@ export default async function AppointmentsPage() {
           <DashboardCard />
           <DashboardCard />
         </div>
-        <DataTable columns={appointmentColumn} data={data}>
-          <div className="flex justify-between">
-            <div className="flex gap-3 w-full">
-              <SearchInput placeholder="Search by appointment id..." size="w-1/2"/>
-              <DropDownBranch />
-              <DropDownAppointmentStatus />
+        <Suspense fallback={<div>Loading table...</div>}>
+          <DataTable columns={appointmentColumn} data={data}>
+            <div className="flex justify-between">
+              <div className="flex gap-3 w-full">
+                <Suspense fallback={<div>Loading search...</div>}>
+                  <SearchInput
+                    placeholder="Search by appointment id..."
+                    size="w-1/2"
+                  />
+                </Suspense>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <DropDownBranch />
+                </Suspense>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <DropDownAppointmentStatus />
+                </Suspense>
+              </div>
+              <Button className="rounded-sm">Add Appointment</Button>
             </div>
-            <Button className="rounded-sm">Add Appointment</Button>
-          </div>
-        </DataTable>
+          </DataTable>
+        </Suspense>
       </div>
     </OwnerWrapper>
   );
