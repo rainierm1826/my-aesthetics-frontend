@@ -5,7 +5,7 @@ const SkeletonTable = () => {
   return (
     <div className="w-full" aria-busy="true">
       {/* Card wrapper */}
-      <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
+      <div className="rounded-lg border-none bg-white shadow-sm overflow-hidden">
         {/* Header: title + search + controls */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border-b bg-muted/50">
           <div className="flex items-center gap-4 min-w-0">

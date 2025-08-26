@@ -43,7 +43,6 @@ const DropDownBranch = ({
   const pathname = usePathname();
   const router = useRouter();
 
- 
   const currentBranch = useUrlParams
     ? searchParams.get("branch") || (includeAllOption ? "all" : "")
     : value || "";
@@ -51,7 +50,7 @@ const DropDownBranch = ({
   const handleValueChange = useCallback(
     (newValue: string) => {
       if (useUrlParams) {
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams);
 
         if (newValue === "all" && includeAllOption) {
           params.delete("branch");
@@ -60,8 +59,11 @@ const DropDownBranch = ({
         }
         params.delete("page");
 
-        const newUrl = `${pathname}?${params.toString()}`;
-        router.push(newUrl, { scroll: false });
+        // More direct URL construction
+        const queryString = params.toString();
+        const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+
+        router.replace(newUrl, { scroll: false });
       }
 
       onValueChange?.(newValue);

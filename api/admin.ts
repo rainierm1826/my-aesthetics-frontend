@@ -71,7 +71,6 @@ export async function getAllAdmin({
     }
 
     const result: AdminListResposne = await res.json();
-    console.log(result)
     return result;
   } catch (error) {
     throw error;

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useCallback } from "react";
 import {
@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/select";
 import { DropDownProps } from "@/lib/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-
 
 interface DropDownSexProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
@@ -48,7 +47,7 @@ const DropDownSex = ({
   const handleValueChange = useCallback(
     (newValue: string) => {
       if (useUrlParams) {
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams);
 
         if (newValue === "all" && includeAllOption) {
           params.delete(urlParamKey);
@@ -57,12 +56,11 @@ const DropDownSex = ({
         }
         params.delete("page");
 
-        const newUrl =
-          params.toString().length > 0
-            ? `${pathname}?${params.toString()}`
-            : pathname;
+        // More direct URL construction
+        const queryString = params.toString();
+        const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
-        router.push(newUrl, { scroll: false });
+        router.replace(newUrl, { scroll: false });
       }
 
       onValueChange?.(newValue);
