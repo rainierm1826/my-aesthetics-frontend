@@ -8,7 +8,7 @@ import SkeletonCard from "./SkeletonCard";
 import SearchInput from "./SearchInput";
 
 const BranchList = ({ action }: { action: boolean }) => {
-  const { data, isLoading } = useBranches();
+  const { data, isFetching } = useBranches();
   const branches: Branch[] = data?.branch ?? [];
 
   return (
@@ -24,7 +24,7 @@ const BranchList = ({ action }: { action: boolean }) => {
         </div>
       )}
       <div className="grid grid-cols-1 mx-10 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl sm:mx-auto">
-        {isLoading
+        {isFetching
           ? Array.from({ length: 6 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))

@@ -74,16 +74,6 @@ export async function getAllService({
   if (category && category !== "all") {
     params.set("category", String(category));
   }
-  const url = `${backendUrl}/service?${params.toString()}`;
-  console.log("getAllService called with:", {
-    query,
-    page,
-    limit,
-    branch,
-    category,
-  });
-
-  console.log("Fetching services:", url);
 
   try {
     const res = await fetch(`${backendUrl}/service?${params.toString()}`, {

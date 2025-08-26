@@ -10,7 +10,7 @@ import DropDownBranch from "./DropDownBranch";
 import SearchInput from "./SearchInput";
 
 const ServiceList = ({ action }: { action: boolean }) => {
-  const { data, isLoading } = useServices();
+  const { data, isFetching } = useServices();
   const services: Service[] = data?.service ?? [];
 
   return (
@@ -34,7 +34,7 @@ const ServiceList = ({ action }: { action: boolean }) => {
       )}
       <div className="flex justify-center flex-col w-full mx-auto sm:w-3/4">
         <div className="grid grid-cols-1 place-items-center sm:grid-cols-3 gap-4 justify-center mt-10 w-full sm:mx-auto">
-          {isLoading
+          {isFetching
             ? Array.from({ length: 6 }).map((_, index) => (
                 <SkeletonCard key={index} />
               ))

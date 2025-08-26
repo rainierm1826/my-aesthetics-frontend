@@ -12,7 +12,7 @@ import DropDownSex from "./DropDownSex";
 import DropDownExperience from "./DropDownExperience";
 
 const AestheticianList = ({ action }: { action: boolean }) => {
-  const { data, isLoading } = useAestheticians();
+  const { data, isFetching } = useAestheticians();
   const aestheticians: Aesthetician[] = data?.aesthetician ?? [];
 
   return (
@@ -36,7 +36,7 @@ const AestheticianList = ({ action }: { action: boolean }) => {
         </div>
       )}
       <div className="grid grid-cols-1 mx-10 md:grid-cols-4 justify-center px-4 gap-3">
-        {isLoading
+        {isFetching
           ? Array.from({ length: 8 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))
