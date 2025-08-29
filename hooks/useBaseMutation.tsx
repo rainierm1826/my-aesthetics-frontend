@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -17,7 +17,7 @@ interface MutationConfig<TData = unknown, TVariables = unknown> {
   shouldResetOnCreate?: boolean;
 }
 
-export const useBaseMutation = <TData=unknown, TVariables=unknown>(
+export const useBaseMutation = <TData = unknown, TVariables = unknown>(
   method: "post" | "patch" | "delete",
   config: MutationConfig<TData, TVariables>
 ) => {
@@ -44,17 +44,12 @@ export const useBaseMutation = <TData=unknown, TVariables=unknown>(
         type: "all",
       });
       const messages = config.successMessages;
-      const defaultMessage = `${config.queryKey} has been ${method}d.`;
-      const message =
-        method === "post"
-          ? messages?.create || defaultMessage
-          : messages?.update || defaultMessage;
-      toast(message);
+      const message = method === "post" ? messages?.create : messages?.update;
+      toast.success(message);
       config.onSuccess?.(data, method);
     },
     onError: (error: Error) => {
-      toast(error.message);
-      console.log(error);
+      toast.error(`${error}`);
     },
   });
 };

@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { BranchName } from "./branch-types";
 
 export type Admin = {
@@ -34,3 +35,19 @@ export type AdminListResposne = {
   status: boolean;
   total: number;
 };
+
+export interface AdminFormProps {
+  renderDialog?: boolean;
+  method: "post" | "patch";
+  formTitle: string;
+  formDescription: string;
+  buttonLabel: string;
+  dialogButtonLabel?: string | ReactNode;
+  firstName?: string;
+  lastName?: string;
+  middleInitial?: string;
+  email?: string;
+  password?: string;
+  branchId?: string;
+  adminId?: string;
+}

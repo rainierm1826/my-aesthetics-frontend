@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import Navbar from "@/components/Navbar";
 import { Inter } from "next/font/google";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
 import "../globals.css";
+import Footer from "@/components/Footer";
 import QueryProvider from "@/provider/QueryProvider";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MY Aesthetics Brow Studio - Owner",
+  title: "MY Aesthetics Brow Studio",
   description: "",
 };
 
@@ -23,13 +23,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} `}>
         <QueryProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>{children}</SidebarInset>
-            <Toaster />
-          </SidebarProvider>
+          <main>{children}</main>
+          <Toaster />
+          <Footer />
         </QueryProvider>
       </body>
     </html>

@@ -33,6 +33,89 @@ export async function signUp(data: unknown): Promise<SignUpResponse> {
   }
 }
 
+export async function signUpAdmin(data: unknown): Promise<SignUpResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/admin-signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result: SignUpResponse = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function verifyOTP(data: unknown): Promise<SignUpResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/verify-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const errorData = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(errorData.message);
+    }
+    const result: SignUpResponse = await response.json();
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function resendOTP(data: unknown): Promise<SignUpResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/resend-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result: SignUpResponse = await response.json();
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export async function signIn(data: unknown): Promise<SignInResponse> {
   try {
     if (!backendUrl) {

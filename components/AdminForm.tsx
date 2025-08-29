@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, ReactNode } from "react";
+import { memo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,8 +15,8 @@ import DropDownBranch from "./DropDownBranch";
 import { ShieldUser } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "./ui/form";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -27,25 +27,10 @@ import {
   signUpAdminFormSchema,
   SignUpAdminFormValues,
 } from "@/schema/signUpSchema";
-import { signUp } from "@/api/auth";
+import {  signUpAdmin } from "@/api/auth";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchAdmin } from "@/api/admin";
-
-interface AdminFormProps {
-  renderDialog?: boolean;
-  method: "post" | "patch";
-  formTitle: string;
-  formDescription: string;
-  buttonLabel: string;
-  dialogButtonLabel?: string | ReactNode;
-  firstName?: string;
-  lastName?: string;
-  middleInitial?: string;
-  email?: string;
-  password?: string;
-  branchId?: string;
-  adminId?: string;
-}
+import { AdminFormProps } from "@/lib/admin-type";
 
 const AdminForm: React.FC<AdminFormProps> = ({
   renderDialog = true,
@@ -77,7 +62,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
   const { reset, control, handleSubmit } = form;
 
   const signUpAdminMutation = useBaseMutation(method, {
-    createFn: signUp,
+    createFn: signUpAdmin,
     queryKey: ["account", "admin"],
     successMessages: {
       create: "Admin has been created.",
@@ -91,7 +76,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           email: "",
           branch_id: "",
           password: "",
-          confirmPassword: ""
+          confirmPassword: "",
         });
       }
     },
@@ -113,12 +98,10 @@ const AdminForm: React.FC<AdminFormProps> = ({
     const { confirmPassword, ...rest } = values;
     const payload = {
       ...rest,
-      role_id: "2",
       ...(method === "patch" && {
         admin_id: adminId,
       }),
     };
-    console.log(payload)
     if (method == "post") {
       signUpAdminMutation.mutate(payload);
     } else {
