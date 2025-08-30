@@ -31,17 +31,20 @@ import {
 import { general, analytics, managements } from "@/lib/constants";
 import { ChevronRight, Plus } from "lucide-react";
 import ProfilePicture from "./ProfilePicture";
+import { useAuthStore } from "@/provider/store/userStore";
+import { useMemo } from "react";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { auth } = useAuthStore();
   return (
     <Sidebar collapsible="icon">
       <SidebarContent className="flex flex-col">
         <SidebarHeader className="flex items-center">
           <Logo mainSize="text-4xl" size="text-xl" href="#" />
         </SidebarHeader>
-        <AnalyticsGroup pathname={pathname} />
-        <ManagementGroup pathname={pathname} />
+        {auth?.role === "owner" && <AnalyticsGroup pathname={pathname} />}
+        <ManagementGroup pathname={pathname} userRole={auth?.role || "owner"} />
         <GeneralGroup pathname={pathname} />
         <SFooter />
       </SidebarContent>
@@ -88,13 +91,23 @@ const AnalyticsGroup = ({ pathname }: { pathname: string }) => {
   );
 };
 
-const ManagementGroup = ({ pathname }: { pathname: string }) => {
+interface ManagementGroupProps {
+  pathname: string;
+  userRole: "admin" | "owner" | "customer";
+}
+
+const ManagementGroup = ({ pathname, userRole }: ManagementGroupProps) => {
+  const filteredManagements = useMemo(
+    () => managements.filter((item) => item.rolesAllowed.includes(userRole)),
+    [userRole]
+  );
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Management</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {managements.map((item) => (
+          {filteredManagements.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
                 <Link
@@ -143,6 +156,8 @@ const GeneralGroup = ({ pathname }: { pathname: string }) => {
 };
 
 const SFooter = () => {
+  const { auth } = useAuthStore();
+
   return (
     <SidebarFooter className="mt-auto">
       <SidebarMenu>
@@ -154,9 +169,14 @@ const SFooter = () => {
                   <ProfilePicture />
                   <div className="space-y-0.5 ">
                     <p className="text-xs font-semibold whitespace-nowrap">
-                      Rainier R. Marasigan
+                      {/* Rainier R. Marasigan */}
+                      {auth?.email}
                     </p>
-                    <p className="text-xs text-[#7C7C7C] text-left">Owner</p>
+                    <p className="text-xs text-[#7C7C7C] text-left">
+                      {auth?.role
+                        ? auth.role.charAt(0).toUpperCase() + auth.role.slice(1)
+                        : ""}
+                    </p>
                   </div>
                   <div className="flex justify-end w-full">
                     <Plus className="h-4 w-4" />

@@ -58,7 +58,7 @@ const SignInForm = () => {
       );
 
       const redirects = {
-        admin: "/owner/dashboard/appointments",
+        admin: "/owner/manage-appointments",
         owner: "/owner/dashboard/appointments",
         customer: "/customer/dashboard",
       };
