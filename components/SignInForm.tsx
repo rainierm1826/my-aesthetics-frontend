@@ -20,6 +20,15 @@ import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { signIn } from "@/api/auth";
 import { signInFormSchema, SignInFormValues } from "@/schema/signInSchema";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/provider/store/userStore";
+import { jwtDecode } from "jwt-decode";
+
+type TokenPayload = {
+  sub: string;
+  email: string;
+  role: "customer" | "admin" | "owner";
+  exp: number;
+};
 
 const SignInForm = () => {
   const form = useForm<SignInFormValues>({
@@ -36,8 +45,25 @@ const SignInForm = () => {
   const signInMutation = useBaseMutation("post", {
     queryKey: "account",
     createFn: signIn,
-    onSuccess: () => {
-      router.push("/customer/dashboard");
+    onSuccess: (data) => {
+      const decoded: TokenPayload = jwtDecode(data.access_token);
+
+      useAuthStore.getState().setAuth(
+        {
+          account_id: decoded.sub,
+          email: decoded.email,
+          role: decoded.role,
+        },
+        data.access_token
+      );
+
+      const redirects = {
+        admin: "/owner/dashboard/appointments",
+        owner: "/owner/dashboard/appointments",
+        customer: "/customer/dashboard",
+      };
+
+      router.push(redirects[decoded.role]);
     },
     successMessages: {
       create: "Sign In Successfully",
