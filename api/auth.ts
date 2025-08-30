@@ -75,15 +75,14 @@ export async function verifyOTP(data: unknown): Promise<SignUpResponse> {
       body: JSON.stringify(data),
     });
 
-    const errorData = await response.json().catch(() => ({}));
+    const body = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-      throw new Error(errorData.message);
+      throw new Error(body.message);
     }
-    const result: SignUpResponse = await response.json();
-    console.log(result);
-    return result;
+
+    return body as SignUpResponse;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -108,10 +107,8 @@ export async function resendOTP(data: unknown): Promise<SignUpResponse> {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const result: SignUpResponse = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -132,11 +129,13 @@ export async function signIn(data: unknown): Promise<SignInResponse> {
       body: JSON.stringify(data),
     });
 
+    const body = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(body.message);
     }
-    const result: SignInResponse = await response.json();
-    return result;
+
+    return body as SignInResponse;
   } catch (error) {
     throw error;
   }

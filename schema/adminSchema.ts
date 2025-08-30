@@ -24,4 +24,4 @@ export const adminFormSchema = z.object({
   branch_id: z.string().min(1, "Branch is required")
 });
 
-export type SignInFormValues = z.infer<typeof adminFormSchema>;
+export type AdminFormValues = z.infer<typeof adminFormSchema>;
