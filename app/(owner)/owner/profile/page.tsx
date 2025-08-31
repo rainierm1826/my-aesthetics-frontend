@@ -3,7 +3,7 @@ import UserForm from "@/components/UserForm";
 
 export default function ProfilePage() {
   return (
-    <OwnerWrapper title="Settings">
+    <OwnerWrapper title="Profile">
       <UserForm />
     </OwnerWrapper>
   );

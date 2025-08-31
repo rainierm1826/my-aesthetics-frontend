@@ -1,12 +1,23 @@
+import { User } from "lucide-react";
+import { BranchName } from "./branch-types";
+
 export type User = {
-  user_id: number | string;
-  account_id: number | string;
-  first_name: string;
-  last_name: string;
-  middle_name: string | null;
-  birthday: string | null; // ISO format date string or null
-  age: number;
+  user_id: string;
+  account_id: string;
+  first_name: string | null;
+  last_name: string | null;
+  middle_initial: string | null;
+  branch?: BranchName
+  birthday: string | null;
+  age: number | null;
   image: string | null;
-  created_at: string; // ISO datetime string
-  updated_at: string; // ISO datetime string
+  phone_number: string | null
+  created_at: string;
+  updated_at: string;
 };
+
+export interface UserResponse {
+  user: User;
+  status: boolean;
+  message: string;
+}

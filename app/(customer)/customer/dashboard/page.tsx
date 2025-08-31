@@ -1,10 +1,13 @@
 "use client";
 
-import { useAuthStore } from "@/provider/store/userStore";
+import { useAuthStore } from "@/provider/store/authStore";
+import { useUserStore } from "@/provider/store/userStore";
 
 export default function CustomerDashboard() {
   const { auth, isAuth } = useAuthStore();
-  console.log(auth, isAuth);
+  const {user} = useUserStore()
+  console.log(user)
+
 
   if (!isAuth) {
     return (
@@ -18,6 +21,7 @@ export default function CustomerDashboard() {
     <h1 className="h-screen flex justify-center items-center">
       Welcome {auth?.email}
       Role {auth?.role}
+      name {user?.first_name}
     </h1>
   );
 }

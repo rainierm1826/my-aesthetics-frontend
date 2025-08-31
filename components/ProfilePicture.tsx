@@ -1,12 +1,19 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const ProfilePicture = () => {
-
+const ProfilePicture = ({
+  size,
+  image,
+  fallback,
+}: {
+  size?: string;
+  image?: string;
+  fallback?: string;
+}) => {
   return (
-    <Avatar>
-      <AvatarImage src={`https://github.com/shadcn.png`} />
-      <AvatarFallback>CN</AvatarFallback>
+    <Avatar className={`${size}`}>
+      <AvatarImage src={image || `https://github.com/shadcn.png`} />
+      <AvatarFallback>{fallback || "CN"}</AvatarFallback>
     </Avatar>
   );
 };

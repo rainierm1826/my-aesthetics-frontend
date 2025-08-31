@@ -1,33 +1,24 @@
+import { User } from "@/lib/user-type";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface Auth {
-  account_id: string;
-  email: string;
-  role: "owner" | "admin" | "customer";
+interface UserState {
+  user: User | null;
+  setUser: (auth: User | null) => void;
+  clearUser: () => void;
 }
 
-interface AuthState {
-  auth: Auth | null;
-  access_token: string | null;
-  isAuth: boolean;
-  setAuth: (auth: Auth | null, access_token: string) => void;
-  clearAuth: () => void;
-}
-
-export const useAuthStore = create<AuthState>()(
+export const useUserStore = create<UserState>()(
   persist(
     (set) => ({
-      auth: null,
-      access_token: null,
-      isAuth: false,
-      setAuth: (auth, access_token) => {
-        set({ auth, access_token, isAuth: true });
+      user: null,
+      setUser: (user) => {
+        set({ user });
       },
-      clearAuth: () => set({ auth: null, access_token: null, isAuth: false }),
+      clearUser: () => set({ user: null }),
     }),
     {
-      name: "auth-storage",
+      name: "user-storage",
     }
   )
 );

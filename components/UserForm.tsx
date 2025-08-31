@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -13,368 +12,454 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Edit2, Save, X } from "lucide-react";
-
-interface UserProfile {
-  profilePicture: string;
-  firstName: string;
-  lastName: string;
-  middleInitial: string;
-  dateOfBirth: string;
-  phoneNumber: string;
-  region: string;
-  province: string;
-  city: string;
-  barangay: string;
-  lot: string;
-  email: string;
-  password: string;
-  role: string;
-}
+import {
+  Camera,
+  Edit2,
+  Save,
+  X,
+  User,
+  Mail,
+  Phone,
+  Calendar,
+  Shield,
+} from "lucide-react";
+import { useForm } from "react-hook-form";
+import { userFormSchema, UserFormValues } from "@/schema/userSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useUserStore } from "@/provider/store/userStore";
+import { useAuthStore } from "@/provider/store/authStore";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import SkeletonSettings from "./SkeletonSettings";
 
 export default function UserForm() {
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState<UserProfile>({
-    profilePicture: "https://github.com/shadcn.png",
-    firstName: "Rainier",
-    lastName: "Marasigan",
-    middleInitial: "R",
-    dateOfBirth: "1990-01-15",
-    phoneNumber: "+63 912 345 6789",
-    region: "CALABARZON",
-    province: "Batangas",
-    city: "Lipa City",
-    barangay: "Marawoy",
-    lot: "123 Rizal Street",
-    email: "john.doe@email.com",
-    password: "••••••••••",
-    role: "Owner",
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { user } = useUserStore();
+  const { auth, isAuth } = useAuthStore();
+
+  const form = useForm<UserFormValues>({
+    resolver: zodResolver(userFormSchema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      middle_initial: "",
+      phone_number: "",
+      birthday: "",
+      image: "https://github.com/shadcn.png",
+      email: "",
+      role: "customer",
+      password: "",
+    },
   });
 
-  const [editedProfile, setEditedProfile] = useState<UserProfile>(profile);
+  const {
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { isDirty },
+  } = form;
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setEditedProfile(profile);
-  };
+  const watchedValues = watch();
+  const fullName =
+    [
+      watchedValues.first_name,
+      watchedValues.middle_initial && `${watchedValues.middle_initial}.`,
+      watchedValues.last_name,
+    ]
+      .filter(Boolean)
+      .join(" ") || "Complete your profile";
 
-  const handleSave = () => {
-    setProfile(editedProfile);
-    setIsEditing(false);
+  useEffect(() => {
+    if (user && auth) {
+      reset({
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        middle_initial: user.middle_initial || "",
+        phone_number: user.phone_number || "",
+        birthday: user.birthday || "",
+        image: user.image || "https://github.com/shadcn.png",
+        email: auth.email || "",
+        role: auth.role || "customer",
+        password: "",
+      });
+    }
+  }, [user, auth, reset]);
+
+  const handleSave = async (data: UserFormValues) => {
+    setIsLoading(true);
+    try {
+      console.log("Saving user data:", data);
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Failed to save user data:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCancel = () => {
-    setEditedProfile(profile);
+    if (user && auth) {
+      reset({
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        middle_initial: user.middle_initial || "",
+        phone_number: user.phone_number || "",
+        birthday: user.birthday || "",
+        image: user.image || "https://github.com/shadcn.png",
+        email: auth.email || "",
+        role: auth.role || "customer",
+        password: "",
+      });
+    }
     setIsEditing(false);
   };
 
-  const handleInputChange = (field: keyof UserProfile, value: string) => {
-    setEditedProfile((prev) => ({ ...prev, [field]: value }));
+  const handleEdit = () => {
+    setIsEditing(true);
   };
 
-  const handleProfilePictureChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        handleInputChange("profilePicture", result);
+        form.setValue("image", result, { shouldDirty: true });
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const getInitials = (firstName: string, lastName: string) => {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "Not set";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
-  const displayProfile = isEditing ? editedProfile : profile;
+
+  if (!isAuth || !user) {
+    return <SkeletonSettings />;
+  }
 
   return (
-    <div className="space-y-3">
-      <div className="flex justify-end">
-        {!isEditing ? (
-          <Button onClick={handleEdit} className="flex items-center gap-2">
-            <Edit2 className="h-4 w-4" />
-            Edit Profile
-          </Button>
-        ) : (
-          <div className="flex gap-2">
-            <Button onClick={handleSave} className="flex items-center gap-2">
-              <Save className="h-4 w-4" />
-              Save Changes
+    <div className="mx-auto space-y-6">
+      <div className="flex items-center justify-end">
+        <div className="flex gap-2">
+          {!isEditing ? (
+            <Button onClick={handleEdit} className="flex items-center gap-2">
+              <Edit2 className="h-4 w-4" />
+              Edit Profile
             </Button>
-            <Button
-              onClick={handleCancel}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <X className="h-4 w-4" />
-              Cancel
-            </Button>
-          </div>
-        )}
+          ) : (
+            <>
+              <Button
+                onClick={handleSubmit(handleSave)}
+                disabled={!isDirty || isLoading}
+                className="flex items-center gap-2"
+              >
+                <Save className="h-4 w-4" />
+                {isLoading ? "Saving..." : "Save Changes"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleCancel}
+                disabled={isLoading}
+                className="flex items-center gap-2"
+              >
+                <X className="h-4 w-4" />
+                Cancel
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* Profile Picture Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Profile Picture</CardTitle>
-          <CardDescription>Update your profile photo</CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center gap-6">
-          <div className="relative">
-            <Avatar className="h-24 w-24">
-              <AvatarImage src={displayProfile.profilePicture} alt="Profile" />
-              <AvatarFallback className="text-lg">
-                {getInitials(displayProfile.firstName, displayProfile.lastName)}
-              </AvatarFallback>
-            </Avatar>
-            {isEditing && (
-              <label className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-2 cursor-pointer hover:bg-primary/90 transition-colors">
-                <Camera className="h-4 w-4" />
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleProfilePictureChange}
-                  className="hidden"
-                />
-              </label>
-            )}
-          </div>
-          <div>
-            <h3 className="font-semibold text-lg">
-              {displayProfile.firstName} {displayProfile.lastName}
-            </h3>
-            <p className="text-muted-foreground">{displayProfile.email}</p>
-            <Badge variant="secondary" className="mt-1">
-              {displayProfile.role}
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
+      <Form {...form}>
+        <div className="space-y-6">
+          {/* Profile Overview Card */}
+          <Card className="overflow-hidden">
+            <CardContent className="relative pt-0">
+              <div className="flex items-end gap-6 pb-6">
+                <FormField
+                  control={control}
+                  name="image"
+                  render={({ field }) => (
+                    <div className="relative">
+                      <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+                        <AvatarImage src={field.value} alt={fullName} />
+                        <AvatarFallback className="text-lg font-semibold">
+                          {watchedValues.first_name?.[0] ||
+                            user?.first_name?.[0] ||
+                            "U"}
+                          {watchedValues.last_name?.[0] ||
+                            user?.last_name?.[0] ||
+                            ""}
+                        </AvatarFallback>
+                      </Avatar>
 
-      {/* Personal Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
-          <CardDescription>Your basic personal details</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              {isEditing ? (
-                <Input
-                  id="firstName"
-                  value={editedProfile.firstName}
-                  onChange={(e) =>
-                    handleInputChange("firstName", e.target.value)
-                  }
+                      {isEditing && (
+                        <label className="absolute -bottom-0 -right-0 bg-primary text-primary-foreground rounded-full p-2 cursor-pointer hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl">
+                          <Camera className="h-4 w-4" />
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                          />
+                        </label>
+                      )}
+                    </div>
+                  )}
                 />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {profile.firstName}
-                </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              {isEditing ? (
-                <Input
-                  id="lastName"
-                  value={editedProfile.lastName}
-                  onChange={(e) =>
-                    handleInputChange("lastName", e.target.value)
-                  }
-                />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {profile.lastName}
-                </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="middleInitial">Middle Initial</Label>
-              {isEditing ? (
-                <Input
-                  id="middleInitial"
-                  value={editedProfile.middleInitial}
-                  onChange={(e) =>
-                    handleInputChange("middleInitial", e.target.value)
-                  }
-                  maxLength={1}
-                />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {profile.middleInitial}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="dateOfBirth">Date of Birth</Label>
-              {isEditing ? (
-                <Input
-                  id="dateOfBirth"
-                  type="date"
-                  value={editedProfile.dateOfBirth}
-                  onChange={(e) =>
-                    handleInputChange("dateOfBirth", e.target.value)
-                  }
-                />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {new Date(profile.dateOfBirth).toLocaleDateString()}
-                </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
-              {isEditing ? (
-                <Input
-                  id="phoneNumber"
-                  value={editedProfile.phoneNumber}
-                  onChange={(e) =>
-                    handleInputChange("phoneNumber", e.target.value)
-                  }
-                />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {profile.phoneNumber}
-                </div>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      {/* Address Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Address Information</CardTitle>
-          <CardDescription>Your current address details</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="region">Region</Label>
-              {isEditing ? (
-                <Input
-                  id="region"
-                  value={editedProfile.region}
-                  onChange={(e) => handleInputChange("region", e.target.value)}
-                />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {profile.region}
+                <div className="flex-1 pb-2">
+                  <h2 className="text-2xl font-bold text-foreground">
+                    {fullName}
+                  </h2>
+                  <p className="text-muted-foreground flex items-center gap-2 mt-1">
+                    <Mail className="h-4 w-4" />
+                    {watchedValues.email || auth?.email}
+                  </p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Shield className="h-4 w-4" />
+                    <Badge variant={"secondary"} className="capitalize rounded-full">
+                      {watchedValues.role || auth?.role}
+                    </Badge>
+                  </div>
                 </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="province">Province</Label>
-              {isEditing ? (
-                <Input
-                  id="province"
-                  value={editedProfile.province}
-                  onChange={(e) =>
-                    handleInputChange("province", e.target.value)
-                  }
-                />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {profile.province}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="city">City</Label>
-              {isEditing ? (
-                <Input
-                  id="city"
-                  value={editedProfile.city}
-                  onChange={(e) => handleInputChange("city", e.target.value)}
-                />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {profile.city}
-                </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="barangay">Barangay</Label>
-              {isEditing ? (
-                <Input
-                  id="barangay"
-                  value={editedProfile.barangay}
-                  onChange={(e) =>
-                    handleInputChange("barangay", e.target.value)
-                  }
-                />
-              ) : (
-                <div className="px-3 py-2 bg-muted rounded-md">
-                  {profile.barangay}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lot">Lot/Street Address</Label>
-            {isEditing ? (
-              <Input
-                id="lot"
-                value={editedProfile.lot}
-                onChange={(e) => handleInputChange("lot", e.target.value)}
-              />
-            ) : (
-              <div className="px-3 py-2 bg-muted rounded-md">{profile.lot}</div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Account Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Account Information</CardTitle>
-          <CardDescription>Your account credentials and role</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground">
-              {profile.email} <span className="text-xs">(Read-only)</span>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            {isEditing ? (
-              <Input
-                id="password"
-                type="password"
-                value={editedProfile.password}
-                onChange={(e) => handleInputChange("password", e.target.value)}
-              />
-            ) : (
-              <div className="px-3 py-2 bg-muted rounded-md">
-                {profile.password}
               </div>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
-            <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground">
-              <Badge variant="secondary">{profile.role}</Badge>{" "}
-              <span className="text-xs ml-2">(Read-only)</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+
+          {/* Personal Information */}
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <User className="h-5 w-5" />
+              <div>
+                <CardTitle>Personal Information</CardTitle>
+                <CardDescription>Your basic personal details</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={control}
+                  name="first_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        {isEditing ? (
+                          <Input placeholder="Enter first name" {...field} />
+                        ) : (
+                          <div className="px-3 py-2 bg-muted rounded-md min-h-10 flex items-center">
+                            {field.value || "Not set"}
+                          </div>
+                        )}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name="last_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        {isEditing ? (
+                          <Input placeholder="Enter last name" {...field} />
+                        ) : (
+                          <div className="px-3 py-2 bg-muted rounded-md min-h-10 flex items-center">
+                            {field.value || "Not set"}
+                          </div>
+                        )}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name="middle_initial"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Middle Initial</FormLabel>
+                      <FormControl>
+                        {isEditing ? (
+                          <Input
+                            placeholder="M"
+                            maxLength={1}
+                            className="text-center"
+                            {...field}
+                          />
+                        ) : (
+                          <div className="px-3 py-2 bg-muted rounded-md min-h-10 flex items-center">
+                            {field.value || "Not set"}
+                          </div>
+                        )}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={control}
+                  name="birthday"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        Date of Birth
+                      </FormLabel>
+                      <FormControl>
+                        {isEditing ? (
+                          <Input type="date" {...field} />
+                        ) : (
+                          <div className="px-3 py-2 bg-muted rounded-md min-h-10 flex items-center">
+                            {field.value ? formatDate(field.value) : "Not set"}
+                          </div>
+                        )}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name="phone_number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <Phone className="h-4 w-4" />
+                        Phone Number
+                      </FormLabel>
+                      <FormControl>
+                        {isEditing ? (
+                          <Input placeholder="+1 (555) 123-4567" {...field} />
+                        ) : (
+                          <div className="px-3 py-2 bg-muted rounded-md min-h-10 flex items-center">
+                            {field.value || "Not set"}
+                          </div>
+                        )}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Account Information */}
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <Shield className="h-5 w-5" />
+              <div>
+                <CardTitle>Account Information</CardTitle>
+                <CardDescription>
+                  Your account credentials and security
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground min-h-10 flex items-center justify-between">
+                        <Badge
+                          variant={"secondary"}
+                          className="rounded-full"
+                        >
+                          {field.value}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="text-xs rounded-full"
+                        >
+                          Read-only
+                        </Badge>
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              {isEditing && (
+                <FormField
+                  control={control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Enter new password (leave blank to keep current)"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <FormField
+                control={control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Account Role</FormLabel>
+                    <FormControl>
+                      <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground min-h-10 flex items-center justify-between">
+                        <Badge
+                          variant={"secondary"}
+                          className="capitalize rounded-full"
+                        >
+                          {field.value}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="text-xs rounded-full"
+                        >
+                          Read-only
+                        </Badge>
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </Form>
     </div>
   );
 }

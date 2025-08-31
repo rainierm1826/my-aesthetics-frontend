@@ -23,8 +23,8 @@ import { FormAesthetician } from "@/lib/aesthetician-types";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "./ui/form";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,

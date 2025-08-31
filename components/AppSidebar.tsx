@@ -31,8 +31,9 @@ import {
 import { general, analytics, managements } from "@/lib/constants";
 import { ChevronRight, Plus } from "lucide-react";
 import ProfilePicture from "./ProfilePicture";
-import { useAuthStore } from "@/provider/store/userStore";
+import { useAuthStore } from "@/provider/store/authStore";
 import { useMemo } from "react";
+import { useUserStore } from "@/provider/store/userStore";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -157,6 +158,7 @@ const GeneralGroup = ({ pathname }: { pathname: string }) => {
 
 const SFooter = () => {
   const { auth } = useAuthStore();
+  const { user } = useUserStore();
 
   return (
     <SidebarFooter className="mt-auto">
@@ -166,11 +168,14 @@ const SFooter = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className="w-full">
                 <div className="flex items-center gap-3">
-                  <ProfilePicture />
+                  <ProfilePicture
+                    fallback={user?.first_name?.charAt(0)}
+                    image={user?.image || "https://github.com/shadcn.png"}
+                  />
                   <div className="space-y-0.5 ">
                     <p className="text-xs font-semibold whitespace-nowrap">
-                      {/* Rainier R. Marasigan */}
-                      {auth?.email}
+                      {user?.first_name} {user?.middle_initial}.{" "}
+                      {user?.last_name}
                     </p>
                     <p className="text-xs text-[#7C7C7C] text-left">
                       {auth?.role

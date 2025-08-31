@@ -20,8 +20,11 @@ import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { signIn } from "@/api/auth";
 import { signInFormSchema, SignInFormValues } from "@/schema/signInSchema";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/provider/store/userStore";
+import { useAuthStore } from "@/provider/store/authStore";
 import { jwtDecode } from "jwt-decode";
+import { getUser } from "@/api/user";
+import { useQueryClient } from "@tanstack/react-query";
+import { useUserStore } from "@/provider/store/userStore";
 
 type TokenPayload = {
   sub: string;
@@ -41,11 +44,12 @@ const SignInForm = () => {
 
   const { control, handleSubmit } = form;
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const signInMutation = useBaseMutation("post", {
     queryKey: "account",
     createFn: signIn,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const decoded: TokenPayload = jwtDecode(data.access_token);
 
       useAuthStore.getState().setAuth(
@@ -56,6 +60,12 @@ const SignInForm = () => {
         },
         data.access_token
       );
+      const user = await queryClient.fetchQuery({
+        queryKey: ["user", decoded.sub],
+        queryFn: () => getUser(data.access_token),
+        staleTime: 5 * 60 * 1000,
+      });
+      useUserStore.getState().setUser(user.user);
 
       const redirects = {
         admin: "/owner/manage-appointments",
