@@ -9,7 +9,7 @@ import SkeletonCard from "@/components/SkeletonCard";
 
 export default function Home() {
   return (
-    <div className="container">
+    <div className="container mx-auto">
       {/* hero section */}
       <section className="h-[calc(100vh-60px-50px)] bg-[#fffcf9]">
         <div className="grid grid-cols-1  md:grid-cols-2 place-content-center h-full px-4">
