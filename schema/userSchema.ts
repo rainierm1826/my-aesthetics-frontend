@@ -16,7 +16,11 @@ export const userFormSchema = z.object({
       (file) => !file || file instanceof File || typeof file === "string",
       "Invalid file type"
     ),
-  birthday: z.string().min(1, "Birthday is required").max(Date.now()).optional(),
+  birthday: z
+    .string()
+    .min(1, "Birthday is required")
+    .max(Date.now())
+    .or(z.literal("")),
   email: z.email().readonly(),
   password: z
     .string()
@@ -27,9 +31,15 @@ export const userFormSchema = z.object({
     .regex(
       /[^A-Za-z0-9]/,
       "Password must contain at least one special character"
-    ).optional(),
-  phone_number: z.string().min(1, "Phone number is required").optional(),
-  role:z.string().readonly()
+    )
+    .optional()
+    .or(z.literal("")),
+  phone_number: z
+    .string()
+    .min(1, "Phone number is required")
+    .optional()
+    .or(z.literal("")),
+  role: z.string().readonly(),
 });
 
 export type UserFormValues = z.infer<typeof userFormSchema>;

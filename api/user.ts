@@ -2,13 +2,24 @@ import { UserResponse } from "@/lib/user-type";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export async function patchUser(data: unknown): Promise<UserResponse> {
+export async function patchUser({
+  data,
+  token,
+}: {
+  data: unknown;
+  token?: string | null;
+}): Promise<UserResponse> {
   try {
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
     const response = await fetch(`${backendUrl}/user`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify(data),
     });
 

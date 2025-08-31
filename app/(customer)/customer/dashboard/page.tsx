@@ -6,7 +6,6 @@ import { useUserStore } from "@/provider/store/userStore";
 export default function CustomerDashboard() {
   const { auth, isAuth } = useAuthStore();
   const {user} = useUserStore()
-  console.log(user)
 
 
   if (!isAuth) {

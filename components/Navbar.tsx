@@ -7,7 +7,7 @@ import NavbarSheet from "./NavbarSheet";
 
 const Navbar = () => {
   return (
-    <header className="container">
+    <header className="container mx-auto">
       <nav className="flex justify-between items-center h-[60px] px-4">
         {/* logo */}
         <div>

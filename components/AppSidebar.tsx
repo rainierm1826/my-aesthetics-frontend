@@ -160,6 +160,7 @@ const SFooter = () => {
   const { auth } = useAuthStore();
   const { user } = useUserStore();
 
+
   return (
     <SidebarFooter className="mt-auto">
       <SidebarMenu>

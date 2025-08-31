@@ -1,3 +1,5 @@
+"use client"
+
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import ProfilePicture from "./ProfilePicture";
@@ -10,8 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { useUserStore } from "@/provider/store/userStore";
 
 const OwnerNavbar = ({ title }: { title: string }) => {
+
+  const {user} = useUserStore()
+
   return (
     <header className="flex h-(--header-height) container shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
@@ -24,7 +30,7 @@ const OwnerNavbar = ({ title }: { title: string }) => {
         <div className="ml-auto flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-0 cursor-pointer">
-              <ProfilePicture />
+              <ProfilePicture image={user?.image || "https://github.com/shadcn.png"}/>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>

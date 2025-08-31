@@ -17,7 +17,7 @@ import {
   Edit2,
   Save,
   X,
-  User,
+  User as UserIcon,
   Mail,
   Phone,
   Calendar,
@@ -37,13 +37,15 @@ import {
   FormMessage,
 } from "./ui/form";
 import SkeletonSettings from "./SkeletonSettings";
+import { useBaseMutation } from "@/hooks/useBaseMutation";
+import { patchUser } from "@/api/user";
 
 export default function UserForm() {
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const { user } = useUserStore();
-  const { auth, isAuth } = useAuthStore();
+  const { user, updateUser } = useUserStore();
+  const { auth, isAuth, access_token } = useAuthStore();
+  console.log(user);
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
@@ -51,12 +53,12 @@ export default function UserForm() {
       first_name: "",
       last_name: "",
       middle_initial: "",
-      phone_number: "",
-      birthday: "",
+      phone_number: undefined,
+      birthday: undefined,
       image: "https://github.com/shadcn.png",
       email: "",
       role: "customer",
-      password: "",
+      password: undefined,
     },
   });
 
@@ -94,19 +96,29 @@ export default function UserForm() {
     }
   }, [user, auth, reset]);
 
-  const handleSave = async (data: UserFormValues) => {
-    setIsLoading(true);
-    try {
-      console.log("Saving user data:", data);
+  const userMutation = useBaseMutation("patch", {
+    queryKey: "user",
+    updateFn: patchUser,
+    onSuccess: (data) => {
+      updateUser(data.user);
+    },
+    successMessages: {
+      update: "User updated successfully.",
+    },
+  });
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+  const isLoading = userMutation.isPending;
 
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Failed to save user data:", error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSave = async (values: UserFormValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { email, password, role, ...rest } = values;
+
+    const cleanData = {
+      ...rest,
+      phone_number: values.phone_number || null,
+      birthday: values.birthday || null,
+    };
+    userMutation.mutate({ data: cleanData, token: access_token });
   };
 
   const handleCancel = () => {
@@ -150,7 +162,6 @@ export default function UserForm() {
       day: "numeric",
     });
   };
-
 
   if (!isAuth || !user) {
     return <SkeletonSettings />;
@@ -237,8 +248,12 @@ export default function UserForm() {
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     <Shield className="h-4 w-4" />
-                    <Badge variant={"secondary"} className="capitalize rounded-full">
-                      {watchedValues.role || auth?.role}
+                    <Badge variant={"secondary"} className="rounded-full">
+                      {auth?.role == "admin" ? (
+                        `Admin at ${user?.branch?.branch_name}`
+                      ) : (
+                        <p className="capitalize">{auth?.role}</p>
+                      )}
                     </Badge>
                   </div>
                 </div>
@@ -249,7 +264,7 @@ export default function UserForm() {
           {/* Personal Information */}
           <Card>
             <CardHeader className="flex flex-row items-center gap-2">
-              <User className="h-5 w-5" />
+              <UserIcon className="h-5 w-5" />
               <div>
                 <CardTitle>Personal Information</CardTitle>
                 <CardDescription>Your basic personal details</CardDescription>
@@ -393,10 +408,7 @@ export default function UserForm() {
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
                       <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground min-h-10 flex items-center justify-between">
-                        <Badge
-                          variant={"secondary"}
-                          className="rounded-full"
-                        >
+                        <Badge variant={"secondary"} className="rounded-full">
                           {field.value}
                         </Badge>
                         <Badge

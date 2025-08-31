@@ -1,11 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Tinos } from "next/font/google";
-
-const tinos = Tinos({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
+import { tinos } from "./fonts/fonts";
 
 const Logo = ({mainSize, size, href}:{mainSize:string, size: string, href:string}) => {
   return (
