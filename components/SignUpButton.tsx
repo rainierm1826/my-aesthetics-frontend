@@ -23,11 +23,11 @@ const SignUpButton = () => {
         <Button variant={"outline"}>Sign-Up</Button>
       </DialogTrigger>
       <DialogContent
-        className="grid grid-cols-2 min-h-[500px] "
+        className="grid grid-cols-1 md:grid-cols-2 min-h-[500px] "
         style={{ maxWidth: "800px" }}
       >
         {/* left column for image */}
-        <div></div>
+        <div className="hidden md:flex"></div>
 
         {/* right column for forms */}
         <div

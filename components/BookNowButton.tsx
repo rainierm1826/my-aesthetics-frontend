@@ -23,8 +23,8 @@ const BookNowButton = ({ size }: { size: string }) => {
           Book Now
         </Button>
       </DialogTrigger>
-      <DialogContent className="grid grid-cols-2" style={{ maxWidth: "800px" }}>
-        <div></div>
+      <DialogContent className="grid grid-cols-1 md:grid-cols-2" style={{ maxWidth: "800px" }}>
+        <div className="hidden md:flex"></div>
         <DialogHeader>
           <DialogTitle>Sign In</DialogTitle>
           <DialogDescription className="mb-5">
