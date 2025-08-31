@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -34,6 +34,8 @@ import ProfilePicture from "./ProfilePicture";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useMemo } from "react";
 import { useUserStore } from "@/provider/store/userStore";
+import { useBaseMutation } from "@/hooks/useBaseMutation";
+import { signOut } from "@/api/auth";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -157,9 +159,24 @@ const GeneralGroup = ({ pathname }: { pathname: string }) => {
 };
 
 const SFooter = () => {
-  const { auth } = useAuthStore();
-  const { user } = useUserStore();
+  const { auth, clearAuth } = useAuthStore();
+  const { user, clearUser } = useUserStore();
+  const router = useRouter();
 
+  const signInMutation = useBaseMutation("post", {
+    queryKey: "account",
+    createFn: signOut,
+    onSuccess: async () => {
+      clearAuth();
+      clearUser();
+      router.push("/");
+    },
+    successMessages: {
+      create: "Sign Out Successfully",
+    },
+  });
+
+  const isLoading = signInMutation.isPending;
 
   return (
     <SidebarFooter className="mt-auto">
@@ -195,7 +212,12 @@ const SFooter = () => {
                 <DropdownMenuItem asChild>
                   <Link href={"/owner/profile"}>Profile</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => signInMutation.mutate()}
+                  disabled={isLoading}
+                >
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuButton>

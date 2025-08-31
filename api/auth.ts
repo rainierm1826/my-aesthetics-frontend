@@ -148,7 +148,7 @@ export async function signOut(): Promise<SignOutResponse> {
         "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
       );
     }
-    const response = await fetch(`${backendUrl}/auth/sign-out`, {
+    const response = await fetch(`${backendUrl}/auth/signout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
