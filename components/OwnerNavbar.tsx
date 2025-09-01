@@ -23,7 +23,7 @@ const OwnerNavbar = ({ title }: { title: string }) => {
   const { user, clearUser } = useUserStore();
   const router = useRouter();
 
-  const signInMutation = useBaseMutation("post", {
+  const signOutMutation = useBaseMutation("post", {
     queryKey: "account",
     createFn: signOut,
     onSuccess: async () => {
@@ -36,7 +36,7 @@ const OwnerNavbar = ({ title }: { title: string }) => {
     },
   });
 
-  const isLoading = signInMutation.isPending;
+  const isLoading = signOutMutation.isPending;
 
   return (
     <header className="flex h-(--header-height) container shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -61,7 +61,7 @@ const OwnerNavbar = ({ title }: { title: string }) => {
                 <Link href="/owner/profile">Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => signInMutation.mutate()}
+                onClick={() => signOutMutation.mutate()}
                 disabled={isLoading}
               >
                 Logout

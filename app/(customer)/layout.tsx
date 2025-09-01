@@ -25,6 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} `}>
         <QueryProvider>
+          <Navbar />
           <main>{children}</main>
           <Toaster />
           <Footer />
