@@ -5,8 +5,8 @@ import { toast } from "sonner";
 
 interface MutationConfig<TData = unknown, TVariables = unknown> {
   createFn?: (payload?: TVariables) => Promise<TData>;
-  updateFn?: (payload?: TVariables) => Promise<TData>;
-  deleteFn?: (payload?: TVariables) => Promise<TData>;
+  updateFn?: (payload: TVariables) => Promise<TData>;
+  deleteFn?: (payload: TVariables) => Promise<TData>;
   queryKey: string | string[];
   successMessages?: {
     create?: string;
