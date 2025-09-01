@@ -167,9 +167,9 @@ const SFooter = () => {
     queryKey: "account",
     createFn: signOut,
     onSuccess: async () => {
+      router.push("/");
       clearAuth();
       clearUser();
-      router.push("/");
     },
     successMessages: {
       create: "Sign Out Successfully",
