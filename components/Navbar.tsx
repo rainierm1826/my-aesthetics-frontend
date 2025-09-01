@@ -25,13 +25,15 @@ const Navbar = () => {
         <NavLinks />
         {/* buttons */}
 
-        {isAuthLoading ? (
-          <p>Loading...</p>
-        ) : isAuth && auth?.role !== "customer" ? (
-          <DropDownMenuOwnerProfile />
-        ) : (
-          <DropDownMenuCustomerProfile />
-        )}
+        <div className="hidden md:flex">
+          {isAuthLoading ? (
+            <p>Loading...</p>
+          ) : isAuth && auth?.role !== "customer" ? (
+            <DropDownMenuOwnerProfile />
+          ) : (
+            <DropDownMenuCustomerProfile />
+          )}
+        </div>
 
         <div className="flex md:hidden">
           <NavbarSheet />

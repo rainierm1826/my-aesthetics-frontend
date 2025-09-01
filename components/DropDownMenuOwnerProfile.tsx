@@ -49,6 +49,9 @@ const DropDownMenuOwnerProfile = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
+          <Link href="/owner/dashboard/appointments">Dashboard</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <Link href="/owner/profile">Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem

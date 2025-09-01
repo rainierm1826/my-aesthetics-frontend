@@ -44,7 +44,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent className="flex flex-col">
         <SidebarHeader className="flex items-center">
-          <Logo mainSize="text-4xl" size="text-xl" href="#" />
+          <Logo mainSize="text-4xl" size="text-xl" href="/" />
         </SidebarHeader>
         {auth?.role === "owner" && <AnalyticsGroup pathname={pathname} />}
         <ManagementGroup pathname={pathname} userRole={auth?.role || "owner"} />

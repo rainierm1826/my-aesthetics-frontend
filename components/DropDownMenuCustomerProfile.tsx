@@ -17,7 +17,7 @@ import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { signOut } from "@/api/auth";
 import SignUpButton from "./SignUpButton";
 import BookNowButton from "./BookNowButton";
-import { Link } from "lucide-react";
+import Link from "next/link";
 
 const DropDownMenuCustomerProfile = () => {
   const { isAuth, clearAuth, auth, isAuthLoading } = useAuthStore();
