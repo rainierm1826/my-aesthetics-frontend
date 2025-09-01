@@ -3,44 +3,15 @@
 import React from "react";
 import Logo from "./Logo";
 import Link from "next/link";
-import SignUpButton from "./SignUpButton";
-import BookNowButton from "./BookNowButton";
+
 import NavbarSheet from "./NavbarSheet";
+
+import DropDownMenuCustomerProfile from "./DropDownMenuCustomerProfile";
 import { useAuthStore } from "@/provider/store/authStore";
-import { useUserStore } from "@/provider/store/userStore";
-import ProfilePicture from "./ProfilePicture";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
-import { useBaseMutation } from "@/hooks/useBaseMutation";
-import { signOut } from "@/api/auth";
+import DropDownMenuOwnerProfile from "./DropDownMenuOwnerProfile";
 
 const Navbar = () => {
-  const { isAuth, clearAuth, auth, isAuthLoading } = useAuthStore();
-  const { user, clearUser } = useUserStore();
-
-  const router = useRouter();
-
-  const signOutMutation = useBaseMutation("post", {
-    queryKey: "account",
-    createFn: signOut,
-    onSuccess: async () => {
-      router.push("/");
-      clearAuth();
-      clearUser();
-    },
-    successMessages: {
-      create: "Sign Out Successfully",
-    },
-  });
-
-  const isLoading = signOutMutation.isPending;
+  const { isAuth, auth, isAuthLoading } = useAuthStore();
 
   return (
     <header className="container mx-auto">
@@ -54,44 +25,12 @@ const Navbar = () => {
         <NavLinks />
         {/* buttons */}
 
-        {isAuthLoading || isLoading ? (
+        {isAuthLoading ? (
           <p>Loading...</p>
-        ) : isAuth ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger className="focus:outline-0 cursor-pointer">
-              <ProfilePicture
-                image={user?.image || "https://github.com/shadcn.png"}
-              />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {auth?.role === "customer" && (
-                <DropdownMenuItem asChild>
-                  <Link href="/customer/dashboard">Dashboard</Link>
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem asChild>
-                <Link href="/customer/profile">Profile</Link>
-              </DropdownMenuItem>
-              {auth?.role === "customer" && (
-                <DropdownMenuItem asChild>
-                  <Link href="/customer/history">History</Link>
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem
-                onClick={() => signOutMutation.mutate()}
-                disabled={isLoading}
-              >
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) :  (
-          <div className="md:flex gap-3 hidden">
-            <SignUpButton />
-            <BookNowButton size="" />
-          </div>
+        ) : isAuth && auth?.role !== "customer" ? (
+          <DropDownMenuOwnerProfile />
+        ) : (
+          <DropDownMenuCustomerProfile />
         )}
 
         <div className="flex md:hidden">

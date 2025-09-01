@@ -5,6 +5,7 @@ interface Auth {
   account_id: string;
   email: string;
   role: "owner" | "admin" | "customer";
+  is_verified: boolean
 }
 
 interface AuthState {

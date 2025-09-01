@@ -30,6 +30,7 @@ type TokenPayload = {
   sub: string;
   email: string;
   role: "customer" | "admin" | "owner";
+  is_verified: boolean
   exp: number;
 };
 
@@ -57,6 +58,7 @@ const SignInForm = () => {
           account_id: decoded.sub,
           email: decoded.email,
           role: decoded.role,
+          is_verified: decoded.is_verified
         },
         data.access_token
       );

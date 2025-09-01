@@ -22,6 +22,7 @@ import {
   Phone,
   Calendar,
   Shield,
+  ShieldCheck
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { userFormSchema, UserFormValues } from "@/schema/userSchema";
@@ -247,7 +248,7 @@ export default function UserForm() {
                     {watchedValues.email || auth?.email}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
-                    <Shield className="h-4 w-4" />
+                    {auth?.is_verified ? <ShieldCheck className="h-4 w-4 text-blue-500" /> : <Shield className="h-4 w-4" />}
                     <Badge variant={"secondary"} className="rounded-full">
                       {auth?.role == "admin" ? (
                         `Admin at ${user?.branch?.branch_name}`
