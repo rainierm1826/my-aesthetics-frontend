@@ -3,7 +3,7 @@
 import React from "react";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useUserStore } from "@/provider/store/userStore";
-import ProfilePicture from "./ProfilePicture";
+import ProfilePicture from "../ProfilePicture";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +15,8 @@ import {
 import { useRouter } from "next/navigation";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { signOut } from "@/api/auth";
-import SignUpButton from "./buttons/SignUpButton";
-import BookNowButton from "./buttons/BookNowButton";
+import SignUpButton from "../buttons/SignUpButton";
+import BookNowButton from "../buttons/BookNowButton";
 import Link from "next/link";
 
 const DropDownMenuCustomerProfile = () => {

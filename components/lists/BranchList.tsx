@@ -4,7 +4,7 @@ import React from "react";
 import BranchCard from "../cards/BranchCard";
 import { Branch } from "@/lib/branch-types";
 import { useBranches } from "@/hooks/useBranches";
-import SkeletonCard from "../SkeletonCard";
+import SkeletonCard from "../skeletons/SkeletonCard";
 import SearchInput from "../SearchInput";
 
 const BranchList = ({ action }: { action: boolean }) => {

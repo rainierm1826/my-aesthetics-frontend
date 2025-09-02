@@ -1,6 +1,6 @@
 import React from "react";
-import { Skeleton } from "./ui/skeleton";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { Skeleton } from "../ui/skeleton";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 const SkeletonScoreBoard = () => {
   return (

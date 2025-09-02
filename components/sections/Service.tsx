@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { tinos } from "../fonts/fonts";
-import SkeletonCard from "../SkeletonCard";
+import SkeletonCard from "../skeletons/SkeletonCard";
 import ServiceList from "../lists/ServiceList";
 
 const Service = () => {

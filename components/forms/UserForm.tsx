@@ -37,7 +37,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import SkeletonSettings from "../SkeletonSettings";
+import SkeletonSettings from "../skeletons/SkeletonSettings";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchUser } from "@/api/user";
 

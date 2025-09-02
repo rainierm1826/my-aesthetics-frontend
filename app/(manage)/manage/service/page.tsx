@@ -1,5 +1,5 @@
 import DashboardCard from "@/components/cards/DashboardCard";
-import OwnerWrapper from "@/components/OwnerWrapper";
+import OwnerWrapper from "@/components/ManagementWrapper";
 
 import {
   dehydrate,

@@ -12,11 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Brush, Upload, X } from "lucide-react";
-import DropDownSex from "../DropDownSex";
-import DropDownBranch from "../DropDownBranch";
-import DropDownExperience from "../DropDownExperience";
+import DropDownSex from "../selects/DropDownSex";
+import DropDownBranch from "../selects/DropDownBranch";
+import DropDownExperience from "../selects/DropDownExperience";
 import Image from "next/image";
-import DropDownAvailability from "../DropDownAvailability";
+import DropDownAvailability from "../selects/DropDownAvailability";
 import { patchAesthetician, postAesthetician } from "@/api/aesthetician";
 import { fileToBase64 } from "@/lib/function";
 import { FormAesthetician } from "@/lib/aesthetician-types";

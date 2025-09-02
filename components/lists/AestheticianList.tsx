@@ -4,12 +4,12 @@ import React from "react";
 import AestheticianCard from "../cards/AestheticianCard";
 import { Aesthetician } from "@/lib/aesthetician-types";
 import { useAestheticians } from "@/hooks/useAestheticians";
-import SkeletonCard from "../SkeletonCard";
+import SkeletonCard from "../skeletons/SkeletonCard";
 import SearchInput from "../SearchInput";
-import DropDownBranch from "../DropDownBranch";
-import DropDownAvailability from "../DropDownAvailability";
-import DropDownSex from "../DropDownSex";
-import DropDownExperience from "../DropDownExperience";
+import DropDownBranch from "../selects/DropDownBranch";
+import DropDownAvailability from "../selects/DropDownAvailability";
+import DropDownSex from "../selects/DropDownSex";
+import DropDownExperience from "../selects/DropDownExperience";
 
 const AestheticianList = ({ action }: { action: boolean }) => {
   const { data, isFetching } = useAestheticians();

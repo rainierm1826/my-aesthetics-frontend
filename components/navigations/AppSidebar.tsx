@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Logo from "./Logo";
+import Logo from "../Logo";
 import Link from "next/link";
 import {
   Collapsible,
@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { general, analytics, managements } from "@/lib/constants";
 import { ChevronRight, Plus } from "lucide-react";
-import ProfilePicture from "./ProfilePicture";
+import ProfilePicture from "../ProfilePicture";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useMemo } from "react";
 import { useUserStore } from "@/provider/store/userStore";
@@ -162,8 +162,9 @@ const SFooter = () => {
   const { auth, clearAuth } = useAuthStore();
   const { user, clearUser } = useUserStore();
   const router = useRouter();
+  const profileURL = auth?.role == "customer" ? "/customer/profile" : "/manage/profile"
 
-  const signInMutation = useBaseMutation("post", {
+  const signOutMutation = useBaseMutation("post", {
     queryKey: "account",
     createFn: signOut,
     onSuccess: async () => {
@@ -176,7 +177,7 @@ const SFooter = () => {
     },
   });
 
-  const isLoading = signInMutation.isPending;
+  const isLoading = signOutMutation.isPending;
 
   return (
     <SidebarFooter className="mt-auto">
@@ -210,10 +211,10 @@ const SFooter = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href={"/owner/profile"}>Profile</Link>
+                  <Link href={profileURL}>Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => signInMutation.mutate()}
+                  onClick={() => signOutMutation.mutate()}
                   disabled={isLoading}
                 >
                   Logout

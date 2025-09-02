@@ -2,14 +2,14 @@
 
 import { DataTable } from "@/components/DataTable";
 import SearchInput from "@/components/SearchInput";
-import SkeletonTable from "../SkeletonTable";
+import SkeletonTable from "../skeletons/SkeletonTable";
 import { toast } from "sonner";
 import { useServices } from "@/hooks/useServices";
 import { Service } from "@/lib/service-types";
 import { serviceColumn } from "@/components/columns/service-column";
 import ServiceForm from "../forms/ServiceForm";
-import DropDownServiceCategory from "../DropDownServiceCategory";
-import DropDownBranch from "../DropDownBranch";
+import DropDownServiceCategory from "../selects/DropDownServiceCategory";
+import DropDownBranch from "../selects/DropDownBranch";
 
 export default function ServiceTable() {
   const { data, isFetching, isError } = useServices();

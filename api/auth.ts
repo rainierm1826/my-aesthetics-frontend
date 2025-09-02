@@ -24,6 +24,10 @@ export async function signUp(data: unknown): Promise<SignUpResponse> {
     });
 
     if (!response.ok) {
+      if (response.status == 409) {
+        throw new Error("Email already exist");
+      }
+
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const result: SignUpResponse = await response.json();

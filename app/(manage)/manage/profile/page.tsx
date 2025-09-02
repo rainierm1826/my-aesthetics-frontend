@@ -1,4 +1,4 @@
-import OwnerWrapper from "@/components/OwnerWrapper";
+import OwnerWrapper from "@/components/ManagementWrapper";
 import UserForm from "@/components/forms/UserForm";
 
 export default function ProfilePage() {

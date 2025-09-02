@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
-import "../globals.css";
-import Footer from "@/components/Footer";
+import Navbar from "@/components/navigations/Navbar";
+import "./globals.css";
+import Footer from "@/components/sections/Footer";
 import QueryProvider from "@/provider/QueryProvider";
 import { Toaster } from "sonner";
-import {inter} from "@/components/fonts/fonts"
-
+import { inter } from "@/components/fonts/fonts";
 
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio",

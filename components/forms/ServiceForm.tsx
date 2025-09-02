@@ -15,8 +15,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Brush, Upload, X } from "lucide-react";
 import Image from "next/image";
-import DropDownBranch from "../DropDownBranch";
-import DropDownServiceCategory from "../DropDownServiceCategory";
+import DropDownBranch from "../selects/DropDownBranch";
+import DropDownServiceCategory from "../selects/DropDownServiceCategory";
 import { Textarea } from "../ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,8 +32,8 @@ import { serviceFormSchema, ServiceFormValues } from "@/schema/serviceSchema";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchService, postService } from "@/api/service";
 import { fileToBase64 } from "@/lib/function";
-import DropDownDiscountType from "../DropDownDiscountType";
-import { ServiceFormProps } from "@/lib/service-type";
+import DropDownDiscountType from "../selects/DropDownDiscountType";
+import { ServiceFormProps } from "@/lib/service-types";
 
 const ServiceForm: React.FC<ServiceFormProps> = ({
   renderDialog = true,

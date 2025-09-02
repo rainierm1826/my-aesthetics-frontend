@@ -10,7 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 type Props = {
   pageCount?: number;

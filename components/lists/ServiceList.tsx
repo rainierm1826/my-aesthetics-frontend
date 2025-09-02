@@ -4,9 +4,9 @@ import React from "react";
 import { useServices } from "@/hooks/useServices";
 import { Service } from "@/lib/service-types";
 import ServicesCard from "../cards/ServicesCard";
-import SkeletonCard from "../SkeletonCard";
-import DropDownServiceCategory from "../DropDownServiceCategory";
-import DropDownBranch from "../DropDownBranch";
+import SkeletonCard from "../skeletons/SkeletonCard";
+import DropDownServiceCategory from "../selects/DropDownServiceCategory";
+import DropDownBranch from "../selects/DropDownBranch";
 import SearchInput from "../SearchInput";
 
 const ServiceList = ({ action }: { action: boolean }) => {

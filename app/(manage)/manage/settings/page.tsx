@@ -1,4 +1,4 @@
-import OwnerWrapper from "@/components/OwnerWrapper";
+import OwnerWrapper from "@/components/ManagementWrapper";
 import SettingsForm from "@/components/forms/SettingsForm";
 
 export default function SettingsPage() {

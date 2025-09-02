@@ -3,7 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import OwnerWrapper from "@/components/OwnerWrapper";
+import OwnerWrapper from "@/components/ManagementWrapper";
 import DashboardCard from "@/components/cards/DashboardCard";
 import { getAllBranches } from "@/api/branch";
 import BranchTable from "@/components/tables/BranchTable";

@@ -1,7 +1,7 @@
 import { getAllAdmin } from "@/api/admin";
 import AdminTable from "@/components/tables/AdminTable";
 import DashboardCard from "@/components/cards/DashboardCard";
-import OwnerWrapper from "@/components/OwnerWrapper";
+import OwnerWrapper from "@/components/ManagementWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import {

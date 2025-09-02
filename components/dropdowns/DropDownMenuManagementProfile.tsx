@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ProfilePicture from "./ProfilePicture";
+import ProfilePicture from "../ProfilePicture";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { signOut } from "@/api/auth";
 
-const DropDownMenuOwnerProfile = () => {
+const DropDownMenuManagementProfile = () => {
   const { clearAuth } = useAuthStore();
   const { user, clearUser } = useUserStore();
   const router = useRouter();
@@ -49,10 +49,10 @@ const DropDownMenuOwnerProfile = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/owner/dashboard/appointments">Dashboard</Link>
+          <Link href="/manage/dashboard/appointments">Dashboard</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/owner/profile">Profile</Link>
+          <Link href="/manage/profile">Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => signOutMutation.mutate()}
@@ -65,4 +65,4 @@ const DropDownMenuOwnerProfile = () => {
   );
 };
 
-export default DropDownMenuOwnerProfile;
+export default DropDownMenuManagementProfile;

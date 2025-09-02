@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import AestheticianList from "../lists/AestheticianList";
-import SkeletonCard from "../SkeletonCard";
+import SkeletonCard from "../skeletons/SkeletonCard";
 import { tinos } from "../fonts/fonts";
 
 const Aesthetician = () => {

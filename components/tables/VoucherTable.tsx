@@ -2,13 +2,13 @@
 
 import { DataTable } from "@/components/DataTable";
 import SearchInput from "@/components/SearchInput";
-import SkeletonTable from "../SkeletonTable";
+import SkeletonTable from "../skeletons/SkeletonTable";
 import { toast } from "sonner";
 import { useVouchers } from "@/hooks/useVouchers";
 import { Voucher } from "@/lib/voucher-type";
 import VoucherForm from "../forms/VoucherForm";
 import { voucherColumn } from "@/components/columns/voucher-column";
-import DropDownDiscountType from "../DropDownDiscountType";
+import DropDownDiscountType from "../selects/DropDownDiscountType";
 
 export default function VoucherTable() {
   const { data, isFetching, isError } = useVouchers();

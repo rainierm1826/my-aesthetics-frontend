@@ -2,13 +2,13 @@
 
 import { DataTable } from "@/components/DataTable";
 import SearchInput from "@/components/SearchInput";
-import SkeletonTable from "../SkeletonTable";
+import SkeletonTable from "../skeletons/SkeletonTable";
 import { toast } from "sonner";
 import AestheticianForm from "../forms/AestheticianForm";
-import DropDownAvailability from "../DropDownAvailability";
-import DropDownSex from "../DropDownSex";
-import DropDownExperience from "../DropDownExperience";
-import DropDownBranch from "../DropDownBranch";
+import DropDownAvailability from "../selects/DropDownAvailability";
+import DropDownSex from "../selects/DropDownSex";
+import DropDownExperience from "../selects/DropDownExperience";
+import DropDownBranch from "../selects/DropDownBranch";
 import { Aesthetician } from "@/lib/aesthetician-types";
 import { aestheticianColumn } from "@/components/columns/aesthetician-column";
 import { useAestheticians } from "@/hooks/useAestheticians";

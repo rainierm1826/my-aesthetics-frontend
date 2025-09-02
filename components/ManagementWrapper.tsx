@@ -1,5 +1,5 @@
 import React from "react";
-import OwnerNavbar from "./OwnerNavbar";
+import ManagementNavbar from "./navigations/ManagementNavbar";
 
 interface OwnerWrapperProps {
   title: string;
@@ -9,7 +9,7 @@ interface OwnerWrapperProps {
 const OwnerWrapper: React.FC<OwnerWrapperProps> = ({ title, children }) => {
   return (
     <div>
-      <OwnerNavbar title={title} />
+      <ManagementNavbar title={title} />
       <div className="container mx-auto py-5 px-5">{children}</div>
     </div>
   );

@@ -7,7 +7,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Calendar } from "@/components/ui/calendar";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { CalendarIcon } from "lucide-react";
 import {
   Popover,

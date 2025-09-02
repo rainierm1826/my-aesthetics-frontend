@@ -11,7 +11,7 @@ import {
 } from "recharts";
 
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { Card, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardHeader, CardTitle } from "../ui/card";
 
 const chartData = [
   { month: "January", desktop: 186 },

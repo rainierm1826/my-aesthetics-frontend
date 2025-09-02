@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
-import "../globals.css";
+import { AppSidebar } from "@/components/navigations/AppSidebar";
+import "./globals.css";
 import QueryProvider from "@/provider/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MY Aesthetics Brow Studio - Owner",
+  title: "MY Aesthetics Brow Studio - Management",
   description: "",
 };
 

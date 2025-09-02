@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, Gift, Percent, Hash } from "lucide-react";
 import { memo, ReactNode } from "react";
-import DropDownDiscountType from "../DropDownDiscountType";
+import DropDownDiscountType from "../selects/DropDownDiscountType";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { voucherFormSchema, VoucherFormValues } from "@/schema/voucherSchema";

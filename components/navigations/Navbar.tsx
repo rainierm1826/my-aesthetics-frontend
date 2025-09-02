@@ -1,14 +1,12 @@
 "use client";
 
 import React from "react";
-import Logo from "./Logo";
+import Logo from "../Logo";
 import Link from "next/link";
-
 import NavbarSheet from "./NavbarSheet";
-
-import DropDownMenuCustomerProfile from "./DropDownMenuCustomerProfile";
+import DropDownMenuCustomerProfile from "../dropdowns/DropDownMenuCustomerProfile";
 import { useAuthStore } from "@/provider/store/authStore";
-import DropDownMenuOwnerProfile from "./DropDownMenuOwnerProfile";
+import DropDownMenuOwnerProfile from "../dropdowns/DropDownMenuManagementProfile";
 
 const Navbar = () => {
   const { isAuth, auth, isAuthLoading } = useAuthStore();

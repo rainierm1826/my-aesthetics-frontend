@@ -1,11 +1,27 @@
-import SkeletonCard from "@/components/SkeletonCard";
+import { tinos } from "@/components/fonts/fonts";
+import SkeletonCard from "@/components/skeletons/SkeletonCard";
 
 export default function Loading() {
   return (
-    <div className="grid grid-cols-1 mx-10 mt-10 md:grid-cols-3 justify-center px-4 gap-3">
-      {Array.from({ length: 6 }).map((_, index) => (
-        <SkeletonCard key={index} />
-      ))}
+    <div className="container mx-auto px-6 my-10">
+      <div className="text-center mb-12">
+        <h1
+          className={`${tinos.className} text-4xl font-bold text-gray-800 mb-4`}
+        >
+          Our Services
+        </h1>
+        <p className="text-[#7C7C7C] text-sm max-w-2xl mx-auto">
+          Simply browse through our extensive list of trusted aestheticians,
+          <br />
+          schedule your appointment hassle-free.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 mx-10 mt-10 md:grid-cols-3 justify-center px-4 gap-3">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
     </div>
   );
 }

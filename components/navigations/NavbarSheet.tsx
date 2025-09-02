@@ -6,7 +6,7 @@ import {
   SheetHeader,
 } from "@/components/ui/sheet";
 import { AlignRight } from "lucide-react";
-import Logo from "./Logo";
+import Logo from "../Logo";
 
 export default function NavbarSheet() {
   return (

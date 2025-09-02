@@ -29,7 +29,7 @@ import type {
   Table as ReactTableType,
 } from "@tanstack/react-table";
 
-import PaginationComponent from "./PaginationComponent";
+import PaginationComponent from "./paginations/PaginationComponent";
 import DataTableEntries from "./DataTableEntries";
 
 interface DataTableProps<TData, TValue> {

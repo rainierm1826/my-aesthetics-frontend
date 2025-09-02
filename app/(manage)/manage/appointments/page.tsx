@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import DashboardCard from "@/components/cards/DashboardCard";
 import { DataTable } from "@/components/DataTable";
-import DatePagination from "@/components/DatePagination";
-import DropDownAppointmentStatus from "@/components/DropDownAppointmentStatus";
-import DropDownBranch from "@/components/DropDownBranch";
-import OwnerWrapper from "@/components/OwnerWrapper";
+import DatePagination from "@/components/paginations/DatePagination";
+import DropDownAppointmentStatus from "@/components/selects/DropDownAppointmentStatus";
+import DropDownBranch from "@/components/selects/DropDownBranch";
+import OwnerWrapper from "@/components/ManagementWrapper";
 import SearchInput from "@/components/SearchInput";
 import { Button } from "@/components/ui/button";
 import { appointmentColumn } from "@/components/columns/appointment-column";

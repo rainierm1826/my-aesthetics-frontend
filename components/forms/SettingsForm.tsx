@@ -24,7 +24,7 @@ import {
 import { ChevronDown } from "lucide-react";
 import { useBranches } from "@/hooks/useBranches";
 import { Branch } from "@/lib/branch-types";
-import SkeletonCompactCard from "../SkeletonCompactCard";
+import SkeletonCompactCard from "../skeletons/SkeletonCompactCard";
 
 export default function SettingsForm() {
   const [open, setOpen] = useState(false);

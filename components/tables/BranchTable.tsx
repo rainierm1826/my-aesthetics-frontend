@@ -5,7 +5,7 @@ import { branchColumns } from "@/components/columns/branch-columns";
 import { Branch } from "@/lib/branch-types";
 import SearchInput from "@/components/SearchInput";
 import BranchForm from "../forms/BranchForm";
-import SkeletonTable from "../SkeletonTable";
+import SkeletonTable from "../skeletons/SkeletonTable";
 import { toast } from "sonner";
 import { useBranches } from "@/hooks/useBranches";
 

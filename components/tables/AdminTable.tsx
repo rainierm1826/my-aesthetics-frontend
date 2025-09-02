@@ -2,13 +2,13 @@
 
 import { DataTable } from "@/components/DataTable";
 import SearchInput from "@/components/SearchInput";
-import SkeletonTable from "../SkeletonTable";
+import SkeletonTable from "../skeletons/SkeletonTable";
 import { toast } from "sonner";
 import { useAdmins } from "@/hooks/useAdmins";
 import { Admin } from "@/lib/admin-type";
 import { adminColumn } from "@/components/columns/admin-column";
 import AdminForm from "../forms/AdminForm";
-import DropDownBranch from "../DropDownBranch";
+import DropDownBranch from "../selects/DropDownBranch";
 
 export default function AdminTable() {
   const { data, isFetching, isError } = useAdmins();

@@ -2,11 +2,9 @@
 
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import DropDownMenuManagementProfile from "../dropdowns/DropDownMenuManagementProfile";
 
-import DropDownMenuOwnerProfile from "./DropDownMenuOwnerProfile";
-
-const OwnerNavbar = ({ title }: { title: string }) => {
-
+const ManagementNavbar = ({ title }: { title: string }) => {
 
   return (
     <header className="flex h-(--header-height) container shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -18,11 +16,11 @@ const OwnerNavbar = ({ title }: { title: string }) => {
         />
         <h1 className="text-2xl py-[11.5px] font-medium">{title}</h1>
         <div className="ml-auto flex items-center gap-2">
-         <DropDownMenuOwnerProfile/>
+          <DropDownMenuManagementProfile />
         </div>
       </div>
     </header>
   );
 };
 
-export default OwnerNavbar;
+export default ManagementNavbar;
