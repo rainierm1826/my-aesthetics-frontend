@@ -28,8 +28,8 @@ export const adminColumn: ColumnDef<Admin>[] = [
     cell: ({ row }) => {
       return (
         <ActionCell
-          id={row.original.auth.account_id}
-          deleteFn={() => deleteAdmin({ account_id: row.original.auth.account_id })}
+          id={row.original.auth?.account_id}
+          deleteFn={() => deleteAdmin({ account_id: row.original.auth?.account_id })}
           deleteMessage="Admin has been deleted."
           queryKey="account"
           editDialog={

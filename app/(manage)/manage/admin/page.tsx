@@ -38,19 +38,17 @@ export default async function AdminPage({
   const dehydratedState = dehydrate(queryClient);
   return (
     <OwnerWrapper title="Manage Admins">
-      <div className="">
-        <div className="flex flex-wrap gap-3 mb-5">
-          <DashboardCard />
-          <DashboardCard />
-          <DashboardCard />
-          <DashboardCard />
-        </div>
-        <Suspense fallback={<Skeleton />}>
-          <HydrationBoundary state={dehydratedState}>
-            <AdminTable />
-          </HydrationBoundary>
-        </Suspense>
+      <div className="flex flex-wrap gap-3 mb-5">
+        <DashboardCard />
+        <DashboardCard />
+        <DashboardCard />
+        <DashboardCard />
       </div>
+      <Suspense fallback={<Skeleton />}>
+        <HydrationBoundary state={dehydratedState}>
+          <AdminTable />
+        </HydrationBoundary>
+      </Suspense>
     </OwnerWrapper>
   );
 }
