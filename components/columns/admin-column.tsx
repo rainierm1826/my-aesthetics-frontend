@@ -43,7 +43,7 @@ export const adminColumn: ColumnDef<Admin>[] = [
               lastName={row.original.last_name}
               middleInitial={row.original.middle_initial || ""}
               branchId={row.original.branch.branch_id}
-              email={row.original.auth.email}
+              email={row.original.auth?.email}
             />
           }
         />
