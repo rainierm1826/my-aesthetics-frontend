@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
 import React, { Suspense } from "react";
 import { tinos } from "../fonts/fonts";
 import SkeletonCard from "../SkeletonCard";
-import ServiceList from "../ServiceList";
+import ServiceList from "../lists/ServiceList";
 
 const Service = () => {
   return (

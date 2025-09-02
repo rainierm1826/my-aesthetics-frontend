@@ -1,5 +1,5 @@
 import { getAllBranches } from "@/api/branch";
-import BranchList from "@/components/BranchList";
+import BranchList from "@/components/lists/BranchList";
 import { tinos } from "@/components/fonts/fonts";
 import {
   dehydrate,

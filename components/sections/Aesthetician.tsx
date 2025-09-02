@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import AestheticianList from "../AestheticianList";
+import AestheticianList from "../lists/AestheticianList";
 import SkeletonCard from "../SkeletonCard";
 import { tinos } from "../fonts/fonts";
 

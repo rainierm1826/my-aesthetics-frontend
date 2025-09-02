@@ -1,4 +1,4 @@
-import DashboardCard from "@/components/DashboardCard";
+import DashboardCard from "@/components/cards/DashboardCard";
 import OwnerWrapper from "@/components/OwnerWrapper";
 
 import {
@@ -7,7 +7,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { getAllService } from "@/api/service";
-import ServiceTable from "@/components/ServiceTable";
+import ServiceTable from "@/components/tables/ServiceTable";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 

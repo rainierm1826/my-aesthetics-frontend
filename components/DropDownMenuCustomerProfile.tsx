@@ -15,8 +15,8 @@ import {
 import { useRouter } from "next/navigation";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { signOut } from "@/api/auth";
-import SignUpButton from "./SignUpButton";
-import BookNowButton from "./BookNowButton";
+import SignUpButton from "./buttons/SignUpButton";
+import BookNowButton from "./buttons/BookNowButton";
 import Link from "next/link";
 
 const DropDownMenuCustomerProfile = () => {

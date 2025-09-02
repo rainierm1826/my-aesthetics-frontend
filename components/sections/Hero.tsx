@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import SignUpButton from "../SignUpButton";
-import BookNowButton from "../BookNowButton";
+import SignUpButton from "../buttons/SignUpButton";
+import BookNowButton from "../buttons/BookNowButton";
 import { tinos } from "../fonts/fonts";
 import { useAuthStore } from "@/provider/store/authStore";
 

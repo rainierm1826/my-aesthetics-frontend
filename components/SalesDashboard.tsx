@@ -2,8 +2,8 @@
 import React from "react";
 import PieChartComponent from "@/components/PieChartComponent";
 import ToggleDates from "@/components/ToggleDates";
-import {BarChartComponent} from "@/components/BarChartComponent";
-import DashboardCard from "@/components/DashboardCard";
+import { BarChartComponent } from "@/components/BarChartComponent";
+import DashboardCard from "@/components/cards/DashboardCard";
 import DropDownBranch from "@/components/DropDownBranch";
 import LineChartComponent from "@/components/LineChartComponent";
 

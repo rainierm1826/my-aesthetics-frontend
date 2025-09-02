@@ -12,7 +12,7 @@ import {
 export const general = [
   {
     title: "Settings",
-    url: "/owner/settings",
+    url: "/manage/settings",
     icon: Settings,
   },
 ];
@@ -25,11 +25,11 @@ export const analytics = [
     items: [
       {
         title: "Appointments",
-        url: "/owner/dashboard/appointments",
+        url: "/manage/dashboard/appointments",
       },
       {
         title: "Sales",
-        url: "/owner/dashboard/sales",
+        url: "/manage/dashboard/sales",
       },
     ],
   },
@@ -38,37 +38,37 @@ export const analytics = [
 export const managements = [
   {
     title: "Appointments",
-    url: "/owner/manage-appointments",
+    url: "/manage/appointments",
     icon: Calendar,
     rolesAllowed: ["owner", "admin"],
   },
   {
     title: "Aesthetician",
-    url: "/owner/manage-aesthetician",
+    url: "/manage/aesthetician",
     icon: VenetianMask,
     rolesAllowed: ["owner", "admin"],
   },
   {
     title: "Service",
-    url: "/owner/manage-service",
+    url: "/manage/service",
     icon: Brush,
     rolesAllowed: ["owner", "admin"],
   },
   {
     title: "Branch",
-    url: "/owner/manage-branch",
+    url: "/manage/branch",
     icon: MapPin,
     rolesAllowed: ["owner"],
   },
   {
     title: "Administrator",
-    url: "/owner/manage-admin",
+    url: "/manage/admin",
     icon: ShieldUser,
     rolesAllowed: ["owner"],
   },
   {
     title: "Voucher",
-    url: "/owner/manage-voucher",
+    url: "/manage/voucher",
     icon: Gift,
     rolesAllowed: ["owner", "admin"],
   },

@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import BranchList from "../BranchList";
+import BranchList from "../lists/BranchList";
 import SkeletonCard from "../SkeletonCard";
 import { tinos } from "../fonts/fonts";
 

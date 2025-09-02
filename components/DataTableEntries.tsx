@@ -22,11 +22,9 @@ const DataTableEntries = () => {
       const nextLimit = Number(val) || 10;
       const params = new URLSearchParams(searchParams.toString());
 
-      // reset page to 1 when changing page size (clean URL if page === 1)
       params.delete("page");
 
       if (nextLimit === 10) {
-        // keep URLs clean by removing default
         params.delete("limit");
       } else {
         params.set("limit", String(nextLimit));

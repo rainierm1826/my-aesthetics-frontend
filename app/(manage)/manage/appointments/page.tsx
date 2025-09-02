@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import DashboardCard from "@/components/DashboardCard";
+import DashboardCard from "@/components/cards/DashboardCard";
 import { DataTable } from "@/components/DataTable";
 import DatePagination from "@/components/DatePagination";
 import DropDownAppointmentStatus from "@/components/DropDownAppointmentStatus";
@@ -7,7 +7,7 @@ import DropDownBranch from "@/components/DropDownBranch";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import SearchInput from "@/components/SearchInput";
 import { Button } from "@/components/ui/button";
-import { appointmentColumn } from "@/lib/appointment-column";
+import { appointmentColumn } from "@/components/columns/appointment-column";
 import {
   Appointment,
   AppointmentStatus,

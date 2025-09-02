@@ -1,10 +1,10 @@
 import OwnerWrapper from "@/components/OwnerWrapper";
-import SettingsForm from "@/components/SettingsForm";
+import SettingsForm from "@/components/forms/SettingsForm";
 
 export default function SettingsPage() {
   return (
     <OwnerWrapper title="Settings">
-      <SettingsForm/>
+      <SettingsForm />
     </OwnerWrapper>
   );
 }

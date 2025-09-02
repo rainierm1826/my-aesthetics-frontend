@@ -1,6 +1,6 @@
 import { getAllAesthetician } from "@/api/aesthetician";
-import AestheticianTable from "@/components/AestheticianTable";
-import DashboardCard from "@/components/DashboardCard";
+import AestheticianTable from "@/components/tables/AestheticianTable";
+import DashboardCard from "@/components/cards/DashboardCard";
 import OwnerWrapper from "@/components/OwnerWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 import {

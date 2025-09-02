@@ -1,5 +1,5 @@
 import { getAllService } from "@/api/service";
-import ServiceList from "@/components/ServiceList";
+import ServiceList from "@/components/lists/ServiceList";
 import { tinos } from "@/components/fonts/fonts";
 import {
   dehydrate,

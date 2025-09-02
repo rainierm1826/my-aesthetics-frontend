@@ -1,5 +1,5 @@
 import { getAllAesthetician } from "@/api/aesthetician";
-import AestheticianList from "@/components/AestheticianList";
+import AestheticianList from "@/components/lists/AestheticianList";
 import { tinos } from "@/components/fonts/fonts";
 import {
   dehydrate,
