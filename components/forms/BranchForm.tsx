@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MapPin, Upload, X } from "lucide-react";
 import Image from "next/image";
-import { BranchFormProps, BranchFormState } from "@/lib/branch-types";
+import { BranchFormProps, BranchFormState } from "@/lib/types/branch-types";
 import { patchBranch, postBranch } from "@/api/branch";
 import { fileToBase64 } from "@/lib/function";
 import { useBaseMutation } from "@/hooks/useBaseMutation";

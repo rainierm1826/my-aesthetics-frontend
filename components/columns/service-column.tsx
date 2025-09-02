@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Service } from "../../lib/service-types";
+import { Service } from "../../lib/types/service-types";
 import { RatingStar } from "@/components/RatingStar";
 import { Badge } from "@/components/ui/badge";
 import ActionCell from "@/components/ActionCell";

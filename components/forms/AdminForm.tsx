@@ -30,7 +30,7 @@ import {
 import { signUpAdmin } from "@/api/auth";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchAdmin } from "@/api/admin";
-import { AdminFormProps } from "@/lib/admin-type";
+import { AdminFormProps } from "@/lib/types/admin-type";
 
 const AdminForm: React.FC<AdminFormProps> = ({
   renderDialog = true,
@@ -218,6 +218,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
                       </FormLabel>
                       <FormControl>
                         <Input
+                          disabled={method == "patch"}
                           id="email"
                           placeholder="Enter email"
                           type="email"
@@ -232,6 +233,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
               <div className="space-y-2">
                 <FormField
                   control={control}
+                  disabled={method == "patch"}
                   name="password"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
@@ -270,6 +272,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
                       </FormLabel>
                       <FormControl>
                         <Input
+                          disabled={method == "patch"}
                           id="confirmPassword"
                           placeholder="Confirm password"
                           type="password"

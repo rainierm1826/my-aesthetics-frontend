@@ -19,7 +19,7 @@ import Image from "next/image";
 import DropDownAvailability from "../selects/DropDownAvailability";
 import { patchAesthetician, postAesthetician } from "@/api/aesthetician";
 import { fileToBase64 } from "@/lib/function";
-import { FormAesthetician } from "@/lib/aesthetician-types";
+import { FormAesthetician } from "@/lib/types/aesthetician-types";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

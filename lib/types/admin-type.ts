@@ -3,7 +3,10 @@ import { BranchName } from "./branch-types";
 
 export type Admin = {
   admin_id: string;
-  account_id: string;
+  auth: {
+    account_id: string;
+    email: string;
+  };
   branch: BranchName;
   first_name: string;
   last_name: string;
@@ -17,7 +20,7 @@ export type GetAdminParams = {
   query?: string;
   page?: number;
   limit?: number;
-  branch?: string
+  branch?: string;
 };
 
 export type AdminResponse = {

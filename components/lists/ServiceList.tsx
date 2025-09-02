@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useServices } from "@/hooks/useServices";
-import { Service } from "@/lib/service-types";
+import { Service } from "@/lib/types/service-types";
 import ServicesCard from "../cards/ServicesCard";
 import SkeletonCard from "../skeletons/SkeletonCard";
 import DropDownServiceCategory from "../selects/DropDownServiceCategory";

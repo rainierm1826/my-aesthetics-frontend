@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Voucher } from "../../lib/voucher-type";
+import { Voucher } from "../../lib/types/voucher-type";
 import ActionCell from "@/components/ActionCell";
 import VoucherForm from "@/components/forms/VoucherForm";
 import { deleteVoucher } from "@/api/voucher";

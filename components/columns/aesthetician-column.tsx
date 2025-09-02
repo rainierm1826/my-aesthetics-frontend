@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Aesthetician } from "../../lib/aesthetician-types";
+import { Aesthetician } from "../../lib/types/aesthetician-types";
 import { Badge } from "@/components/ui/badge";
 import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";

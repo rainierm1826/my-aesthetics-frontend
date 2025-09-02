@@ -2,7 +2,7 @@
 
 import React from "react";
 import AestheticianCard from "../cards/AestheticianCard";
-import { Aesthetician } from "@/lib/aesthetician-types";
+import { Aesthetician } from "@/lib/types/aesthetician-types";
 import { useAestheticians } from "@/hooks/useAestheticians";
 import SkeletonCard from "../skeletons/SkeletonCard";
 import SearchInput from "../SearchInput";

@@ -2,8 +2,8 @@ import {
   GetServiceParams,
   ServiceListResponse,
   ServiceResponse,
-} from "@/lib/service-types";
-import { DeleteResponse } from "@/lib/types";
+} from "@/lib/types/service-types";
+import { DeleteResponse } from "@/lib/types/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 

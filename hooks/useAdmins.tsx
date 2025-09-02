@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
 import { getAllAdmin } from "@/api/admin";
-import { AdminListResposne } from "@/lib/admin-type";
+import { AdminListResposne } from "@/lib/types/admin-type";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 export function useAdmins() {
-  const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? "";
 
   return useQuery<AdminListResposne, Error>({
-    queryKey: ["account", "admin", {query, limit, page, branch}],
+    queryKey: ["account", "admin", { query, limit, page, branch }],
     queryFn: () => getAllAdmin({ query, page, limit, branch }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,

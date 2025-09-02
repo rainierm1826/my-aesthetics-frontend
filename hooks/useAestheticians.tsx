@@ -1,7 +1,7 @@
 "use client";
 
 import { getAllAesthetician } from "@/api/aesthetician";
-import { AestheticianListResponse } from "@/lib/aesthetician-types";
+import { AestheticianListResponse } from "@/lib/types/aesthetician-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 

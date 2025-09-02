@@ -13,7 +13,7 @@ import {
   AppointmentStatus,
   PaymentMethod,
   PaymentStatus,
-} from "@/lib/types";
+} from "@/lib/types/types";
 
 async function getData(): Promise<Appointment[]> {
   return [

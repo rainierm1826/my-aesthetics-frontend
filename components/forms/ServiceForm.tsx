@@ -33,7 +33,7 @@ import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchService, postService } from "@/api/service";
 import { fileToBase64 } from "@/lib/function";
 import DropDownDiscountType from "../selects/DropDownDiscountType";
-import { ServiceFormProps } from "@/lib/service-types";
+import { ServiceFormProps } from "@/lib/types/service-types";
 
 const ServiceForm: React.FC<ServiceFormProps> = ({
   renderDialog = true,

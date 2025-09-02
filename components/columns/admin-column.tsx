@@ -1,10 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Admin } from "../../lib/admin-type";
+import { Admin } from "../../lib/types/admin-type";
 import ActionCell from "@/components/ActionCell";
 import AdminForm from "@/components/forms/AdminForm";
-import { deleteAdminAccount } from "@/api/auth";
+import { deleteAdmin } from "@/api/admin";
 
 export const adminColumn: ColumnDef<Admin>[] = [
   {
@@ -16,6 +16,10 @@ export const adminColumn: ColumnDef<Admin>[] = [
     },
   },
   {
+    accessorKey: "auth.email",
+    header: "Email",
+  },
+  {
     accessorKey: "branch.branch_name",
     header: "Branch Name",
   },
@@ -24,8 +28,8 @@ export const adminColumn: ColumnDef<Admin>[] = [
     cell: ({ row }) => {
       return (
         <ActionCell
-          id={row.original.account_id}
-          deleteFn={(id: string) => deleteAdminAccount({ admin_id: id })}
+          id={row.original.auth.account_id}
+          deleteFn={() => deleteAdmin({ account_id: row.original.auth.account_id })}
           deleteMessage="Admin has been deleted."
           queryKey="account"
           editDialog={
@@ -39,6 +43,7 @@ export const adminColumn: ColumnDef<Admin>[] = [
               lastName={row.original.last_name}
               middleInitial={row.original.middle_initial || ""}
               branchId={row.original.branch.branch_id}
+              email={row.original.auth.email}
             />
           }
         />

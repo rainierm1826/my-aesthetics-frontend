@@ -1,5 +1,9 @@
-import { AdminListResposne, AdminResponse, GetAdminParams } from "@/lib/admin-type";
-import { DeleteResponse } from "@/lib/types";
+import {
+  AdminListResposne,
+  AdminResponse,
+  GetAdminParams,
+} from "@/lib/types/admin-type";
+import { DeleteResponse } from "@/lib/types/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -24,13 +28,14 @@ export async function patchAdmin(data: unknown): Promise<AdminResponse> {
   }
 }
 
-export async function deleteAdmin(admin_id: {
-  admin_id: string;
+export async function deleteAdmin(account_id: {
+  account_id: string;
 }): Promise<DeleteResponse> {
+
   try {
-    const response = await fetch(`${backendUrl}/admin`, {
+    const response = await fetch(`${backendUrl}/auth/delete-admin`, {
       method: "DELETE",
-      body: JSON.stringify(admin_id),
+      body: JSON.stringify(account_id),
       headers: {
         "Content-Type": "application/json",
       },
@@ -50,7 +55,7 @@ export async function getAllAdmin({
   query,
   page,
   limit,
-  branch
+  branch,
 }: GetAdminParams): Promise<AdminListResposne> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);

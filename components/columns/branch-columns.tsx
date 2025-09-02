@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import type { Branch } from "../../lib/branch-types";
+import type { Branch } from "../../lib/types/branch-types";
 import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import BranchCard from "@/components/cards/BranchCard";

@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { getBranchName } from "@/api/branch";
-import { BranchName, BranchNameResponse } from "@/lib/branch-types";
-import { DropDownProps } from "@/lib/types";
+import { BranchName, BranchNameResponse } from "@/lib/types/branch-types";
+import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 interface DropDownBranchProps

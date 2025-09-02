@@ -5,7 +5,7 @@ import SearchInput from "@/components/SearchInput";
 import SkeletonTable from "../skeletons/SkeletonTable";
 import { toast } from "sonner";
 import { useServices } from "@/hooks/useServices";
-import { Service } from "@/lib/service-types";
+import { Service } from "@/lib/types/service-types";
 import { serviceColumn } from "@/components/columns/service-column";
 import ServiceForm from "../forms/ServiceForm";
 import DropDownServiceCategory from "../selects/DropDownServiceCategory";

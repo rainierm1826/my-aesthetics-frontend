@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent } from "../ui/card";
 import { RatingStar } from "../RatingStar";
 import BookNowButton from "../buttons/BookNowButton";
-import { AestheticianCardProps } from "@/lib/aesthetician-types";
+import { AestheticianCardProps } from "@/lib/types/aesthetician-types";
 
 const AestheticianCard = ({
   action,

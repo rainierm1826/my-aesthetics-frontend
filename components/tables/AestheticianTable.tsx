@@ -9,7 +9,7 @@ import DropDownAvailability from "../selects/DropDownAvailability";
 import DropDownSex from "../selects/DropDownSex";
 import DropDownExperience from "../selects/DropDownExperience";
 import DropDownBranch from "../selects/DropDownBranch";
-import { Aesthetician } from "@/lib/aesthetician-types";
+import { Aesthetician } from "@/lib/types/aesthetician-types";
 import { aestheticianColumn } from "@/components/columns/aesthetician-column";
 import { useAestheticians } from "@/hooks/useAestheticians";
 

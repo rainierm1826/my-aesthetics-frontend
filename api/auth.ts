@@ -2,8 +2,7 @@ import {
   SignInResponse,
   SignOutResponse,
   SignUpResponse,
-} from "@/lib/auth-type";
-import { DeleteResponse } from "@/lib/types";
+} from "@/lib/types/auth-type";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -170,24 +169,4 @@ export async function signOut(): Promise<SignOutResponse> {
   }
 }
 
-export async function deleteAdminAccount(admin_id: {
-  admin_id: string;
-}): Promise<DeleteResponse> {
-  try {
-    const response = await fetch(`${backendUrl}/auth/delete-admin`, {
-      method: "DELETE",
-      body: JSON.stringify(admin_id),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
 
-    if (!response.status) {
-      throw new Error(`error: ${response.status}`);
-    }
-    const result: DeleteResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
-}

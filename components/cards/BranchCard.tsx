@@ -5,7 +5,7 @@ import { RatingStar } from "../RatingStar";
 import { Clock, MapPin, Phone } from "lucide-react";
 import BookNowButton from "../buttons/BookNowButton";
 import clsx from "clsx";
-import { BranchCardProps } from "@/lib/branch-types";
+import { BranchCardProps } from "@/lib/types/branch-types";
 
 const BranchCard = ({
   className,

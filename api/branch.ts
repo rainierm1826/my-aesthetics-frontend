@@ -3,8 +3,8 @@ import {
   BranchNameResponse,
   BranchResponse,
   GetBranchesParams,
-} from "@/lib/branch-types";
-import { DeleteResponse } from "@/lib/types";
+} from "@/lib/types/branch-types";
+import { DeleteResponse } from "@/lib/types/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -96,10 +96,10 @@ export async function getBranchName() {
     });
 
     if (!response.ok) {
-      throw Error("Internal error")
+      throw Error("Internal error");
     }
     const result: BranchNameResponse = await response.json();
-    return result
+    return result;
   } catch (error) {
     throw error;
   }

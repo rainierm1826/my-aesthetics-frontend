@@ -1,9 +1,9 @@
-import { DeleteResponse } from "@/lib/types";
+import { DeleteResponse } from "@/lib/types/types";
 import {
   GetVoucherParams,
   VoucherListResponse,
   VoucherResponse,
-} from "@/lib/voucher-type";
+} from "@/lib/types/voucher-type";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 

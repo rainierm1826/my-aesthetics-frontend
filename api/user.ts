@@ -1,4 +1,4 @@
-import { UserResponse } from "@/lib/user-type";
+import { UserResponse } from "@/lib/types/user-type";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 

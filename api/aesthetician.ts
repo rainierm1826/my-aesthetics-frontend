@@ -2,8 +2,8 @@ import {
   AestheticianListResponse,
   AestheticianResponse,
   GetAestheticianParams,
-} from "@/lib/aesthetician-types";
-import { DeleteResponse } from "@/lib/types";
+} from "@/lib/types/aesthetician-types";
+import { DeleteResponse } from "@/lib/types/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -11,10 +11,10 @@ export async function getAllAesthetician({
   query,
   page,
   limit,
-  availability="",
-  branch="",
-  experience="",
-  sex="",
+  availability = "",
+  branch = "",
+  experience = "",
+  sex = "",
 }: GetAestheticianParams): Promise<AestheticianListResponse> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);
@@ -45,7 +45,9 @@ export async function getAllAesthetician({
   }
 }
 
-export async function postAesthetician(data: unknown): Promise<AestheticianResponse> {
+export async function postAesthetician(
+  data: unknown
+): Promise<AestheticianResponse> {
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     const response = await fetch(`${backendUrl}/aesthetician`, {
@@ -66,7 +68,9 @@ export async function postAesthetician(data: unknown): Promise<AestheticianRespo
   }
 }
 
-export async function patchAesthetician(data: unknown): Promise<AestheticianResponse> {
+export async function patchAesthetician(
+  data: unknown
+): Promise<AestheticianResponse> {
   try {
     const response = await fetch(`${backendUrl}/aesthetician`, {
       method: "PATCH",

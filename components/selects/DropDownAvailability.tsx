@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DropDownProps } from "@/lib/types";
+import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface DropDownAvailabilityProps

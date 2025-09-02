@@ -5,7 +5,7 @@ import SearchInput from "@/components/SearchInput";
 import SkeletonTable from "../skeletons/SkeletonTable";
 import { toast } from "sonner";
 import { useVouchers } from "@/hooks/useVouchers";
-import { Voucher } from "@/lib/voucher-type";
+import { Voucher } from "@/lib/types/voucher-type";
 import VoucherForm from "../forms/VoucherForm";
 import { voucherColumn } from "@/components/columns/voucher-column";
 import DropDownDiscountType from "../selects/DropDownDiscountType";

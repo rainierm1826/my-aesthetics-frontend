@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Appointment } from "../../lib/types";
+import { Appointment } from "../../lib/types/types";
 import { Badge } from "@/components/ui/badge";
 // import ActionCell from "@/components/ActionCell";
 

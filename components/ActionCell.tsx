@@ -25,7 +25,7 @@ import {
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { DeleteResponse } from "@/lib/types";
+import { DeleteResponse } from "@/lib/types/types";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 
 type ActionCellProps = {
