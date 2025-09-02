@@ -26,6 +26,8 @@ export const adminColumn: ColumnDef<Admin>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      console.log(row.original)
+
       return (
         <ActionCell
           id={row.original.auth?.account_id}
