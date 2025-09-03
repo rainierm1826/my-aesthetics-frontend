@@ -1,28 +1,45 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Appointment } from "../../lib/types/types";
 import { Badge } from "@/components/ui/badge";
+import { Appointment } from "@/lib/types/appointment-types";
+import { ordinal } from "@/lib/function";
 // import ActionCell from "@/components/ActionCell";
 
 export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
-    accessorKey: "appointmentId",
+    accessorKey: "appointment_id",
     header: "Appointment ID",
   },
   {
-    accessorKey: "slotNumber",
-    header: "Slot",
+    accessorKey: "slot_number",
+    header: "On Queue",
+    cell: ({ row }) => {
+      return ordinal(row.original.slot_number);
+    },
   },
   {
-    accessorKey: "userName",
+    id: "fullName",
     header: "Full Name",
+    cell: ({ row }) => {
+      const fullName = row.original.walk_in
+        ? `${row.original.walk_in.first_name} ${
+            row.original.walk_in.middle_initial ?? ""
+          } ${row.original.walk_in.last_name}`.trim()
+        : row.original.user
+        ? `${row.original.user.first_name} ${
+            row.original.user.middle_initial ?? ""
+          } ${row.original.user.last_name}`.trim()
+        : "";
+
+      return fullName;
+    },
   },
   {
-    accessorKey: "toPay",
+    accessorKey: "to_pay",
     header: "To Pay",
     cell: ({ row }) => {
-      return `₱${row.original.toPay}`;
+      return `₱${row.original.to_pay}`;
     },
   },
   {
@@ -32,12 +49,11 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
     accessorKey: "appointmentStatus",
     header: "Appointment Status",
     cell: ({ row }) => {
-      const { appointmentStatus } = row.original;
-      const s =
-        appointmentStatus.charAt(0).toUpperCase() + appointmentStatus.slice(1);
+      const { status } = row.original;
+      const s = status.charAt(0).toUpperCase() + status.slice(1);
       return (
         <Badge
-          className={`${
+          className={`rounded-full ${
             s == "Completed"
               ? "bg-green-100 text-green-700"
               : s == "Waiting"
@@ -57,7 +73,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
   // {
   //   id: "actions",
   //   cell: ({ row }) => {
-  //     return <ActionCell data={row.original} />;
+  //     return <ActionCell data={row.original.appointment_id} />;
   //   },
   // },
 ];

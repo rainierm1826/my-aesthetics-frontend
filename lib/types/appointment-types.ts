@@ -44,6 +44,7 @@ export type Appointment = {
   voucher_code: string | null;
   discount_amount: number;
   original_amount: number;
+  slot_number:number
   created_at: string;
   updated_at: string;
 };
@@ -56,4 +57,11 @@ export type AppointmentListResponse = {
   pages: number;
   status: boolean;
   total: number;
+};
+
+export type GetAppointmentParams = {
+  query?: string;
+  page?: number;
+  limit?: number;
+  branch?: string;
 };
