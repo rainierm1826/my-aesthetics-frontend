@@ -47,6 +47,8 @@ const AdminForm: React.FC<AdminFormProps> = ({
   branchId,
   adminId,
 }) => {
+
+
   const form = useForm<SignUpAdminFormValues>({
     resolver: zodResolver(signUpAdminFormSchema),
     defaultValues: {
@@ -55,7 +57,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       middle_initial: middleInitial || "",
       email: email || "",
       branch_id: branchId || "",
-      password: password || "",
+      password: password
     },
   });
 
@@ -86,7 +88,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
     updateFn: patchAdmin,
     queryKey: ["account", "admin"],
     successMessages: {
-      create: "Admin has been updated.",
+      update: "Admin has been updated.",
     },
   });
 

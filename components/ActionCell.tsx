@@ -32,7 +32,7 @@ type ActionCellProps = {
   id: string;
   deleteFn: (id: string) => Promise<DeleteResponse>;
   deleteMessage: string;
-  queryKey: string;
+  queryKey: string[] | string;
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
   editDialog?: ReactNode;
@@ -77,7 +77,7 @@ function ActionCell({
     deleteFn: deleteFn,
     queryKey: queryKey,
     successMessages: {
-      delete: deleteMessage,
+      delete: deleteMessage || "Deleted Successfully",
     },
   });
 

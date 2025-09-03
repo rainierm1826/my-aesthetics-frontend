@@ -26,15 +26,18 @@ export const adminColumn: ColumnDef<Admin>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-
+      console.log(row.original)
       return (
         <ActionCell
           id={row.original.auth?.account_id}
-          deleteFn={() => deleteAdmin({ account_id: row.original.auth?.account_id })}
+          deleteFn={() =>
+            deleteAdmin({ account_id: row.original.auth?.account_id })
+          }
           deleteMessage="Admin has been deleted."
           queryKey="account"
           editDialog={
             <AdminForm
+              adminId={row.original.user_id}
               method="patch"
               renderDialog={false}
               formTitle="Edit Branch"

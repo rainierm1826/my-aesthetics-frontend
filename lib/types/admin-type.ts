@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { BranchName } from "./branch-types";
 
 export type Admin = {
-  admin_id: string;
+  user_id: string;
   auth: {
     account_id: string;
     email: string;

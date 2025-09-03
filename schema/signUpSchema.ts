@@ -26,7 +26,7 @@ export type SignUpFormValues = z.infer<typeof signUpFormSchema>;
 
 export const signUpAdminFormSchema = z
   .object({
-    email: z.email(),
+    email: z.email().optional(),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters long")
@@ -36,10 +36,12 @@ export const signUpAdminFormSchema = z
       .regex(
         /[^A-Za-z0-9]/,
         "Password must contain at least one special character"
-      ),
+      )
+      .optional(),
     confirmPassword: z
       .string()
-      .min(8, "Password must be at least 8 characters long"),
+      .min(8, "Password must be at least 8 characters long")
+      .optional(),
     first_name: z
       .string()
       .min(1, "First name is required")
@@ -51,9 +53,15 @@ export const signUpAdminFormSchema = z
     middle_initial: z.string().max(1, "Maximum of one character"),
     branch_id: z.string().min(1, "Branch is required"),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => {
+    if (data.password || data.confirmPassword) {
+      return data.password === data.confirmPassword;
+    }
+    return true;
+  }, {
     message: "Password do not match.",
     path: ["confirmPassword"],
-  })
+  });
 
 export type SignUpAdminFormValues = z.infer<typeof signUpAdminFormSchema>;
+

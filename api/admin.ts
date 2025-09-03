@@ -8,6 +8,7 @@ import { DeleteResponse } from "@/lib/types/types";
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function patchAdmin(data: unknown): Promise<AdminResponse> {
+
   try {
     const response = await fetch(`${backendUrl}/admin`, {
       method: "PATCH",
@@ -21,6 +22,7 @@ export async function patchAdmin(data: unknown): Promise<AdminResponse> {
       throw new Error(`error: ${response.status}`);
     }
     const result: AdminResponse = await response.json();
+    console.log(result)
     return result;
   } catch (error) {
     console.log(error);
