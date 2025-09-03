@@ -44,7 +44,7 @@ export const useBaseMutation = <TData=unknown, TVariables=void>(
         type: "all",
       });
       const messages = config.successMessages;
-      const message = method === "post" ? messages?.create : messages?.update === "patch" ? messages.update : messages?.delete;
+      const message = method === "post" ? messages?.create : method === "patch" ? messages?.update : messages?.delete;
       toast.success(message);
       config.onSuccess?.(data, method);
     },
