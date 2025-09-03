@@ -1,5 +1,6 @@
 import {
   AppointmentListResponse,
+  AppointmentResponse,
   GetAppointmentParams,
 } from "@/lib/types/appointment-types";
 
@@ -18,12 +19,15 @@ export async function getAllAppointments({
   params.set("branch", String(branch));
 
   try {
-    const res = await fetch(`${backendUrl}/appointment/all?${params.toString()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await fetch(
+      `${backendUrl}/appointment/all?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!res.ok) {
       const body = await res.text().catch(() => "");
@@ -31,6 +35,33 @@ export async function getAllAppointments({
     }
 
     const result: AppointmentListResponse = await res.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function postAppointment(
+  data: unknown
+): Promise<AppointmentResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/appointment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result: AppointmentResponse = await response.json();
     return result;
   } catch (error) {
     throw error;

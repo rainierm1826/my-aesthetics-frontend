@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type Appointment = {
   appointment_id: string;
   user: {
@@ -59,9 +61,35 @@ export type AppointmentListResponse = {
   total: number;
 };
 
+export type AppointmentResponse = {
+  appointment: Appointment[];
+  message: string;
+  status: boolean;
+};
+
 export type GetAppointmentParams = {
   query?: string;
   page?: number;
   limit?: number;
   branch?: string;
 };
+
+export interface AppointmentFormProps {
+  renderDialog?: boolean;
+  method: "post" | "patch";
+  buttonLabel: string;
+  dialogButtonLabel?: string | ReactNode;
+  formTitle: string;
+  formDescription: string;
+  appointmentId?: string;
+  branchId?: string;
+  serviceId?: string;
+  firstName?: string;
+  lastName?: string;
+  middleInitial?: string;
+  phoneNumber?: string;
+  sex?: "male" | "female" | "others" | string;
+  finalPaymentMethod: "cash" | "xendit" | string
+}
+
+
