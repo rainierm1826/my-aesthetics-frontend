@@ -12,10 +12,10 @@ const BranchList = ({ action }: { action: boolean }) => {
   const branches: Branch[] = data?.branch ?? [];
 
   return (
-    <>
+    <main className="bg-[#fffcf9]">
       {/* Actions Section */}
       {action && (
-        <div className="max-w-4xl mx-auto mb-8">
+        <div className="max-w-4xl mx-auto mb-8 ">
           <div className="flex flex-col lg:flex-row items-center justify-center">
             <div className="flex-1 max-w-md w-full mr-4 mb-5 sm:mb-0">
               <SearchInput placeholder="Search by name..." size="w-full" />
@@ -43,7 +43,7 @@ const BranchList = ({ action }: { action: boolean }) => {
               />
             ))}
       </div>
-    </>
+    </main>
   );
 };
 

@@ -14,10 +14,10 @@ const ServiceList = ({ action }: { action: boolean }) => {
   const services: Service[] = data?.service ?? [];
 
   return (
-    <>
+    <main className="bg-[#fffcf9]">
       {/* Actions Section */}
       {action && (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto ">
           <div className="flex flex-col lg:flex-row items-center justify-center">
             <div className="flex-1 max-w-md w-full mr-4 mb-5 sm:mb-0">
               <SearchInput placeholder="Search by name..." size="w-full" />
@@ -55,7 +55,7 @@ const ServiceList = ({ action }: { action: boolean }) => {
               ))}
         </div>
       </div>
-    </>
+    </main>
   );
 };
 

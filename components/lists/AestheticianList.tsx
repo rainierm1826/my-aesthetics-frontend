@@ -16,7 +16,7 @@ const AestheticianList = ({ action }: { action: boolean }) => {
   const aestheticians: Aesthetician[] = data?.aesthetician ?? [];
 
   return (
-    <div className="flex justify-center flex-col w-full mx-auto">
+    <div className="flex justify-center flex-col w-full mx-auto bg-[#fffcf9]">
       {action && (
         <div className="max-w-4xl mx-auto mb-16">
           <div className="flex flex-col lg:flex-row items-center justify-center">
