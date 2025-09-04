@@ -84,3 +84,16 @@ export type AestheticianCardProps = {
   rating: number;
   availability: "available" | "working" | "off-duty" | "on-break" | string;
 };
+
+export type AestheticianName = {
+  first_name: string;
+  last_name: string;
+  middle_initial: string;
+  aesthetician_id: string;
+};
+
+export interface AestheticianNameResponse {
+  status: boolean;
+  message: string;
+  aesthetician: AestheticianName[];
+}

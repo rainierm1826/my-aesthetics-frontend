@@ -83,7 +83,6 @@ export async function verifyOTP(data: unknown): Promise<SignUpResponse> {
     if (!response.ok) {
       throw new Error(body.message);
     }
-
     return body as SignUpResponse;
   } catch (error) {
     throw error;

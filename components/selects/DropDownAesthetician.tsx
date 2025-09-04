@@ -8,36 +8,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BranchName } from "@/lib/types/branch-types";
 import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useBrancheName } from "@/hooks/useBranchName";
+import { useAestheticianName } from "@/hooks/useAestheticianName";
+import { AestheticianName } from "@/lib/types/aesthetician-types";
 
-interface DropDownBranchProps
+interface DropDownAestheticianProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
   onValueChange?: (value: string) => void;
   value?: string;
   placeholder?: string;
   includeAllOption?: boolean;
   useUrlParams?: boolean;
+  branchId?:string
 }
 
-const DropDownBranch = ({
+const DropDownAesthetician = ({
   onValueChange,
   value,
-  placeholder = "Select branch",
+  placeholder = "Select aesthetician",
   includeAllOption = false,
   useUrlParams = false,
-}: DropDownBranchProps) => {
-  const { data, isLoading, error } = useBrancheName();
+  branchId
+}: DropDownAestheticianProps) => {
+  const { data, isLoading, error } = useAestheticianName(branchId);
 
-  const branches: BranchName[] = data?.branch ?? [];
+  const aestheticians: AestheticianName[] = data?.aesthetician ?? [];
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  const currentBranch = useUrlParams
-    ? searchParams.get("branch") || (includeAllOption ? "all" : "")
+  const currentAesthetician = useUrlParams
+    ? searchParams.get("aesthetician") || (includeAllOption ? "all" : "")
     : value || "";
 
   const handleValueChange = useCallback(
@@ -46,9 +48,9 @@ const DropDownBranch = ({
         const params = new URLSearchParams(searchParams);
 
         if (newValue === "all" && includeAllOption) {
-          params.delete("branch");
+          params.delete("aesthetician");
         } else {
-          params.set("branch", newValue);
+          params.set("aesthetician", newValue);
         }
         params.delete("page");
 
@@ -76,9 +78,9 @@ const DropDownBranch = ({
     return (
       <Select disabled>
         <SelectTrigger>
-          <SelectValue placeholder="Loading branches..." />
+          <SelectValue placeholder="Loading aestheticians..." />
         </SelectTrigger>
-        <SelectContent className="">
+        <SelectContent>
           <SelectItem value="__loading" disabled>
             Loading...
           </SelectItem>
@@ -92,11 +94,11 @@ const DropDownBranch = ({
     return (
       <Select disabled>
         <SelectTrigger>
-          <SelectValue placeholder="Error loading branches" />
+          <SelectValue placeholder="Error loading aesthetician" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="__error" disabled>
-            Failed to load branches
+            Failed to load aesthetician
           </SelectItem>
         </SelectContent>
       </Select>
@@ -104,21 +106,26 @@ const DropDownBranch = ({
   }
 
   return (
-    <Select value={currentBranch} onValueChange={handleValueChange}>
+    <Select value={currentAesthetician} onValueChange={handleValueChange}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent align="end">
-        {includeAllOption && <SelectItem value="all">All Branches</SelectItem>}
+        {includeAllOption && (
+          <SelectItem value="all">All Aesthetician</SelectItem>
+        )}
 
-        {branches.length === 0 ? (
-          <SelectItem value="__no_branches" disabled>
-            No branches available
+        {aestheticians.length === 0 ? (
+          <SelectItem value="__no_aesthetician" disabled>
+            No aesthetician available
           </SelectItem>
         ) : (
-          branches.map((b) => (
-            <SelectItem key={b.branch_id} value={String(b.branch_id)}>
-              {b.branch_name}
+          aestheticians.map((a) => (
+            <SelectItem
+              key={a.aesthetician_id}
+              value={a.aesthetician_id}
+            >
+              {`${a.first_name} ${a.middle_initial}. ${a.last_name}`}
             </SelectItem>
           ))
         )}
@@ -127,4 +134,4 @@ const DropDownBranch = ({
   );
 };
 
-export default DropDownBranch;
+export default DropDownAesthetician;

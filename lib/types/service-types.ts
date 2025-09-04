@@ -63,3 +63,14 @@ export type GetServiceParams = {
   branch?:string
   category?:string
 };
+
+export type ServiceName = {
+  service_name: string;
+  service_id: string;
+};
+
+export interface ServiceNameResponse {
+  status: boolean;
+  message: string;
+  service: ServiceName[];
+}

@@ -58,11 +58,12 @@ export async function postAppointment(
       body: JSON.stringify(data),
     });
 
+    const body = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(body.message);
     }
-    const result: AppointmentResponse = await response.json();
-    return result;
+    return body as AppointmentResponse;
   } catch (error) {
     throw error;
   }

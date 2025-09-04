@@ -1,5 +1,6 @@
 import {
   AestheticianListResponse,
+  AestheticianNameResponse,
   AestheticianResponse,
   GetAestheticianParams,
 } from "@/lib/types/aesthetician-types";
@@ -31,6 +32,9 @@ export async function getAllAesthetician({
       headers: {
         "Content-Type": "application/json",
       },
+      next: {
+        revalidate: 3600,
+      },
     });
 
     if (!res.ok) {
@@ -39,6 +43,30 @@ export async function getAllAesthetician({
     }
 
     const result: AestheticianListResponse = await res.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getAestheticianName(branch?: string) {
+  const params = new URLSearchParams();
+  if (branch) params.append("branch", branch);
+  try {
+    const response = await fetch(
+      `${backendUrl}/aesthetician/aesthetician-name?${params}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw Error("Internal error");
+    }
+    const result: AestheticianNameResponse = await response.json();
     return result;
   } catch (error) {
     throw error;

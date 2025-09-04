@@ -25,11 +25,15 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from "@radix-ui/react-dialog";
+} from "@/components/ui/dialog";
 import { Calendar } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import DropDownPaymentMethod from "../selects/DropDownPaymentMethod";
+import DropDownSex from "../selects/DropDownSex";
+import DropDownAesthetician from "../selects/DropDownAesthetician";
+import DropDownBranch from "../selects/DropDownBranch";
+import DropDownService from "../selects/DropDownService";
 
 const AppointmentForm: React.FC<AppointmentFormProps> = ({
   renderDialog = true,
@@ -63,7 +67,11 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
     },
   });
 
-  const { control, handleSubmit, reset } = form;
+  const { control, handleSubmit, reset, watch } = form;
+  const paymentMethod = watch("final_payment_method");
+  const isCash = paymentMethod == "cash";
+  const branch = watch("branch_id");
+  const service = watch("service_id");
 
   const appointmentMutation = useBaseMutation(method, {
     createFn: postAesthetician,
@@ -89,15 +97,18 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   });
 
   const isLoading = appointmentMutation.isPending;
-
   const onSubmit = async (values: WalkInAppointmentFormValues) => {
     const payload = {
       ...values,
+      is_walk_in: true,
       ...(method === "patch" && { appointment_id: appointmentId }),
     };
 
+    console.log(payload);
+
     appointmentMutation.mutate(payload);
   };
+
   const formContent = (
     <>
       <DialogHeader>
@@ -109,120 +120,237 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       </DialogHeader>
 
       <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* fields */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid grid-cols-7 gap-3">
+            {/* First Name */}
+            <FormField
+              control={control}
+              name="first_name"
+              render={({ field }) => (
+                <FormItem className="space-y-2 col-span-3">
+                  <FormLabel
+                    htmlFor="first-name"
+                    className="text-xs text-gray-600"
+                  >
+                    First Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="first-name"
+                      placeholder="Enter first name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Last Name */}
+            <FormField
+              control={control}
+              name="last_name"
+              render={({ field }) => (
+                <FormItem className="space-y-2 col-span-3">
+                  <FormLabel
+                    htmlFor="last-name"
+                    className="text-xs text-gray-600"
+                  >
+                    Last Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="last-name"
+                      placeholder="Enter last name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Middle Initial */}
+            <FormField
+              control={control}
+              name="middle_initial"
+              render={({ field }) => (
+                <FormItem className="col-span-1 space-y-2">
+                  <FormLabel
+                    htmlFor="middle-initial"
+                    className="text-xs text-gray-600"
+                  >
+                    M.I
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="middle-initial"
+                      placeholder="M"
+                      maxLength={1}
+                      className="w-full text-center"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={control}
+              name="phone_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter phone number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="sex"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sex</FormLabel>
+                  <FormControl>
+                    <DropDownSex
+                      value={field.value ?? ""}
+                      onValueChange={(v) => field.onChange(v)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={control}
+              name="branch_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Choose Branch</FormLabel>
+                  <FormControl>
+                    <DropDownBranch
+                      value={field.value ?? ""}
+                      onValueChange={(v) => field.onChange(v)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {branch && (
+              <FormField
+                control={control}
+                name="service_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Choose Service</FormLabel>
+                    <FormControl>
+                      <DropDownService
+                        value={field.value ?? ""}
+                        onValueChange={(v) => field.onChange(v)}
+                        branchId={branch}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {branch && service && (
+              <FormField
+                control={control}
+                name="aesthetician_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Choose Aesthetician</FormLabel>
+                    <FormControl>
+                      <DropDownAesthetician
+                        value={field.value ?? ""}
+                        onValueChange={(v) => field.onChange(v)}
+                        branchId={branch}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            <FormField
+              control={control}
+              name="final_payment_method"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Payment Method</FormLabel>
+                  <FormControl>
+                    <DropDownPaymentMethod
+                      value={field.value ?? ""}
+                      onValueChange={(v) => field.onChange(v)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {isCash && (
+            <FormField
+              control={control}
+              name="to_pay"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>To Pay</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter amount"
+                      type="number"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? Number(e.target.value) : undefined
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <FormField
-            control={form.control}
-            name="first_name"
+            control={control}
+            name="voucher_code"
             render={({ field }) => (
-              <FormItem className="mb-5">
-                <FormLabel>First Name</FormLabel>
+              <FormItem>
+                <FormLabel>Voucher</FormLabel>
                 <FormControl>
-                  <Input placeholder="First name" {...field} />
+                  <Input placeholder="Enter voucher" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="last_name"
-            render={({ field }) => (
-              <FormItem className="mb-5">
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Last name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="middle_initial"
-            render={({ field }) => (
-              <FormItem className="mb-5">
-                <FormLabel>M.I</FormLabel>
-                <FormControl>
-                  <Input placeholder="A" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="final_payment_method"
-            render={({ field }) => (
-              <FormItem className="mb-5">
-                <FormLabel>Payment Method</FormLabel>
-                <FormControl>
-                  <DropDownPaymentMethod
-                    value={field.value ?? ""}
-                    onValueChange={(v) => field.onChange(v)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-
-          <FormField
-            control={form.control}
-            name="aesthetician_id"
-            render={({ field }) => (
-              <FormItem className="mb-5">
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter branch name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="branch_id"
-            render={({ field }) => (
-              <FormItem className="mb-5">
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter branch name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="service_id"
-            render={({ field }) => (
-              <FormItem className="mb-5">
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter branch name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Actions */}
           <div className="flex gap-3 pt-4">
             <Button
               type="button"
               variant="outline"
               className="flex-1"
-              onClick={() => {
-                reset();
-              }}
+              onClick={() => reset()}
             >
               Cancel
             </Button>
@@ -241,7 +369,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
         <DialogTrigger asChild>
           <Button>{dialogButtonLabel}</Button>
         </DialogTrigger>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           {formContent}
         </DialogContent>
       </Dialog>

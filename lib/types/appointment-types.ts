@@ -89,7 +89,7 @@ export interface AppointmentFormProps {
   middleInitial?: string;
   phoneNumber?: string;
   sex?: "male" | "female" | "others" | string;
-  finalPaymentMethod: "cash" | "xendit" | string
+  finalPaymentMethod?: "cash" | "xendit" | string
 }
 
 

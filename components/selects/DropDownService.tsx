@@ -8,36 +8,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BranchName } from "@/lib/types/branch-types";
 import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useBrancheName } from "@/hooks/useBranchName";
+import { useServiceName } from "@/hooks/useServiceName";
+import { ServiceName } from "@/lib/types/service-types";
 
-interface DropDownBranchProps
+interface DropDownServiceProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
   onValueChange?: (value: string) => void;
   value?: string;
   placeholder?: string;
   includeAllOption?: boolean;
   useUrlParams?: boolean;
+    branchId?:string
+
 }
 
-const DropDownBranch = ({
+const DropDownService = ({
   onValueChange,
   value,
-  placeholder = "Select branch",
+  placeholder = "Select service",
   includeAllOption = false,
   useUrlParams = false,
-}: DropDownBranchProps) => {
-  const { data, isLoading, error } = useBrancheName();
+  branchId
+}: DropDownServiceProps) => {
+  const { data, isLoading, error } = useServiceName(branchId);
+  
+  console.log(branchId, "from dropdown service")
 
-  const branches: BranchName[] = data?.branch ?? [];
+  const services: ServiceName[] = data?.service ?? [];
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  const currentBranch = useUrlParams
-    ? searchParams.get("branch") || (includeAllOption ? "all" : "")
+  const currentService = useUrlParams
+    ? searchParams.get("service") || (includeAllOption ? "all" : "")
     : value || "";
 
   const handleValueChange = useCallback(
@@ -46,9 +51,9 @@ const DropDownBranch = ({
         const params = new URLSearchParams(searchParams);
 
         if (newValue === "all" && includeAllOption) {
-          params.delete("branch");
+          params.delete("service");
         } else {
-          params.set("branch", newValue);
+          params.set("service", newValue);
         }
         params.delete("page");
 
@@ -76,10 +81,10 @@ const DropDownBranch = ({
     return (
       <Select disabled>
         <SelectTrigger>
-          <SelectValue placeholder="Loading branches..." />
+          <SelectValue placeholder="Loading services..." />
         </SelectTrigger>
-        <SelectContent className="">
-          <SelectItem value="__loading" disabled>
+        <SelectContent>
+          <SelectItem value="__service" disabled>
             Loading...
           </SelectItem>
         </SelectContent>
@@ -92,11 +97,11 @@ const DropDownBranch = ({
     return (
       <Select disabled>
         <SelectTrigger>
-          <SelectValue placeholder="Error loading branches" />
+          <SelectValue placeholder="Error loading services" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="__error" disabled>
-            Failed to load branches
+            Failed to load services
           </SelectItem>
         </SelectContent>
       </Select>
@@ -104,21 +109,26 @@ const DropDownBranch = ({
   }
 
   return (
-    <Select value={currentBranch} onValueChange={handleValueChange}>
+    <Select value={currentService} onValueChange={handleValueChange}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent align="end">
-        {includeAllOption && <SelectItem value="all">All Branches</SelectItem>}
+        {includeAllOption && (
+          <SelectItem value="all">All services</SelectItem>
+        )}
 
-        {branches.length === 0 ? (
-          <SelectItem value="__no_branches" disabled>
-            No branches available
+        {services.length === 0 ? (
+          <SelectItem value="__no_service" disabled>
+            No service available
           </SelectItem>
         ) : (
-          branches.map((b) => (
-            <SelectItem key={b.branch_id} value={String(b.branch_id)}>
-              {b.branch_name}
+          services.map((s) => (
+            <SelectItem
+              key={s.service_id}
+              value={s.service_id}
+            >
+              {s.service_name}
             </SelectItem>
           ))
         )}
@@ -127,4 +137,4 @@ const DropDownBranch = ({
   );
 };
 
-export default DropDownBranch;
+export default DropDownService;

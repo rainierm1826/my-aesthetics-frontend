@@ -2,7 +2,6 @@
 
 import { DataTable } from "@/components/DataTable";
 import SearchInput from "@/components/SearchInput";
-import BranchForm from "../forms/BranchForm";
 import SkeletonTable from "../skeletons/SkeletonTable";
 import { toast } from "sonner";
 import { useAppointments } from "@/hooks/useAppointments";
@@ -11,7 +10,7 @@ import { Appointment } from "@/lib/types/appointment-types";
 import DatePagination from "../paginations/DatePagination";
 import DropDownBranch from "../selects/DropDownBranch";
 import DropDownAppointmentStatus from "../selects/DropDownAppointmentStatus";
-import { Button } from "../ui/button";
+import AppointmentForm from "../forms/AppointmentForm";
 
 export default function AppointmentTable() {
   const { data, isFetching, isError } = useAppointments();
@@ -29,7 +28,14 @@ export default function AppointmentTable() {
           <DropDownBranch />
           <DropDownAppointmentStatus />
         </div>
-        <Button className="rounded-sm">Add Appointment</Button>
+        <AppointmentForm
+          method="post"
+          dialogButtonLabel="New Appointment"
+          buttonLabel="Add Appointment"
+          formDescription="Create a new appointment by filling in the details below."
+          formTitle="Add New Appointment"
+        />
+        
       </div>
 
       {isFetching ? (

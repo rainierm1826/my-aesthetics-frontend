@@ -1,6 +1,7 @@
 import {
   GetServiceParams,
   ServiceListResponse,
+  ServiceNameResponse,
   ServiceResponse,
 } from "@/lib/types/service-types";
 import { DeleteResponse } from "@/lib/types/types";
@@ -111,6 +112,30 @@ export async function deleteService(service_id: {
       throw new Error(`error: ${response.status}`);
     }
     const result: DeleteResponse = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getServiceName(branch?: string) {
+  const params = new URLSearchParams();
+  if (branch) params.append("branch", branch);
+  try {
+    const response = await fetch(
+      `${backendUrl}/service/service-name?${params}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw Error("Internal error");
+    }
+    const result: ServiceNameResponse = await response.json();
     return result;
   } catch (error) {
     throw error;
