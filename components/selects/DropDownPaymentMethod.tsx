@@ -11,7 +11,7 @@ import {
 import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
-interface DropDownAppointmentStatusProps
+interface DropDownPaymentMethodProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
   onValueChange?: (value: string) => void;
   value?: string;
@@ -22,20 +22,18 @@ interface DropDownAppointmentStatusProps
   urlParamKey?: string;
 }
 
-const DropDownAppointmentStatus = ({
+const DropDownPaymentMethod = ({
   onValueChange,
   value,
-  placeholder = "Select Appointment Status",
+  placeholder = "Select payment method",
   includeAllOption = false,
-  allOptionLabel = "Select Appointment Status",
+  allOptionLabel = "Select payment method",
   useUrlParams = false,
-  urlParamKey = "status",
-}: DropDownAppointmentStatusProps) => {
-  const status = [
-    { value: "pending", label: "Pending" },
-    { value: "waiting", label: "Waiting" },
-    { value: "cancelled", label: "Cancelled" },
-    { value: "completed", label: "Completed" },
+  urlParamKey = "payment",
+}: DropDownPaymentMethodProps) => {
+  const paymentMethod = [
+    { value: "cash", label: "Cash" },
+    { value: "xendit", label: "Xendit" },
   ];
 
   const searchParams = useSearchParams();
@@ -87,9 +85,9 @@ const DropDownAppointmentStatus = ({
         {includeAllOption && (
           <SelectItem value="all">{allOptionLabel}</SelectItem>
         )}
-        {status.map((s) => (
-          <SelectItem key={s.value} value={s.value}>
-            {s.label}
+        {paymentMethod.map((p) => (
+          <SelectItem key={p.value} value={p.value}>
+            {p.label}
           </SelectItem>
         ))}
       </SelectContent>
@@ -97,4 +95,4 @@ const DropDownAppointmentStatus = ({
   );
 };
 
-export default DropDownAppointmentStatus;
+export default DropDownPaymentMethod;

@@ -28,6 +28,8 @@ import {
 } from "@radix-ui/react-dialog";
 import { Calendar } from "lucide-react";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import DropDownPaymentMethod from "../selects/DropDownPaymentMethod";
 
 const AppointmentForm: React.FC<AppointmentFormProps> = ({
   renderDialog = true,
@@ -61,7 +63,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
     },
   });
 
-  const { control, handleSubmit, reset, } = form;
+  const { control, handleSubmit, reset } = form;
 
   const appointmentMutation = useBaseMutation(method, {
     createFn: postAesthetician,
@@ -109,6 +111,108 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* fields */}
+
+          <FormField
+            control={form.control}
+            name="first_name"
+            render={({ field }) => (
+              <FormItem className="mb-5">
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="First name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="last_name"
+            render={({ field }) => (
+              <FormItem className="mb-5">
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Last name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="middle_initial"
+            render={({ field }) => (
+              <FormItem className="mb-5">
+                <FormLabel>M.I</FormLabel>
+                <FormControl>
+                  <Input placeholder="A" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="final_payment_method"
+            render={({ field }) => (
+              <FormItem className="mb-5">
+                <FormLabel>Payment Method</FormLabel>
+                <FormControl>
+                  <DropDownPaymentMethod
+                    value={field.value ?? ""}
+                    onValueChange={(v) => field.onChange(v)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+
+          <FormField
+            control={form.control}
+            name="aesthetician_id"
+            render={({ field }) => (
+              <FormItem className="mb-5">
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter branch name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="branch_id"
+            render={({ field }) => (
+              <FormItem className="mb-5">
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter branch name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="service_id"
+            render={({ field }) => (
+              <FormItem className="mb-5">
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter branch name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Actions */}
           <div className="flex gap-3 pt-4">
