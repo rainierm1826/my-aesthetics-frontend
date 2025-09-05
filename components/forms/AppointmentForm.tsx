@@ -1,7 +1,7 @@
 "use client";
 
 import { AppointmentFormProps } from "@/lib/types/appointment-types";
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -34,6 +34,7 @@ import DropDownAesthetician from "../selects/DropDownAesthetician";
 import DropDownBranch from "../selects/DropDownBranch";
 import DropDownService from "../selects/DropDownService";
 import { patchAppointment, postAppointment } from "@/api/appointment";
+import { Switch } from "../ui/switch";
 
 const AppointmentForm: React.FC<AppointmentFormProps> = ({
   renderDialog = true,
@@ -73,6 +74,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   });
 
   const { control, handleSubmit, reset, watch } = form;
+  const [addVoucher, setAddVoucher] = useState<boolean>(false);
+  const [addToPay, setAddToPay] = useState<boolean>(false);
 
   const branch = watch("branch_id");
   const service = watch("service_id");
@@ -80,7 +83,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const appointmentMutation = useBaseMutation(method, {
     createFn: postAppointment,
     updateFn: patchAppointment,
-    queryKey: ["appointment"],
+    queryKey: [["appointment"], ["aesthetician-name"], ["aesthetician"]],
     successMessages: {
       create: "Appointment has been created.",
       update: "Appointment has been updated.",
@@ -117,7 +120,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       ...(values.voucher_code ? { voucher_code: values.voucher_code } : {}),
     };
 
-    console.log(payload);
     appointmentMutation.mutate(payload);
   };
 
@@ -258,7 +260,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 </FormItem>
               )}
             />
-            {branch && (
+            {((branch && method === "post") || method === "patch") && (
               <FormField
                 control={control}
                 name="service_id"
@@ -280,7 +282,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {branch && service && (
+            {(method === "patch" ||
+              (method === "post" && branch && service)) && (
               <FormField
                 control={control}
                 name="aesthetician_id"
@@ -316,50 +319,80 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               )}
             />
           </div>
-
-          <FormField
-            control={control}
-            name="to_pay"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>To Pay</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter amount"
-                    type="number"
-                    {...field}
-                    value={field.value ?? ""}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? Number(e.target.value) : undefined
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={control}
-            name="voucher_code"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Voucher</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter voucher"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(e.target.value || undefined)
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex justify-between items-center shadow-sm rounded-sm px-4 py-2">
+            <div>
+              <p className="text-sm font-medium">Add amount</p>
+              <p className="text-xs text-muted-foreground">
+                Manually add amount
+              </p>
+            </div>
+            <Switch
+              checked={addToPay}
+              onCheckedChange={() => setAddToPay((value) => !value)}
+            />
+          </div>
+          {addToPay && (
+            <FormField
+              control={control}
+              name="to_pay"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>To Pay</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter amount"
+                      type="number"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? Number(e.target.value) : undefined
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {method == "post" && (
+            <div className="flex justify-between items-center shadow-sm rounded-sm px-4 py-2">
+              <div>
+                <p className="text-sm font-medium">Add voucher</p>
+                <p className="text-xs text-muted-foreground">
+                  Manually add voucher
+                </p>
+              </div>
+              <Switch
+                checked={addVoucher}
+                onCheckedChange={() => {
+                  setAddVoucher((value) => !value);
+                }}
+              />
+            </div>
+          )}
+          {addVoucher && method !== "patch" && (
+            <FormField
+              control={control}
+              name="voucher_code"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Voucher</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter voucher"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(e.target.value || undefined)
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <div className="flex gap-3 pt-4">
             <Button

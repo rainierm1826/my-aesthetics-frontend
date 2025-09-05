@@ -27,12 +27,13 @@ export type Appointment = {
     first_name: string;
     last_name: string;
     middle_initial: string;
-    experience: number;
+    experience: string;
   };
   service: {
     service_id: string;
     service_name: string;
     final_price: number;
+    discounted_price:number
     category: string;
   };
   status: string;
@@ -77,6 +78,7 @@ export type GetAppointmentParams = {
   limit?: number;
   branch?: string;
   date?: string;
+  status?:string
 };
 
 export interface AppointmentFormProps {

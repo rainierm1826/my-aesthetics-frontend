@@ -7,7 +7,7 @@ interface MutationConfig<TData = unknown, TVariables = unknown> {
   createFn?: (payload?: TVariables) => Promise<TData>;
   updateFn?: (payload: TVariables) => Promise<TData>;
   deleteFn?: (payload: TVariables) => Promise<TData>;
-  queryKey: string | string[];
+  queryKey: string | string[] | (string | string[])[];
   successMessages?: {
     create?: string;
     update?: string;
@@ -17,7 +17,7 @@ interface MutationConfig<TData = unknown, TVariables = unknown> {
   shouldResetOnCreate?: boolean;
 }
 
-export const useBaseMutation = <TData=unknown, TVariables=void>(
+export const useBaseMutation = <TData = unknown, TVariables = void>(
   method: "post" | "patch" | "delete",
   config: MutationConfig<TData, TVariables>
 ) => {
@@ -37,17 +37,29 @@ export const useBaseMutation = <TData=unknown, TVariables=void>(
       throw new Error(`No ${method} function provided`);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: Array.isArray(config.queryKey)
-          ? config.queryKey
-          : [config.queryKey],
-        type: "all",
+      const keys = Array.isArray(config.queryKey[0])
+        ? (config.queryKey as string[][]) 
+        : [config.queryKey]; 
+
+      keys.forEach((key) => {
+        queryClient.invalidateQueries({
+          queryKey: Array.isArray(key) ? key : [key],
+          exact: false, // invalidate nested queries too
+        });
       });
+
       const messages = config.successMessages;
-      const message = method === "post" ? messages?.create : method === "patch" ? messages?.update : messages?.delete;
-      toast.success(message);
+      const message =
+        method === "post"
+          ? messages?.create
+          : method === "patch"
+          ? messages?.update
+          : messages?.delete;
+
+      if (message) toast.success(message);
       config.onSuccess?.(data, method);
     },
+
     onError: (error: Error) => {
       toast.error(`${error}`);
     },

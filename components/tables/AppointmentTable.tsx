@@ -26,7 +26,7 @@ export default function AppointmentTable() {
         <div className="flex gap-3 w-full">
           <SearchInput placeholder="Search by appointment id..." size="w-1/3" />
           <DropDownBranch useUrlParams={true} />
-          <DropDownAppointmentStatus />
+          <DropDownAppointmentStatus useUrlParams={true} includeAllOption/>
         </div>
         <AppointmentForm
           method="post"

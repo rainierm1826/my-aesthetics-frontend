@@ -6,7 +6,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export function useAestheticianName(branchId?: string) {
   return useQuery<AestheticianNameResponse, Error>({
-    queryKey: ["aesthetician", "aesthetician-name", branchId],
+    queryKey: ["aesthetician-name", branchId],
     queryFn: () => getAestheticianName(branchId),
     placeholderData: keepPreviousData,
     refetchOnMount: false,

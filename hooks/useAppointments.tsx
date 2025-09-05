@@ -9,23 +9,23 @@ export function useAppointments() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? "";
+  const status = searchParams.get("status") ?? "";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
 
-  const today = new Date().toISOString().split("T")[0]
-  const date = searchParams.get("date") ?? today
-
-  console.log(date)
+  const today = new Date().toISOString().split("T")[0];
+  const date = searchParams.get("date") ?? today;
 
   return useQuery<AppointmentListResponse, Error>({
-    queryKey: ["appointment", { query, limit, page, branch, date }],
+    queryKey: ["appointment", { query, limit, page, branch, date, status }],
     queryFn: () =>
       getAllAppointments({
         query,
         page,
         limit,
         branch,
-        date
+        date,
+        status,
       }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,

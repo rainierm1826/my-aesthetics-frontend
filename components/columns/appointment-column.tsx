@@ -7,6 +7,7 @@ import { ordinal } from "@/lib/function";
 import { deleteAppointment } from "@/api/appointment";
 import ActionCell from "@/components/ActionCell";
 import AppointmentForm from "../forms/AppointmentForm";
+import ReceiptCard from "../cards/ReceiptCard";
 
 export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
@@ -98,6 +99,10 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
           deleteMessage="Appointment has been deleted."
           queryKey="appointment"
           id={appointment_id}
+          editAppointmentStatus
+          infoDialog={
+            <ReceiptCard appointment={row.original}/>
+          }
           editDialog={
             <AppointmentForm
               method="patch"

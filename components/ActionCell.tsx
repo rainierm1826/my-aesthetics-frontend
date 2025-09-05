@@ -27,6 +27,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DeleteResponse } from "@/lib/types/types";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
+import { patchAppointment } from "@/api/appointment";
 
 type ActionCellProps = {
   id: string;
@@ -36,6 +37,7 @@ type ActionCellProps = {
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
   editDialog?: ReactNode;
+  editAppointmentStatus?: boolean;
 };
 
 function ActionCell({
@@ -46,11 +48,13 @@ function ActionCell({
   infoDialog,
   previewDialog,
   editDialog,
+  editAppointmentStatus,
 }: ActionCellProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleMoreInfoClick = () => {
@@ -73,13 +77,36 @@ function ActionCell({
     setTimeout(() => setOpenDeleteDialog(true), 100);
   };
 
+  const handleSuccessClick = () => {
+    setDropdownOpen(false);
+    setTimeout(() => setOpenSuccessDialog(true), 100); 
+  };
+
   const deleteMutation = useBaseMutation("delete", {
     deleteFn: deleteFn,
-    queryKey: queryKey,
+    queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
     successMessages: {
       delete: deleteMessage || "Deleted Successfully",
     },
   });
+
+  const successAppointmentMutation = useBaseMutation("patch", {
+    updateFn: patchAppointment,
+    queryKey: ["appointment"], 
+    successMessages: {
+      update: "Appointment updated successfully",
+    },
+    onSuccess: () => {
+      setOpenSuccessDialog(false);
+    },
+  });
+
+  const handleSuccessAppointment = (id: string) => {
+    successAppointmentMutation.mutate({
+      appointment_id: id,
+      status: "completed",
+    });
+  };
 
   const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
@@ -126,8 +153,18 @@ function ActionCell({
               Preview
             </DropdownMenuItem>
           )}
+
+          {editAppointmentStatus && (
+            <DropdownMenuItem
+              className="text-green-400 hover:text-green-500"
+              onSelect={handleSuccessClick}
+            >
+              Mark as Complete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
+
       {/* More Info Dialog */}
       {infoDialog && (
         <Dialog open={openMoreInfoDialog} onOpenChange={setOpenMoreInfoDialog}>
@@ -141,6 +178,7 @@ function ActionCell({
           </DialogContent>
         </Dialog>
       )}
+
       {/* Edit Dialog */}
       {editDialog && (
         <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
@@ -154,6 +192,7 @@ function ActionCell({
           </DialogContent>
         </Dialog>
       )}
+
       {/* Preview Dialog */}
       {previewDialog && (
         <Dialog open={openPreviewDialog} onOpenChange={setOpenPreviewDialog}>
@@ -167,6 +206,8 @@ function ActionCell({
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Delete Dialog */}
       <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -190,6 +231,40 @@ function ActionCell({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Success/Complete Appointment Dialog */}
+      {editAppointmentStatus && (
+        <AlertDialog
+          open={openSuccessDialog}
+          onOpenChange={setOpenSuccessDialog}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Mark Appointment as Complete?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. The appointment status will be
+                updated to completed.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                disabled={successAppointmentMutation.isPending}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => handleSuccessAppointment(id)}
+                disabled={successAppointmentMutation.isPending}
+                className="bg-green-500 text-white hover:bg-green-400 disabled:opacity-50"
+              >
+                {successAppointmentMutation.isPending
+                  ? "Updating..."
+                  : "Mark Complete"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </>
   );
 }

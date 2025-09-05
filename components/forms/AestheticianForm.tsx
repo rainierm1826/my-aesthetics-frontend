@@ -78,7 +78,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
   const aestheticianMutation = useBaseMutation(method, {
     createFn: postAesthetician,
     updateFn: patchAesthetician,
-    queryKey: ["aesthetician"],
+    queryKey: [["aesthetician"], ["aesthetician-name"]],
     successMessages: {
       create: "Aesthetician has been created.",
       update: "Aesthetician has been updated.",
