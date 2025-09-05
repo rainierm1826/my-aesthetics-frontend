@@ -12,6 +12,7 @@ import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useAestheticianName } from "@/hooks/useAestheticianName";
 import { AestheticianName } from "@/lib/types/aesthetician-types";
+import { Badge } from "../ui/badge";
 
 interface DropDownAestheticianProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
@@ -20,7 +21,7 @@ interface DropDownAestheticianProps
   placeholder?: string;
   includeAllOption?: boolean;
   useUrlParams?: boolean;
-  branchId?:string
+  branchId?: string;
 }
 
 const DropDownAesthetician = ({
@@ -29,7 +30,7 @@ const DropDownAesthetician = ({
   placeholder = "Select aesthetician",
   includeAllOption = false,
   useUrlParams = false,
-  branchId
+  branchId,
 }: DropDownAestheticianProps) => {
   const { data, isLoading, error } = useAestheticianName(branchId);
 
@@ -121,11 +122,15 @@ const DropDownAesthetician = ({
           </SelectItem>
         ) : (
           aestheticians.map((a) => (
-            <SelectItem
-              key={a.aesthetician_id}
-              value={a.aesthetician_id}
-            >
-              {`${a.first_name} ${a.middle_initial}. ${a.last_name}`}
+            <SelectItem key={a.aesthetician_id} value={a.aesthetician_id}>
+              <p className="flex items-center gap-5">
+                {`${a.first_name} ${a.middle_initial}. ${a.last_name}`}
+                {a.experience == "pro" && (
+                  <Badge className="rounded-full bg-green-50 text-green-500 text-xs">
+                    Pro
+                  </Badge>
+                )}  
+              </p>
             </SelectItem>
           ))
         )}

@@ -33,7 +33,10 @@ const DropDownPaymentMethod = ({
 }: DropDownPaymentMethodProps) => {
   const paymentMethod = [
     { value: "cash", label: "Cash" },
-    { value: "xendit", label: "Xendit" },
+    { value: "e-wallet", label: "E-Wallet" },
+    { value: "bank-transfer", label: "Bank Transfer" },
+    { value: "credit-card", label: "Credit Card" },
+    { value: "debit-card", label: "Debit Card" },
   ];
 
   const searchParams = useSearchParams();

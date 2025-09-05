@@ -34,7 +34,6 @@ const DropDownService = ({
 }: DropDownServiceProps) => {
   const { data, isLoading, error } = useServiceName(branchId);
   
-  console.log(branchId, "from dropdown service")
 
   const services: ServiceName[] = data?.service ?? [];
   const searchParams = useSearchParams();

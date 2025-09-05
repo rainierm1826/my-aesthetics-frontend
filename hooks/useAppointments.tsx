@@ -12,14 +12,20 @@ export function useAppointments() {
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
 
+  const today = new Date().toISOString().split("T")[0]
+  const date = searchParams.get("date") ?? today
+
+  console.log(date)
+
   return useQuery<AppointmentListResponse, Error>({
-    queryKey: ["appointment", { query, limit, page, branch }],
+    queryKey: ["appointment", { query, limit, page, branch, date }],
     queryFn: () =>
       getAllAppointments({
         query,
         page,
         limit,
         branch,
+        date
       }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,

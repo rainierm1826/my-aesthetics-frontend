@@ -7,12 +7,16 @@ export type Appointment = {
     first_name: string;
     last_name: string;
     middle_initial: string;
+    phone_number: string;
+    sex: string;
   } | null;
   walk_in: {
     walk_in_id: string;
     first_name: string;
     last_name: string;
     middle_initial: string;
+    phone_number: string;
+    sex: string;
   } | null;
   branch: {
     branch_id: string;
@@ -46,7 +50,7 @@ export type Appointment = {
   voucher_code: string | null;
   discount_amount: number;
   original_amount: number;
-  slot_number:number
+  slot_number: number;
   created_at: string;
   updated_at: string;
 };
@@ -72,6 +76,7 @@ export type GetAppointmentParams = {
   page?: number;
   limit?: number;
   branch?: string;
+  date?: string;
 };
 
 export interface AppointmentFormProps {
@@ -84,12 +89,13 @@ export interface AppointmentFormProps {
   appointmentId?: string;
   branchId?: string;
   serviceId?: string;
+  aestheticianId?: string;
   firstName?: string;
   lastName?: string;
   middleInitial?: string;
   phoneNumber?: string;
   sex?: "male" | "female" | "others" | string;
-  finalPaymentMethod?: "cash" | "xendit" | string
+  finalPaymentMethod?: "cash" | "xendit" | string;
+  toPay?: number;
+  voucherCode?:string
 }
-
-

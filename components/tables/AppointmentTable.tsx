@@ -25,7 +25,7 @@ export default function AppointmentTable() {
       <div className="flex justify-between items-center mb-5">
         <div className="flex gap-3 w-full">
           <SearchInput placeholder="Search by appointment id..." size="w-1/3" />
-          <DropDownBranch />
+          <DropDownBranch useUrlParams={true} />
           <DropDownAppointmentStatus />
         </div>
         <AppointmentForm
@@ -35,7 +35,6 @@ export default function AppointmentTable() {
           formDescription="Create a new appointment by filling in the details below."
           formTitle="Add New Appointment"
         />
-        
       </div>
 
       {isFetching ? (

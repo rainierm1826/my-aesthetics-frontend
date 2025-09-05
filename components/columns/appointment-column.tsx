@@ -4,7 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Appointment } from "@/lib/types/appointment-types";
 import { ordinal } from "@/lib/function";
-// import ActionCell from "@/components/ActionCell";
+import { deleteAppointment } from "@/api/appointment";
+import ActionCell from "@/components/ActionCell";
+import AppointmentForm from "../forms/AppointmentForm";
 
 export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
@@ -70,10 +72,55 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
       );
     },
   },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => {
-  //     return <ActionCell data={row.original.appointment_id} />;
-  //   },
-  // },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const {
+        appointment_id,
+        user,
+        walk_in,
+        aesthetician,
+        service,
+        to_pay,
+        branch,
+        final_payment_method,
+        voucher_code,
+      } = row.original;
+      const first_name = walk_in?.first_name || user?.first_name;
+      const last_name = walk_in?.last_name || user?.last_name;
+      const middle_initial = walk_in?.middle_initial || user?.middle_initial;
+      const phone_number = walk_in?.phone_number || user?.phone_number;
+      const sex = walk_in?.sex || user?.sex;
+
+      return (
+        <ActionCell
+          deleteFn={(id: string) => deleteAppointment({ appointment_id: id })}
+          deleteMessage="Appointment has been deleted."
+          queryKey="appointment"
+          id={appointment_id}
+          editDialog={
+            <AppointmentForm
+              method="patch"
+              renderDialog={false}
+              formTitle="Edit Appointment"
+              formDescription="Update the appointment by changing in the details below."
+              buttonLabel="Update Appointment"
+              appointmentId={appointment_id}
+              firstName={first_name}
+              lastName={last_name}
+              middleInitial={middle_initial}
+              branchId={branch.branch_id}
+              serviceId={service.service_id}
+              aestheticianId={aesthetician.aesthetician_id}
+              finalPaymentMethod={final_payment_method || ""}
+              phoneNumber={phone_number}
+              toPay={to_pay}
+              sex={sex}
+              voucherCode={voucher_code || ""}
+            />
+          }
+        />
+      );
+    },
+  },
 ];

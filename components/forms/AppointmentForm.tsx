@@ -17,7 +17,6 @@ import {
   walkInAppointmentSchema,
 } from "@/schema/appointmentSchema";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
-import { postAesthetician } from "@/api/aesthetician";
 import { DialogHeader } from "../ui/dialog";
 import {
   Dialog,
@@ -34,6 +33,7 @@ import DropDownSex from "../selects/DropDownSex";
 import DropDownAesthetician from "../selects/DropDownAesthetician";
 import DropDownBranch from "../selects/DropDownBranch";
 import DropDownService from "../selects/DropDownService";
+import { patchAppointment, postAppointment } from "@/api/appointment";
 
 const AppointmentForm: React.FC<AppointmentFormProps> = ({
   renderDialog = true,
@@ -49,8 +49,11 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   phoneNumber,
   branchId,
   serviceId,
+  aestheticianId,
   finalPaymentMethod,
+  toPay,
   method,
+  voucherCode,
 }) => {
   const form = useForm<WalkInAppointmentFormValues>({
     resolver: zodResolver(walkInAppointmentSchema),
@@ -62,22 +65,25 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       sex: sex || "",
       branch_id: branchId || "",
       service_id: serviceId || "",
-      aesthetician_id: appointmentId || "",
+      aesthetician_id: aestheticianId || "",
+      to_pay: toPay || undefined,
       final_payment_method: finalPaymentMethod || "",
+      voucher_code: voucherCode || undefined,
     },
   });
 
   const { control, handleSubmit, reset, watch } = form;
-  const paymentMethod = watch("final_payment_method");
-  const isCash = paymentMethod == "cash";
+
   const branch = watch("branch_id");
   const service = watch("service_id");
 
   const appointmentMutation = useBaseMutation(method, {
-    createFn: postAesthetician,
+    createFn: postAppointment,
+    updateFn: patchAppointment,
     queryKey: ["appointment"],
     successMessages: {
-      create: "Aesthetician has been created.",
+      create: "Appointment has been created.",
+      update: "Appointment has been updated.",
     },
     onSuccess: (_, m) => {
       if (m === "post") {
@@ -91,6 +97,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           phone_number: "",
           sex: "",
           branch_id: "",
+          to_pay: undefined,
+          voucher_code: undefined,
         });
       }
     },
@@ -98,14 +106,18 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
 
   const isLoading = appointmentMutation.isPending;
   const onSubmit = async (values: WalkInAppointmentFormValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { voucher_code, to_pay, ...rest } = values;
+
     const payload = {
-      ...values,
+      ...rest,
       is_walk_in: true,
       ...(method === "patch" && { appointment_id: appointmentId }),
+      ...(values.to_pay != null ? { to_pay: values.to_pay } : {}),
+      ...(values.voucher_code ? { voucher_code: values.voucher_code } : {}),
     };
 
     console.log(payload);
-
     appointmentMutation.mutate(payload);
   };
 
@@ -305,31 +317,29 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
             />
           </div>
 
-          {isCash && (
-            <FormField
-              control={control}
-              name="to_pay"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>To Pay</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter amount"
-                      type="number"
-                      {...field}
-                      value={field.value ?? ""}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? Number(e.target.value) : undefined
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          <FormField
+            control={control}
+            name="to_pay"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>To Pay</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter amount"
+                    type="number"
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={control}
@@ -338,7 +348,13 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               <FormItem>
                 <FormLabel>Voucher</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter voucher" {...field} />
+                  <Input
+                    placeholder="Enter voucher"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(e.target.value || undefined)
+                    }
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

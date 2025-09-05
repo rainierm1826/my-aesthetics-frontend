@@ -90,6 +90,7 @@ export type AestheticianName = {
   last_name: string;
   middle_initial: string;
   aesthetician_id: string;
+  experience:string
 };
 
 export interface AestheticianNameResponse {

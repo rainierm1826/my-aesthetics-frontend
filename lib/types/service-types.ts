@@ -67,6 +67,10 @@ export type GetServiceParams = {
 export type ServiceName = {
   service_name: string;
   service_id: string;
+  price:number
+  discounted_price:number
+  discount:number
+  discount_type:number
 };
 
 export interface ServiceNameResponse {
