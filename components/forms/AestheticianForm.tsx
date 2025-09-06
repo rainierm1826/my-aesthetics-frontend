@@ -120,9 +120,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
     if (method === "patch" && aestheticianId) {
       formData.append("aesthetician_id", aestheticianId.toString());
     }
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+
 
     aestheticianMutation.mutate(formData);
   };

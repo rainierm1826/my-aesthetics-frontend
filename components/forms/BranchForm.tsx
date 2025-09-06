@@ -13,9 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MapPin, Upload, X } from "lucide-react";
 import Image from "next/image";
-import { BranchFormProps, BranchFormState } from "@/lib/types/branch-types";
+import { BranchFormProps } from "@/lib/types/branch-types";
 import { patchBranch, postBranch } from "@/api/branch";
-import { fileToBase64 } from "@/lib/function";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { branchFormSchema, BranchFormValues } from "@/schema/branchSchema";
 import { useForm } from "react-hook-form";
@@ -48,21 +47,20 @@ const BranchForm: React.FC<BranchFormProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ?? null
   );
-  const [formData, setFormData] = useState<BranchFormState>({
-    image: image || null,
-    branch_name: branchName || "",
-    address: {
-      region: region || "",
-      province: province || "",
-      city: city || "",
-      barangay: barangay || "",
-      lot: lot || "",
-    },
-  });
 
   const form = useForm<BranchFormValues>({
     resolver: zodResolver(branchFormSchema),
-    defaultValues: formData,
+    defaultValues: {
+      image: image || null,
+      branch_name: branchName || "",
+      address: {
+        region: region || "",
+        province: province || "",
+        city: city || "",
+        barangay: barangay || "",
+        lot: lot || "",
+      },
+    },
   });
 
   const branchMutation = useBaseMutation(method, {
@@ -94,25 +92,31 @@ const BranchForm: React.FC<BranchFormProps> = ({
   const isLoading = branchMutation.isPending;
 
   const onSubmit = async (values: BranchFormValues) => {
-    let imageBase64 = "";
-    if (formData.image instanceof File) {
-      imageBase64 = await fileToBase64(formData.image);
-    } else if (typeof formData.image === "string") {
-      imageBase64 = formData.image;
+    const formData = new FormData();
+
+    // Add text fields
+    formData.append("branch_name", values.branch_name);
+    formData.append("region", values.address.region);
+    formData.append("province", values.address.province);
+    formData.append("city", values.address.city);
+    formData.append("barangay", values.address.barangay);
+    formData.append("lot", values.address.lot);
+
+    // Handle image - only append if it's a File or existing string URL
+    if (values.image instanceof File) {
+      formData.append("image", values.image);
+    } else if (typeof values.image === "string" && values.image) {
+      formData.append("image", values.image);
     }
-    const payload = {
-      branch_name: values.branch_name,
-      image: imageBase64,
-      address: {
-        region: values.address.region,
-        province: values.address.province,
-        city: values.address.city,
-        barangay: values.address.barangay,
-        lot: values.address.lot,
-      },
-      ...(method === "patch" && { branch_id: branchId }),
-    };
-    branchMutation.mutate(payload);
+
+    // Add branch_id for patch requests
+    if (method === "patch" && branchId) {
+      formData.append("branch_id", branchId.toString());
+    }
+
+ 
+
+    branchMutation.mutate(formData);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,17 +124,25 @@ const BranchForm: React.FC<BranchFormProps> = ({
     if (!files || files.length === 0) return;
 
     const file = files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview((reader.result as string) ?? null);
-      setFormData((prev) => ({ ...prev, image: file }));
-    };
-    reader.readAsDataURL(file);
+
+    // Create preview URL for display
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+
+    // Update form with the actual File object
+    form.setValue("image", file);
   };
 
   const removeImage = () => {
+    // Clean up preview URL if it exists
+    if (imagePreview && imagePreview.startsWith("blob:")) {
+      URL.revokeObjectURL(imagePreview);
+    }
+
     setImagePreview(null);
-    setFormData((prev) => ({ ...prev, image: null }));
+    form.setValue("image", null);
+
+    // Clear file input
     const fileInput = document.getElementById(
       "branch-image"
     ) as HTMLInputElement | null;
@@ -212,6 +224,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
               </FormItem>
             )}
           />
+
           <div className="space-y-3">
             <FormLabel className="text-sm font-medium">Address</FormLabel>
             <div className="grid grid-cols-2 gap-2">

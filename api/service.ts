@@ -8,7 +8,7 @@ import { DeleteResponse } from "@/lib/types/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export async function postService(data: unknown): Promise<ServiceResponse> {
+export async function postService(data?: FormData): Promise<ServiceResponse> {
   try {
     if (!backendUrl) {
       throw new Error(
@@ -17,10 +17,7 @@ export async function postService(data: unknown): Promise<ServiceResponse> {
     }
     const response = await fetch(`${backendUrl}/service`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data
     });
 
     if (!response.ok) {
@@ -33,7 +30,7 @@ export async function postService(data: unknown): Promise<ServiceResponse> {
   }
 }
 
-export async function patchService(data: unknown): Promise<ServiceResponse> {
+export async function patchService(data: FormData): Promise<ServiceResponse> {
   try {
     if (!backendUrl) {
       throw new Error(
@@ -42,10 +39,7 @@ export async function patchService(data: unknown): Promise<ServiceResponse> {
     }
     const response = await fetch(`${backendUrl}/service`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data
     });
 
     if (!response.ok) {

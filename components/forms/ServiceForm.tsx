@@ -31,7 +31,6 @@ import {
 import { serviceFormSchema, ServiceFormValues } from "@/schema/serviceSchema";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchService, postService } from "@/api/service";
-import { fileToBase64 } from "@/lib/function";
 import DropDownDiscountType from "../selects/DropDownDiscountType";
 import { ServiceFormProps } from "@/lib/types/service-types";
 
@@ -57,7 +56,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ?? null
   );
-  console.log(serviceId)
+  console.log(serviceId);
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {
@@ -104,7 +103,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   // Live values
   const priceValue = Number(watch("price") ?? 0) || 0;
   const discountValue = Number(watch("discount") ?? 0) || 0;
-  const discountTypeValue = watch("discount_type"); // "fixed" | "percentage"
+  const discountTypeValue = watch("discount_type");
   const isSaleValue = !!watch("is_sale");
 
   const rawDiscounted =
@@ -119,27 +118,40 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const isLoading = serviceMutation.isPending;
 
   const onSubmit = async (values: ServiceFormValues) => {
-    let imageBase64 = "";
-    const img = values.image;
+    const formData = new FormData();
 
-    if (img instanceof File) {
-      imageBase64 = await fileToBase64(img);
-    } else if (typeof img === "string") {
-      imageBase64 = img;
+    Object.entries(values).forEach(([key, value]) => {
+      if (key === "image" && value instanceof File) {
+        formData.append("image", value);
+      } else if (key === "branch_id") {
+        if (value === "all") {
+        } else {
+          formData.append("branch_id", String(value));
+        }
+      } else if (typeof value === "boolean") {
+        // Send as "1" or "0" instead of "true"/"false"
+        formData.append(key, value ? "true" : "false");
+      } else if (typeof value === "number") {
+        formData.append(key, value.toString());
+      } else if (value !== undefined && value !== null) {
+        formData.append(key, String(value));
+      }
+    });
+
+    // add discounted_price from rawDiscounted
+    formData.set("discounted_price", rawDiscounted.toString());
+
+    // add service_id only on patch
+    if (method === "patch" && serviceId) {
+      formData.append("service_id", serviceId.toString());
     }
 
-    const payload = {
-      ...values,
-      discounted_price: rawDiscounted,
-      image: imageBase64,
-      branch_id: values.branch_id === "all" ? null : values.branch_id,
-      ...(method === "patch" && {
-        service_id: serviceId,
-      }),
-    };
+    console.log("FormData entries:");
+    for (const [key, val] of formData.entries()) {
+      console.log(key, val);
+    }
 
-    console.log(payload);
-    serviceMutation.mutate(payload);
+    serviceMutation.mutate(formData);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

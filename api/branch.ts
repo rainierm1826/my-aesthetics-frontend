@@ -8,9 +8,15 @@ import { DeleteResponse } from "@/lib/types/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export async function postBranch(data: unknown): Promise<BranchResponse> {
+export async function postBranch(data?: FormData): Promise<BranchResponse> {
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    if (data) {
+      console.log("FormData entries:");
+      for (const [key, value] of data.entries()) {
+        console.log(key, value);
+      }
+    }
 
     if (!backendUrl) {
       throw new Error(
@@ -19,10 +25,7 @@ export async function postBranch(data: unknown): Promise<BranchResponse> {
     }
     const response = await fetch(`${backendUrl}/branch`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data,
     });
 
     if (!response.ok) {
@@ -35,14 +38,11 @@ export async function postBranch(data: unknown): Promise<BranchResponse> {
   }
 }
 
-export async function patchBranch(data: unknown): Promise<BranchResponse> {
+export async function patchBranch(data?: FormData): Promise<BranchResponse> {
   try {
     const response = await fetch(`${backendUrl}/branch`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data,
     });
 
     if (!response.status) {
