@@ -44,15 +44,11 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
       year: "numeric",
       month: "long",
       day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     });
   };
 
   return (
-    <Card
-      className={`w-full mx-auto h-[450px] overflow-y-auto ${className}`}
-    >
+    <Card className={`w-full mx-auto h-[450px] overflow-y-auto ${className}`}>
       <CardHeader className="text-center pb-4">
         <div className="space-y-1">
           <h2 className="text-xl font-bold">RECEIPT</h2>

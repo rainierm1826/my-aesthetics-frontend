@@ -18,7 +18,6 @@ import DropDownExperience from "../selects/DropDownExperience";
 import Image from "next/image";
 import DropDownAvailability from "../selects/DropDownAvailability";
 import { patchAesthetician, postAesthetician } from "@/api/aesthetician";
-import { fileToBase64 } from "@/lib/function";
 import { FormAesthetician } from "@/lib/types/aesthetician-types";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { useForm } from "react-hook-form";
@@ -104,21 +103,28 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
   const isLoading = aestheticianMutation.isPending;
 
   const onSubmit = async (values: AestheticianFormValues) => {
-    let imageBase64 = "";
-    const img = values.image;
+    const formData = new FormData();
 
-    if (img instanceof File) {
-      imageBase64 = await fileToBase64(img);
-    } else if (typeof img === "string") {
-      imageBase64 = img;
+    Object.entries(values).forEach(([key, value]) => {
+      if (key === "image" && value instanceof File) {
+        formData.append("image", value);
+      } else if (value !== undefined && value !== null) {
+        formData.append(key, value as string);
+      }
+    });
+
+    if (values.image instanceof File) {
+      formData.append("image", values.image);
     }
-    const payload = {
-      ...values,
-      image: imageBase64,
-      ...(method === "patch" && { aesthetician_id: aestheticianId }),
-    };
 
-    aestheticianMutation.mutate(payload);
+    if (method === "patch" && aestheticianId) {
+      formData.append("aesthetician_id", aestheticianId.toString());
+    }
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    aestheticianMutation.mutate(formData);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,6 +221,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
                               alt="Aesthetician preview"
                               fill
                               className="object-cover"
+                              unoptimized
                             />
                           )}
                         </div>

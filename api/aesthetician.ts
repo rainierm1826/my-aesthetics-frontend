@@ -93,16 +93,13 @@ export async function getAesthetician(aesthetician_id?: string) {
 }
 
 export async function postAesthetician(
-  data: unknown
+  data?: FormData
 ): Promise<AestheticianResponse> {
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     const response = await fetch(`${backendUrl}/aesthetician`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data
     });
 
     if (!response.ok) {
@@ -116,15 +113,12 @@ export async function postAesthetician(
 }
 
 export async function patchAesthetician(
-  data: unknown
+  data?: FormData
 ): Promise<AestheticianResponse> {
   try {
     const response = await fetch(`${backendUrl}/aesthetician`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data
     });
 
     if (!response.ok) {

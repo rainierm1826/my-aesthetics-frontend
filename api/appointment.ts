@@ -13,7 +13,7 @@ export async function getAllAppointments({
   limit,
   branch = "",
   date,
-  status
+  status,
 }: GetAppointmentParams): Promise<AppointmentListResponse> {
   const today = new Date().toISOString().split("T")[0];
 
@@ -23,7 +23,7 @@ export async function getAllAppointments({
   params.set("limit", String(limit));
   params.set("branch", String(branch));
   params.set("date", date ?? today);
-  params.set("status", String(status));
+  params.set("status", status ?? "");
 
   try {
     const res = await fetch(
