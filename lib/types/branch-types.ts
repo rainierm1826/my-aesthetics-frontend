@@ -33,7 +33,7 @@ export interface BranchNameResponse {
 }
 
 export interface BranchResponse {
-  branch: Branch[];
+  branch: Branch;
   message: string;
   status: boolean;
 }
@@ -75,6 +75,7 @@ export interface BranchFormProps {
 }
 
 export type BranchCardProps = {
+  branch_id:string
   className?: string;
   image: string;
   branchName: string;

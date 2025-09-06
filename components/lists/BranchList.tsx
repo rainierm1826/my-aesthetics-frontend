@@ -30,6 +30,7 @@ const BranchList = ({ action }: { action: boolean }) => {
             ))
           : branches.map((branch) => (
               <BranchCard
+                branch_id={branch.branch_id}
                 key={branch.branch_id}
                 action
                 branchName={branch.branch_name}
