@@ -10,11 +10,11 @@ import { RatingStar } from "@/components/RatingStar";
 import { appointments } from "@/lib/data";
 import BookNowButton from "@/components/buttons/BookNowButton";
 
-interface PageProps {
+interface AestheticianPageProps {
   params: { id: string };
 }
 
-export default async function AestheticianPage({ params }: PageProps) {
+export default async function AestheticianPage({ params }: AestheticianPageProps) {
   const { id } = params;
 
   let aesthetician: AestheticianResponse | null = null;

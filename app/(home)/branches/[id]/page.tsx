@@ -10,11 +10,11 @@ import { RatingStar } from "@/components/RatingStar";
 import { appointments } from "@/lib/data";
 import BookNowButton from "@/components/buttons/BookNowButton";
 
-interface PageProps {
+interface BranchPageProps {
   params: { id: string };
 }
 
-export default async function BranchPage({ params }: PageProps) {
+export default async function BranchPage({ params }: BranchPageProps) {
   const { id } = params;
 
   let branch: BranchResponse | null = null;

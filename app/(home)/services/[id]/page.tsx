@@ -9,11 +9,11 @@ import { RatingStar } from "@/components/RatingStar";
 import { appointments } from "@/lib/data";
 import BookNowButton from "@/components/buttons/BookNowButton";
 
-interface PageProps {
+interface ServicePageProps  {
   params: { id: string };
 }
 
-export default async function ServicePage({ params }: PageProps) {
+export default async function ServicePage({ params }: ServicePageProps ) {
   const { id } = params;
 
   let service: ServiceResponse | null = null;
