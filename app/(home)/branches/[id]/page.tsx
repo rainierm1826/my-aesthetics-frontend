@@ -11,11 +11,11 @@ import { appointments } from "@/lib/data";
 import BookNowButton from "@/components/buttons/BookNowButton";
 
 interface BranchPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function BranchPage({ params }: BranchPageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   let branch: BranchResponse | null = null;
 

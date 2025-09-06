@@ -11,11 +11,11 @@ import { appointments } from "@/lib/data";
 import BookNowButton from "@/components/buttons/BookNowButton";
 
 interface AestheticianPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function AestheticianPage({ params }: AestheticianPageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   let aesthetician: AestheticianResponse | null = null;
 

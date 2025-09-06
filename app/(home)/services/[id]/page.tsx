@@ -9,12 +9,12 @@ import { RatingStar } from "@/components/RatingStar";
 import { appointments } from "@/lib/data";
 import BookNowButton from "@/components/buttons/BookNowButton";
 
-interface ServicePageProps  {
-  params: { id: string };
+interface ServicePageProps {
+  params: Promise<{ id: string }>;
 }
 
-export default async function ServicePage({ params }: ServicePageProps ) {
-  const { id } = params;
+export default async function ServicePage({ params }: ServicePageProps) {
+  const { id } = await params;
 
   let service: ServiceResponse | null = null;
 
@@ -56,7 +56,6 @@ export default async function ServicePage({ params }: ServicePageProps ) {
     )
     .slice(0, 5);
 
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -66,7 +65,9 @@ export default async function ServicePage({ params }: ServicePageProps ) {
             {serviceData.is_sale && (
               <div className="absolute top-4 left-4 z-10">
                 <Badge variant="destructive" className="text-white">
-                  {serviceData.discount_type == "percentage" ? `${serviceData.discount}% Discount` : `₱${serviceData.discount} Off`}
+                  {serviceData.discount_type == "percentage"
+                    ? `${serviceData.discount}% Discount`
+                    : `₱${serviceData.discount} Off`}
                 </Badge>
               </div>
             )}
