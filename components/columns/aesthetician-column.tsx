@@ -139,6 +139,7 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
           }
           previewDialog={
             <AestheticianCard
+              aesthetician_id={aesthetician_id}
               firstName={first_name}
               lastName={last_name}
               middleInitial={middle_initial}

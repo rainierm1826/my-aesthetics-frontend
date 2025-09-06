@@ -45,6 +45,7 @@ export const branchColumns: ColumnDef<Branch>[] = [
           id={branch.branch_id}
           previewDialog={
             <BranchCard
+              branch_id={branch.branch_id}
               rating={branch.avarage_rate}
               status={branch.status}
               barangay={address.barangay}
