@@ -141,3 +141,26 @@ export async function getServiceName(branch?: string) {
     throw error;
   }
 }
+
+export async function getService(service_id?: string) {
+
+  try {
+    const response = await fetch(
+      `${backendUrl}/service/${service_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw Error("Internal error");
+    }
+    const result: ServiceResponse = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}

@@ -70,6 +70,28 @@ export async function getAestheticianName(branch?: string) {
   }
 }
 
+export async function getAesthetcian(aesthetician_id?: string) {
+  try {
+    const response = await fetch(
+      `${backendUrl}/aesthetician/${aesthetician_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw Error("Internal error");
+    }
+    const result: AestheticianResponse = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function postAesthetician(
   data: unknown
 ): Promise<AestheticianResponse> {

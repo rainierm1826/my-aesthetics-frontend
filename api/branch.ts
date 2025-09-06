@@ -105,6 +105,25 @@ export async function getBranchName() {
   }
 }
 
+export async function getBranch(branch_id: string) {
+  try {
+    const response = await fetch(`${backendUrl}/branch/${branch_id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw Error("Internal error");
+    }
+    const result: BranchResponse = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function deleteBranch(branch_id: {
   branch_id: string;
 }): Promise<DeleteResponse> {
