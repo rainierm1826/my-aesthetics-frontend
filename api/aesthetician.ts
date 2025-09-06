@@ -70,7 +70,7 @@ export async function getAestheticianName(branch?: string) {
   }
 }
 
-export async function getAesthetcian(aesthetician_id?: string) {
+export async function getAesthetician(aesthetician_id?: string) {
   try {
     const response = await fetch(
       `${backendUrl}/aesthetician/${aesthetician_id}`,

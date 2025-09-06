@@ -41,7 +41,7 @@ export type Service = {
 };
 
 export type ServiceResponse = {
-  service: Service[];
+  service: Service;
   status: boolean;
   message: string;
 };

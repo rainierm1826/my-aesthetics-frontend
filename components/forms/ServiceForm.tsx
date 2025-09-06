@@ -57,6 +57,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ?? null
   );
+  console.log(serviceId)
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {

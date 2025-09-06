@@ -40,6 +40,7 @@ const ServiceList = ({ action }: { action: boolean }) => {
               ))
             : services.map((service) => (
                 <ServicesCard
+                  service_id={service.service_id}
                   action
                   key={service.service_id}
                   category={service.category}

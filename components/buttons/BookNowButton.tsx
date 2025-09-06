@@ -13,6 +13,7 @@ import {
 import SignInForm from "../forms/SignInForm";
 
 const BookNowButton = ({ size }: { size: string }) => {
+
   return (
     <Dialog>
       <DialogTrigger asChild>

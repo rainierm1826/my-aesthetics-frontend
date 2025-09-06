@@ -7,7 +7,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-export default async function AestheticianPage({
+export default async function AestheticiansPage({
   searchParams,
 }: {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;

@@ -23,10 +23,7 @@ export const serviceFormSchema = z
     discount_type: z.string().optional(),
     branch_id: z.string().min(1, "Branch is required"),
     category: z.string().min(1, "Service category is required"),
-    description: z
-      .string()
-      .min(1, "Service description is required")
-      .max(255, "Service description must be 255 characters or less"),
+    description: z.string().min(1, "Service description is required"),
 
     is_sale: z.boolean(),
   })

@@ -112,6 +112,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
           deleteFn={(id: string) => deleteService({ service_id: id })}
           previewDialog={
             <ServicesCard
+              service_id={service_id}
               category={category}
               isSale={is_sale}
               serviceName={service_name}
@@ -127,6 +128,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
           queryKey="service"
           editDialog={
             <ServiceForm
+              serviceId={service_id}
               method="patch"
               description={description}
               image={image}
