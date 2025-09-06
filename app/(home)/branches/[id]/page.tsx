@@ -14,17 +14,6 @@ interface PageProps {
   params: { id: string };
 }
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "active":
-      return "bg-green-500";
-    case "close":
-      return "bg-red-500";
-    default:
-      return "bg-gray-500";
-  }
-};
-
 export default async function BranchPage({ params }: PageProps) {
   const { id } = params;
 
@@ -35,6 +24,17 @@ export default async function BranchPage({ params }: PageProps) {
   } catch (error) {
     console.error(error);
   }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-500";
+      case "close":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
 
   if (!branch) {
     return (
@@ -96,7 +96,7 @@ export default async function BranchPage({ params }: PageProps) {
               <AvatarImage
                 src={branchData.image}
                 alt={branchData.branch_name}
-                className="w-full h-full object-cover object-center" 
+                className="w-full h-full object-cover object-center"
               />
               <AvatarFallback className="w-full h-full text-6xl rounded-lg">
                 {branchData.branch_name[0]}

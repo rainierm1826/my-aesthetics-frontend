@@ -13,7 +13,6 @@ interface PageProps {
   params: { id: string };
 }
 
-
 export default async function ServicePage({ params }: PageProps) {
   const { id } = params;
 

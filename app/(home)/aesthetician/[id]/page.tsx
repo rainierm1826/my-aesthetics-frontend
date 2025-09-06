@@ -14,22 +14,6 @@ interface PageProps {
   params: { id: string };
 }
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "available":
-      return "bg-green-500";
-    case "working":
-      return "bg-yellow-300";
-    case "off-duty":
-      return "bg-red-500";
-    case "on-break":
-      return "bg-orange-500";
-    default:
-      return "bg-gray-500";
-  }
-};
-  
-
 export default async function AestheticianPage({ params }: PageProps) {
   const { id } = params;
 
@@ -40,6 +24,21 @@ export default async function AestheticianPage({ params }: PageProps) {
   } catch (error) {
     console.error(error);
   }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "available":
+        return "bg-green-500";
+      case "working":
+        return "bg-yellow-300";
+      case "off-duty":
+        return "bg-red-500";
+      case "on-break":
+        return "bg-orange-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
 
   if (!aesthetician) {
     return (
