@@ -94,7 +94,7 @@ export async function deleteVoucher(voucher_code: {
 }): Promise<DeleteResponse> {
   try {
     const response = await fetch(`${backendUrl}/voucher`, {
-      method: "DELETE",
+      method: "PATCH",
       body: JSON.stringify(voucher_code),
       headers: {
         "Content-Type": "application/json",

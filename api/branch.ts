@@ -129,7 +129,7 @@ export async function deleteBranch(branch_id: {
 }): Promise<DeleteResponse> {
   try {
     const response = await fetch(`${backendUrl}/branch`, {
-      method: "DELETE",
+      method: "PATCH",
       body: JSON.stringify(branch_id),
       headers: {
         "Content-Type": "application/json",

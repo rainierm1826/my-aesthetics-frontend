@@ -111,7 +111,7 @@ export async function deleteAppointment(appointment_id: {
 }): Promise<DeleteResponse> {
   try {
     const response = await fetch(`${backendUrl}/appointment`, {
-      method: "DELETE",
+      method: "PATCH",
       body: JSON.stringify(appointment_id),
       headers: {
         "Content-Type": "application/json",

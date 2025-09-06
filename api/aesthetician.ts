@@ -136,7 +136,7 @@ export async function deleteAesthetician(aesthetician_id: {
 }): Promise<DeleteResponse> {
   try {
     const response = await fetch(`${backendUrl}/aesthetician`, {
-      method: "DELETE",
+      method: "PATCH",
       body: JSON.stringify(aesthetician_id),
       headers: {
         "Content-Type": "application/json",

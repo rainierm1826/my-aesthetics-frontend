@@ -36,7 +36,7 @@ export async function deleteAdmin(account_id: {
 
   try {
     const response = await fetch(`${backendUrl}/auth/delete-admin`, {
-      method: "DELETE",
+      method: "PATCH",
       body: JSON.stringify(account_id),
       headers: {
         "Content-Type": "application/json",
