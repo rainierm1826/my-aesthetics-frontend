@@ -94,7 +94,7 @@ export async function deleteService(service_id: {
   service_id: string;
 }): Promise<DeleteResponse> {
   try {
-    const response = await fetch(`${backendUrl}/service`, {
+    const response = await fetch(`${backendUrl}/service/delete`, {
       method: "PATCH",
       body: JSON.stringify(service_id),
       headers: {

@@ -6,13 +6,11 @@ export async function patchUser({
   data,
   token,
 }: {
-  data: unknown;
+  data: FormData;
   token?: string | null;
 }): Promise<UserResponse> {
   try {
-    const headers: HeadersInit = {
-      "Content-Type": "application/json",
-    };
+    const headers: HeadersInit = {};
 
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
@@ -20,7 +18,7 @@ export async function patchUser({
     const response = await fetch(`${backendUrl}/user`, {
       method: "PATCH",
       headers,
-      body: JSON.stringify(data),
+      body: data,
     });
 
     if (!response.ok) {

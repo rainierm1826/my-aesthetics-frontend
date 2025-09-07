@@ -56,7 +56,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ?? null
   );
-  console.log(serviceId);
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {
@@ -129,7 +128,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           formData.append("branch_id", String(value));
         }
       } else if (typeof value === "boolean") {
-        // Send as "1" or "0" instead of "true"/"false"
         formData.append(key, value ? "true" : "false");
       } else if (typeof value === "number") {
         formData.append(key, value.toString());

@@ -4,10 +4,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Appointment } from "@/lib/types/appointment-types";
 import { ordinal } from "@/lib/function";
-import { deleteAppointment } from "@/api/appointment";
 import ActionCell from "@/components/ActionCell";
 import AppointmentForm from "../forms/AppointmentForm";
 import ReceiptCard from "../cards/ReceiptCard";
+import { deleteData } from "@/api/branch";
 
 export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
@@ -95,14 +95,12 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
 
       return (
         <ActionCell
-          deleteFn={(id: string) => deleteAppointment({ appointment_id: id })}
+          deleteFn={(id: string) => deleteData({ id: id, url: "appointment" })}
           deleteMessage="Appointment has been deleted."
           queryKey="appointment"
           id={appointment_id}
           editAppointmentStatus
-          infoDialog={
-            <ReceiptCard appointment={row.original}/>
-          }
+          infoDialog={<ReceiptCard appointment={row.original} />}
           editDialog={
             <AppointmentForm
               method="patch"

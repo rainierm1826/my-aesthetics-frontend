@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import ActionCell from "@/components/ActionCell";
 import ServicesCard from "@/components/cards/ServicesCard";
 import ServiceForm from "@/components/forms/ServiceForm";
-import { deleteService } from "@/api/service";
+import { deleteData } from "@/api/branch";
 
 export const serviceColumn: ColumnDef<Service>[] = [
   {
@@ -109,7 +109,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
       return (
         <ActionCell
           id={service_id}
-          deleteFn={(id: string) => deleteService({ service_id: id })}
+          deleteFn={(id: string) => deleteData({ id: id, url:"service" })}
           previewDialog={
             <ServicesCard
               service_id={service_id}

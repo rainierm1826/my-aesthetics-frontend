@@ -36,6 +36,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
   formDescription,
   formTitle,
   branchId,
+  addressId,
   barangay,
   branchName,
   city,
@@ -101,6 +102,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
     formData.append("city", values.address.city);
     formData.append("barangay", values.address.barangay);
     formData.append("lot", values.address.lot);
+    formData.append("address_id", addressId || "");
 
     // Handle image - only append if it's a File or existing string URL
     if (values.image instanceof File) {

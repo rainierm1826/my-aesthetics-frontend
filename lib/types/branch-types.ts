@@ -1,4 +1,4 @@
-import { Address, DeleteResponse } from "./types";
+import { Address } from "./types";
 
 export type Branch = {
   branch_id: string;
@@ -57,13 +57,13 @@ export type BranchFormState = {
 };
 
 export interface BranchFormProps {
-  deleteFn?: (id: string) => Promise<DeleteResponse>;
   renderDialog?: boolean;
   method: "post" | "patch";
   formTitle: string;
   formDescription: string;
   branchId?: string;
   branchName?: string;
+  addressId?:string
   region?: string;
   province?: string;
   city?: string;

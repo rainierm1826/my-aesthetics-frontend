@@ -6,7 +6,7 @@ import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import BranchCard from "@/components/cards/BranchCard";
 import BranchForm from "@/components/forms/BranchForm";
-import { deleteBranch } from "@/api/branch";
+import { deleteData } from "@/api/branch";
 
 export const branchColumns: ColumnDef<Branch>[] = [
   { accessorKey: "branch_id", header: "Branch ID" },
@@ -56,14 +56,12 @@ export const branchColumns: ColumnDef<Branch>[] = [
               image={branch.image}
             />
           }
-          deleteFn={(id: string) => deleteBranch({ branch_id: id })}
+          deleteFn={(id: string) => deleteData({ id: id, url: "branch" })}
           deleteMessage="Branch has been deleted."
           editDialog={
             <BranchForm
+              addressId={address.address_id}
               method="patch"
-              deleteFn={async (id: string) =>
-                await deleteBranch({ branch_id: id })
-              }
               renderDialog={false}
               formTitle="Edit Branch"
               formDescription="Update the branch by filling in the details below."

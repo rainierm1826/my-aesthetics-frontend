@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Admin } from "../../lib/types/admin-type";
 import ActionCell from "@/components/ActionCell";
 import AdminForm from "@/components/forms/AdminForm";
-import { deleteAdmin } from "@/api/admin";
+import { deleteData } from "@/api/branch";
 
 export const adminColumn: ColumnDef<Admin>[] = [
   {
@@ -31,7 +31,7 @@ export const adminColumn: ColumnDef<Admin>[] = [
         <ActionCell
           id={row.original.auth?.account_id}
           deleteFn={() =>
-            deleteAdmin({ account_id: row.original.auth?.account_id })
+            deleteData({ id: row.original.auth?.account_id, url:"/auth/delete-admin" })
           }
           deleteMessage="Admin has been deleted."
           queryKey="account"

@@ -4,8 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Voucher } from "../../lib/types/voucher-type";
 import ActionCell from "@/components/ActionCell";
 import VoucherForm from "@/components/forms/VoucherForm";
-import { deleteVoucher } from "@/api/voucher";
 import { toLongDate } from "../../lib/function";
+import { deleteData } from "@/api/branch";
 
 export const voucherColumn: ColumnDef<Voucher>[] = [
   {
@@ -72,7 +72,7 @@ export const voucherColumn: ColumnDef<Voucher>[] = [
           deleteMessage="Voucher has been deleted."
           id={voucher_code}
           deleteFn={(voucher_code: string) =>
-            deleteVoucher({ voucher_code: voucher_code })
+            deleteData({ id: voucher_code, url:"voucher" })
           }
           editDialog={
             <VoucherForm

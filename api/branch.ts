@@ -124,16 +124,16 @@ export async function getBranch(branch_id: string) {
   }
 }
 
-export async function deleteBranch(branch_id: {
-  branch_id: string;
+export async function deleteData({
+  id,
+  url,
+}: {
+  id: string;
+  url: string;
 }): Promise<DeleteResponse> {
   try {
-    const response = await fetch(`${backendUrl}/branch`, {
+    const response = await fetch(`${backendUrl}/${url}/${id}`, {
       method: "PATCH",
-      body: JSON.stringify(branch_id),
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
 
     if (!response.status) {

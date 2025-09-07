@@ -7,7 +7,7 @@ import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import AestheticianCard from "@/components/cards/AestheticianCard";
 import AestheticianForm from "@/components/forms/AestheticianForm";
-import { deleteAesthetician } from "@/api/aesthetician";
+import { deleteData } from "@/api/branch";
 
 export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
   { accessorKey: "aesthetician_id", header: "Aesthetician ID" },
@@ -114,7 +114,7 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
 
       return (
         <ActionCell
-          deleteFn={(id: string) => deleteAesthetician({ aesthetician_id: id })}
+          deleteFn={(id: string) => deleteData({ id: id, url:"aesthetician" })}
           deleteMessage="Aesthetician has been deleted."
           queryKey="aesthetician"
           id={aesthetician_id}

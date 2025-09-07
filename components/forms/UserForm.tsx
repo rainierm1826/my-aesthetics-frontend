@@ -111,15 +111,17 @@ export default function UserForm() {
   const isLoading = userMutation.isPending;
 
   const handleSave = async (values: UserFormValues) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { email, password, role, ...rest } = values;
-
-    const cleanData = {
-      ...rest,
-      phone_number: values.phone_number || null,
-      birthday: values.birthday || null,
-    };
-    userMutation.mutate({ data: cleanData, token: access_token });
+    const formData = new FormData();
+    formData.append("first_name", values.first_name);
+    formData.append("last_name", values.last_name);
+    formData.append("middle_initial", values.middle_initial);
+    formData.append("birthday", values.birthday);
+    if (values.image instanceof File) {
+      formData.append("image", values.image);
+    } else if (typeof values.image === "string" && values.image) {
+      formData.append("image", values.image);
+    }
+    userMutation.mutate({ data: formData, token: access_token });
   };
 
   const handleCancel = () => {
@@ -146,12 +148,7 @@ export default function UserForm() {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        form.setValue("image", result, { shouldDirty: true });
-      };
-      reader.readAsDataURL(file);
+      form.setValue("image", file, { shouldDirty: true }); // store File, not base64
     }
   };
 
