@@ -146,7 +146,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             <div className="flex items-center gap-3">
               <MapPin className="h-4 w-4 text-gray-500 flex-shrink-0" />
               <span className="text-gray-700">
-                {serviceData.branch.branch_name}
+                {serviceData.branch.branch_name || "Available at all branches"}
               </span>
             </div>
             {serviceData.is_sale && (

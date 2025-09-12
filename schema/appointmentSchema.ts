@@ -7,7 +7,6 @@ export const walkInAppointmentSchema = z.object({
     .string()
     .max(1, "Middle initial must be a single character"),
   phone_number: z.string(),
-  sex: z.string().min(1, "Sex is required"),
   voucher_code: z.string().optional(),
   final_payment_method: z.string().min(1, "Select payment method"),
   to_pay: z.number().optional(),

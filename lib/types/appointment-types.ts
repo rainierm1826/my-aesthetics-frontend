@@ -2,41 +2,23 @@ import { ReactNode } from "react";
 
 export type Appointment = {
   appointment_id: string;
-  user: {
-    user_id: string;
-    first_name: string;
-    last_name: string;
-    middle_initial: string;
-    phone_number: string;
-    sex: string;
-  } | null;
-  walk_in: {
-    walk_in_id: string;
-    first_name: string;
-    last_name: string;
-    middle_initial: string;
-    phone_number: string;
-    sex: string;
-  } | null;
-  branch: {
-    branch_id: string;
-    branch_name: string | null;
-  };
-  aesthetician: {
-    aesthetician_id: string;
-    first_name: string;
-    last_name: string;
-    middle_initial: string;
-    experience: string;
-  };
-  service: {
-    service_id: string;
-    service_name: string;
-    final_price: number;
-    discounted_price:number
-    category: string;
-  };
+  customer_name_snapshot: string;
+  aesthetician_name_snapshot: string;
+  category_snapshot:string,
+  is_pro_snapshot: boolean;
+  phone_number: string;
+  service_name_snapshot: string;
+  price_snapshot: number;
+  is_sale_snapshot: boolean;
+  discount_type_snapshot: string
+  discount_snapshot: number
+  discounted_price_snapshot: number
+  branch_name_snapshot: string;
+  voucher_code_snapshot: string | null;
+  voucher_discount_type_snapshot: string | null;
+  voucher_discount_amount_snapshot: string | null;
   status: string;
+  slot_number: number
   branch_rating: number | null;
   service_rating: number | null;
   aesthetician_rating: number | null;
@@ -48,13 +30,10 @@ export type Appointment = {
   final_payment_method: string | null;
   to_pay: number;
   payment_status: string;
-  voucher_code: string | null;
-  discount_amount: number;
-  original_amount: number;
-  slot_number: number;
-  created_at: string;
+  created_at: string; 
   updated_at: string;
 };
+
 
 export type AppointmentListResponse = {
   appointment: Appointment[];

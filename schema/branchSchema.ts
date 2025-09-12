@@ -5,12 +5,7 @@ export const branchFormSchema = z.object({
     .string()
     .min(1, "Branch name is required")
     .max(100, "Branch name must be less than 100 characters"),
-  image: z
-    .any()
-    .refine(
-      (file) => !file || file instanceof File || typeof file === "string",
-      "Invalid file type"
-    ),
+  image: z.instanceof(File),
   address: z.object({
     region: z
       .string()

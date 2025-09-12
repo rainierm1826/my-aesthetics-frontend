@@ -12,25 +12,11 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
   appointment,
   className = "",
 }) => {
-  const customer = appointment.user || appointment.walk_in;
-  const customerName = customer
-    ? `${customer.first_name} ${
-        customer.middle_initial ? customer.middle_initial + ". " : ""
-      }${customer.last_name}`
-    : "Walk-in Customer";
+  const professionalFee = appointment.is_pro_snapshot ? 1500 : 0;
 
-  const aestheticianName = `${appointment.aesthetician.first_name} ${
-    appointment.aesthetician.middle_initial
-      ? appointment.aesthetician.middle_initial + ". "
-      : ""
-  }${appointment.aesthetician.last_name}`;
-
-  const isProfessional = appointment.aesthetician.experience == "pro";
-  const professionalFee = isProfessional ? 1500 : 0;
   const serviceCost =
-    appointment.service.discounted_price || appointment.service.final_price;
+    appointment.discounted_price_snapshot || appointment.price_snapshot;
   const totalServiceCost = serviceCost + professionalFee;
-  const finalAmount = totalServiceCost - (appointment.discount_amount || 0);
 
   const formatCurrency = (amount: number) => {
     return `₱${amount.toLocaleString("en-PH", {
@@ -65,10 +51,8 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
         <div className="space-y-1">
           <h3 className="font-semibold text-sm">CUSTOMER</h3>
           <div className="text-sm">
-            <p>{customerName}</p>
-            {customer && (
-              <p className="text-muted-foreground">{customer.phone_number}</p>
-            )}
+            <p>{appointment.customer_name_snapshot}</p>
+            <p className="text-muted-foreground">{appointment.phone_number}</p>
           </div>
         </div>
 
@@ -79,7 +63,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
           <div>
             <h4 className="font-medium">BRANCH</h4>
             <p className="text-muted-foreground">
-              {appointment.branch.branch_name}
+              {appointment.branch_name_snapshot}
             </p>
             <p className="text-muted-foreground">
               Slot #{appointment.slot_number}
@@ -87,8 +71,10 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
           </div>
           <div>
             <h4 className="font-medium">AESTHETICIAN</h4>
-            <p className="text-muted-foreground">{aestheticianName}</p>
-            {isProfessional && (
+            <p className="text-muted-foreground">
+              {appointment.aesthetician_name_snapshot}
+            </p>
+            {appointment.is_pro_snapshot && (
               <p className="text-xs font-medium">Professional</p>
             )}
           </div>
@@ -104,16 +90,18 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
             <div className="flex justify-between items-start">
               <div className="flex-1">
                 <p className="text-sm font-medium">
-                  {appointment.service.service_name}
+                  {appointment.service_name_snapshot}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  {appointment.service.category}
-                </p>
+                {appointment.is_sale_snapshot && (
+                  <p className="text-xs text-green-600 font-medium">ON SALE</p>
+                )}
+                
+                
               </div>
               <p className="text-sm">{formatCurrency(serviceCost)}</p>
             </div>
 
-            {isProfessional && (
+            {appointment.is_pro_snapshot && (
               <div className="flex justify-between items-center">
                 <p className="text-sm">Professional Fee</p>
                 <p className="text-sm">{formatCurrency(professionalFee)}</p>
@@ -125,17 +113,19 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
               <p className="text-sm">{formatCurrency(totalServiceCost)}</p>
             </div>
 
-            {appointment.discount_amount && appointment.discount_amount > 0 && (
-              <div className="flex justify-between items-center">
-                <p className="text-sm">
-                  Discount
-                  {appointment.voucher_code && `(${appointment.voucher_code})`}
-                </p>
-                <p className="text-sm">
-                  -{formatCurrency(appointment.discount_amount)}
-                </p>
-              </div>
-            )}
+            {appointment.discount_snapshot &&
+              appointment.discount_snapshot > 0 && (
+                <div className="flex justify-between items-center">
+                  <p className="text-sm">
+                    Discount
+                    {appointment.voucher_code_snapshot &&
+                      ` (${appointment.voucher_code_snapshot})`}
+                  </p>
+                  <p className="text-sm">
+                    -{formatCurrency(appointment.discount_snapshot)}
+                  </p>
+                </div>
+              )}
           </div>
         </div>
 
@@ -145,7 +135,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
         <div className="space-y-2">
           <div className="flex justify-between items-center font-bold">
             <p>TOTAL AMOUNT</p>
-            <p>{formatCurrency(finalAmount)}</p>
+            <p>{formatCurrency(totalServiceCost)}</p>
           </div>
 
           {appointment.down_payment && appointment.down_payment > 0 && (
@@ -154,12 +144,25 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
                 <p>Down Payment ({appointment.down_payment_method})</p>
                 <p>{formatCurrency(appointment.down_payment)}</p>
               </div>
-              {appointment.to_pay && (
-                <div className="flex justify-between font-medium">
-                  <p>Balance Due</p>
-                  <p>{formatCurrency(appointment.to_pay)}</p>
-                </div>
-              )}
+              {appointment.to_pay &&
+                appointment.to_pay > 0 &&
+                appointment.down_payment && (
+                  <div className="flex justify-between font-medium">
+                    <p>Balance Due</p>
+                    <p>
+                      {formatCurrency(
+                        appointment.to_pay - appointment.down_payment
+                      )}
+                    </p>
+                  </div>
+                )}
+            </div>
+          )}
+
+          {appointment.final_payment_method && (
+            <div className="flex justify-between items-center text-sm">
+              <p>Final Payment Method</p>
+              <p className="font-medium capitalize">{appointment.final_payment_method}</p>
             </div>
           )}
 

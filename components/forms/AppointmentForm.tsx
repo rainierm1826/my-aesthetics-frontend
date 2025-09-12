@@ -29,7 +29,6 @@ import { Calendar } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import DropDownPaymentMethod from "../selects/DropDownPaymentMethod";
-import DropDownSex from "../selects/DropDownSex";
 import DropDownAesthetician from "../selects/DropDownAesthetician";
 import DropDownBranch from "../selects/DropDownBranch";
 import DropDownService from "../selects/DropDownService";
@@ -46,7 +45,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   firstName,
   lastName,
   middleInitial,
-  sex,
   phoneNumber,
   branchId,
   serviceId,
@@ -63,7 +61,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       last_name: lastName || "",
       middle_initial: middleInitial || "",
       phone_number: phoneNumber || "",
-      sex: sex || "",
       branch_id: branchId || "",
       service_id: serviceId || "",
       aesthetician_id: aestheticianId || "",
@@ -98,7 +95,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           last_name: "",
           middle_initial: "",
           phone_number: "",
-          sex: "",
           branch_id: "",
           to_pay: undefined,
           voucher_code: undefined,
@@ -225,22 +221,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={control}
-              name="sex"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Sex</FormLabel>
-                  <FormControl>
-                    <DropDownSex
-                      value={field.value ?? ""}
-                      onValueChange={(v) => field.onChange(v)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
