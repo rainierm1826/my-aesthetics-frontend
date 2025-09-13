@@ -67,7 +67,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
   const branchMutation = useBaseMutation(method, {
     createFn: postBranch,
     updateFn: patchBranch,
-    queryKey: ["branch"],
+    queryKey: [["branch"], ["branch-name"]],
     successMessages: {
       create: "Branch has been created.",
       update: "Branch has been updated.",

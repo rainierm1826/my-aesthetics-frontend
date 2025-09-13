@@ -20,6 +20,7 @@ interface DropDownBranchProps
   placeholder?: string;
   includeAllOption?: boolean;
   useUrlParams?: boolean;
+  disabled?:boolean
 }
 
 const DropDownBranch = ({
@@ -28,6 +29,7 @@ const DropDownBranch = ({
   placeholder = "Select branch",
   includeAllOption = false,
   useUrlParams = false,
+  disabled=false
 }: DropDownBranchProps) => {
   const { data, isLoading, error } = useBrancheName();
 
@@ -74,7 +76,7 @@ const DropDownBranch = ({
   // Handle loading state
   if (isLoading) {
     return (
-      <Select disabled>
+      <Select disabled={disabled}>
         <SelectTrigger>
           <SelectValue placeholder="Loading branches..." />
         </SelectTrigger>

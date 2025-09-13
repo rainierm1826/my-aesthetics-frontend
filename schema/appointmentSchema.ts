@@ -9,7 +9,6 @@ export const walkInAppointmentSchema = z.object({
   phone_number: z.string(),
   voucher_code: z.string().optional(),
   final_payment_method: z.string().min(1, "Select payment method"),
-  to_pay: z.number().optional(),
   branch_id: z.string().min(1, "Branch ID is required"),
   service_id: z.string().min(1, "Service ID is required"),
   aesthetician_id: z.string().min(1, "Aesthetician ID is required"),

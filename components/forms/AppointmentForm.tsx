@@ -34,6 +34,8 @@ import DropDownBranch from "../selects/DropDownBranch";
 import DropDownService from "../selects/DropDownService";
 import { patchAppointment, postAppointment } from "@/api/appointment";
 import { Switch } from "../ui/switch";
+import { useAuthStore } from "@/provider/store/authStore";
+import { useUserStore } from "@/provider/store/userStore";
 
 const AppointmentForm: React.FC<AppointmentFormProps> = ({
   renderDialog = true,
@@ -50,10 +52,12 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   serviceId,
   aestheticianId,
   finalPaymentMethod,
-  toPay,
   method,
   voucherCode,
 }) => {
+  const { auth, isAuthLoading } = useAuthStore();
+  const { user } = useUserStore();
+
   const form = useForm<WalkInAppointmentFormValues>({
     resolver: zodResolver(walkInAppointmentSchema),
     defaultValues: {
@@ -61,10 +65,10 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       last_name: lastName || "",
       middle_initial: middleInitial || "",
       phone_number: phoneNumber || "",
-      branch_id: branchId || "",
+      branch_id:
+        auth?.role !== "owner" ? user?.branch?.branch_id || "" : branchId || "",
       service_id: serviceId || "",
       aesthetician_id: aestheticianId || "",
-      to_pay: toPay || undefined,
       final_payment_method: finalPaymentMethod || "",
       voucher_code: voucherCode || undefined,
     },
@@ -72,7 +76,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
 
   const { control, handleSubmit, reset, watch } = form;
   const [addVoucher, setAddVoucher] = useState<boolean>(false);
-  const [addToPay, setAddToPay] = useState<boolean>(false);
 
   const branch = watch("branch_id");
   const service = watch("service_id");
@@ -96,7 +99,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           middle_initial: "",
           phone_number: "",
           branch_id: "",
-          to_pay: undefined,
           voucher_code: undefined,
         });
       }
@@ -106,13 +108,12 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const isLoading = appointmentMutation.isPending;
   const onSubmit = async (values: WalkInAppointmentFormValues) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { voucher_code, to_pay, ...rest } = values;
+    const { voucher_code, ...rest } = values;
 
     const payload = {
       ...rest,
       is_walk_in: true,
       ...(method === "patch" && { appointment_id: appointmentId }),
-      ...(values.to_pay != null ? { to_pay: values.to_pay } : {}),
       ...(values.voucher_code ? { voucher_code: values.voucher_code } : {}),
     };
 
@@ -221,26 +222,28 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 </FormItem>
               )}
             />
-
+            {!isAuthLoading && (
+              <FormField
+                disabled={auth?.role != "owner" || isAuthLoading}
+                control={control}
+                name="branch_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Choose Branch</FormLabel>
+                    <FormControl>
+                      <DropDownBranch
+                        value={field.value ?? ""}
+                        onValueChange={(v) => field.onChange(v)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={control}
-              name="branch_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Choose Branch</FormLabel>
-                  <FormControl>
-                    <DropDownBranch
-                      value={field.value ?? ""}
-                      onValueChange={(v) => field.onChange(v)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             {((branch && method === "post") || method === "patch") && (
               <FormField
                 control={control}
@@ -300,43 +303,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               )}
             />
           </div>
-          <div className="flex justify-between items-center shadow-sm rounded-sm px-4 py-2">
-            <div>
-              <p className="text-sm font-medium">Add amount</p>
-              <p className="text-xs text-muted-foreground">
-                Manually add amount
-              </p>
-            </div>
-            <Switch
-              checked={addToPay}
-              onCheckedChange={() => setAddToPay((value) => !value)}
-            />
-          </div>
-          {addToPay && (
-            <FormField
-              control={control}
-              name="to_pay"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>To Pay</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter amount"
-                      type="number"
-                      {...field}
-                      value={field.value ?? ""}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? Number(e.target.value) : undefined
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+
           {method == "post" && (
             <div className="flex justify-between items-center shadow-sm rounded-sm px-4 py-2">
               <div>
