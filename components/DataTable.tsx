@@ -53,13 +53,10 @@ export function DataTable<TData, TValue>({
     is_sale: false,
     discount_type: false,
     discount: false,
-    branch_id: false,
     region: false,
     province: false,
     city: false,
     lot: false,
-    aesthetician_id: false,
-    service_id: false,
     description: false,
   });
 
