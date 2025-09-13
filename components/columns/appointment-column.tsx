@@ -22,7 +22,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
   },
   {
     accessorKey: "customer_name_snapshot",
-    header: "Full Name",
+    header: "Customer",
   },
   {
     accessorKey: "to_pay",
@@ -47,8 +47,8 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
               ? "bg-green-100 text-green-700"
               : s == "Waiting"
               ? "bg-blue-100 text-blue-700"
-              : s == "Pending"
-              ? "bg-gray-100 text-gray-700"
+              : s == "On-process"
+              ? "bg-yellow-100 text-yellow-700"
               : s == "Cancelled"
               ? "bg-red-100 text-red-700"
               : ""

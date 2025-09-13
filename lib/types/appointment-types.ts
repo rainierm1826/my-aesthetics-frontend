@@ -16,7 +16,7 @@ export type Appointment = {
   branch_name_snapshot: string;
   voucher_code_snapshot: string | null;
   voucher_discount_type_snapshot: string | null;
-  voucher_discount_amount_snapshot: string | null;
+  voucher_discount_amount_snapshot: number | null;
   status: string;
   slot_number: number
   branch_rating: number | null;

@@ -29,6 +29,52 @@ import { DeleteResponse } from "@/lib/types/types";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchAppointment } from "@/api/appointment";
 
+type AppointmentStatus = "completed" | "cancelled" | "on-process" | "waiting";
+
+type StatusConfig = {
+  label: string;
+  value: AppointmentStatus;
+  dialogTitle: string;
+  dialogDescription: string;
+  buttonColor: string;
+  buttonHoverColor: string;
+};
+
+const statusConfigs: StatusConfig[] = [
+  {
+    label: "Mark as Complete",
+    value: "completed",
+    dialogTitle: "Mark Appointment as Complete?",
+    dialogDescription: "The appointment status will be updated to completed.",
+    buttonColor: "bg-green-500",
+    buttonHoverColor: "hover:bg-green-400",
+  },
+  {
+    label: "Mark as Cancelled",
+    value: "cancelled",
+    dialogTitle: "Cancel Appointment?",
+    dialogDescription: "The appointment status will be updated to cancelled.",
+    buttonColor: "bg-red-500",
+    buttonHoverColor: "hover:bg-red-400",
+  },
+  {
+    label: "Mark as On Process",
+    value: "on-process",
+    dialogTitle: "Mark Appointment as On Process?",
+    dialogDescription: "The appointment status will be updated to on process.",
+    buttonColor: "bg-yellow-500",
+    buttonHoverColor: "hover:bg-yellow-400",
+  },
+  {
+    label: "Mark as Waiting",
+    value: "waiting",
+    dialogTitle: "Mark Appointment as Waiting?",
+    dialogDescription: "The appointment status will be updated to waiting.",
+    buttonColor: "bg-blue-500",
+    buttonHoverColor: "hover:bg-blue-400",
+  },
+];
+
 type ActionCellProps = {
   id: string;
   deleteFn: (id: string) => Promise<DeleteResponse>;
@@ -54,7 +100,10 @@ function ActionCell({
   const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
+  const [openStatusDialog, setOpenStatusDialog] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<StatusConfig | null>(
+    null
+  );
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleMoreInfoClick = () => {
@@ -77,9 +126,10 @@ function ActionCell({
     setTimeout(() => setOpenDeleteDialog(true), 100);
   };
 
-  const handleSuccessClick = () => {
+  const handleStatusClick = (status: StatusConfig) => {
+    setSelectedStatus(status);
     setDropdownOpen(false);
-    setTimeout(() => setOpenSuccessDialog(true), 100); 
+    setTimeout(() => setOpenStatusDialog(true), 100);
   };
 
   const deleteMutation = useBaseMutation("delete", {
@@ -90,21 +140,22 @@ function ActionCell({
     },
   });
 
-  const successAppointmentMutation = useBaseMutation("patch", {
+  const statusUpdateMutation = useBaseMutation("patch", {
     updateFn: patchAppointment,
-    queryKey: ["appointment"], 
+    queryKey: ["appointment"],
     successMessages: {
       update: "Appointment updated successfully",
     },
     onSuccess: () => {
-      setOpenSuccessDialog(false);
+      setOpenStatusDialog(false);
+      setSelectedStatus(null);
     },
   });
 
-  const handleSuccessAppointment = (id: string) => {
-    successAppointmentMutation.mutate({
+  const handleStatusUpdate = (id: string, status: AppointmentStatus) => {
+    statusUpdateMutation.mutate({
       appointment_id: id,
-      status: "completed",
+      status: status,
     });
   };
 
@@ -128,19 +179,24 @@ function ActionCell({
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem
-            className="text-blue-400 hover:text-blue-500"
-            onSelect={handleEditClick}
-          >
-            Edit
-          </DropdownMenuItem>
+          {editDialog && (
+            <DropdownMenuItem onSelect={handleEditClick}>
+              Update
+            </DropdownMenuItem>
+          )}
 
-          <DropdownMenuItem
-            className="text-red-400 hover:text-red-500"
-            onSelect={handleDeleteClick}
-          >
-            Delete
-          </DropdownMenuItem>
+          {editAppointmentStatus && (
+            <>
+              {statusConfigs.map((status) => (
+                <DropdownMenuItem
+                  key={status.value}
+                  onSelect={() => handleStatusClick(status)}
+                >
+                  {status.label}
+                </DropdownMenuItem>
+              ))}
+            </>
+          )}
 
           {infoDialog && (
             <DropdownMenuItem onSelect={handleMoreInfoClick}>
@@ -154,14 +210,9 @@ function ActionCell({
             </DropdownMenuItem>
           )}
 
-          {editAppointmentStatus && (
-            <DropdownMenuItem
-              className="text-green-400 hover:text-green-500"
-              onSelect={handleSuccessClick}
-            >
-              Mark as Complete
-            </DropdownMenuItem>
-          )}
+          <DropdownMenuItem onSelect={handleDeleteClick}>
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -232,34 +283,28 @@ function ActionCell({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Success/Complete Appointment Dialog */}
-      {editAppointmentStatus && (
-        <AlertDialog
-          open={openSuccessDialog}
-          onOpenChange={setOpenSuccessDialog}
-        >
+      {/* Status Update Dialog */}
+      {editAppointmentStatus && selectedStatus && (
+        <AlertDialog open={openStatusDialog} onOpenChange={setOpenStatusDialog}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Mark Appointment as Complete?</AlertDialogTitle>
+              <AlertDialogTitle>{selectedStatus.dialogTitle}</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. The appointment status will be
-                updated to completed.
+                This action cannot be undone. {selectedStatus.dialogDescription}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel
-                disabled={successAppointmentMutation.isPending}
-              >
+              <AlertDialogCancel disabled={statusUpdateMutation.isPending}>
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => handleSuccessAppointment(id)}
-                disabled={successAppointmentMutation.isPending}
-                className="bg-green-500 text-white hover:bg-green-400 disabled:opacity-50"
+                onClick={() => handleStatusUpdate(id, selectedStatus.value)}
+                disabled={statusUpdateMutation.isPending}
+                className={`${selectedStatus.buttonColor} text-white ${selectedStatus.buttonHoverColor} disabled:opacity-50`}
               >
-                {successAppointmentMutation.isPending
+                {statusUpdateMutation.isPending
                   ? "Updating..."
-                  : "Mark Complete"}
+                  : "Update Status"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

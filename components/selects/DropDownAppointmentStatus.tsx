@@ -32,7 +32,7 @@ const DropDownAppointmentStatus = ({
   urlParamKey = "status",
 }: DropDownAppointmentStatusProps) => {
   const status = [
-    { value: "pending", label: "Pending" },
+    { value: "on-process", label: "On-Process" },
     { value: "waiting", label: "Waiting" },
     { value: "cancelled", label: "Cancelled" },
     { value: "completed", label: "Completed" },
