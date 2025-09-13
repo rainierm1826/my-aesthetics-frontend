@@ -10,7 +10,6 @@ import AestheticianForm from "@/components/forms/AestheticianForm";
 import { deleteData } from "@/api/branch";
 
 export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
-  { accessorKey: "aesthetician_id", header: "Aesthetician ID" },
   {
     id: "fullName",
     header: "Full Name",

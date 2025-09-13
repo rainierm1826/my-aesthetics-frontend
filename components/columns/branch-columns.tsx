@@ -9,7 +9,6 @@ import BranchForm from "@/components/forms/BranchForm";
 import { deleteData } from "@/api/branch";
 
 export const branchColumns: ColumnDef<Branch>[] = [
-  { accessorKey: "branch_id", header: "Branch ID" },
   { accessorKey: "branch_name", header: "Branch Name" },
 
   {

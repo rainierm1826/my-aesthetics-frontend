@@ -11,10 +11,6 @@ import { deleteData } from "@/api/branch";
 
 export const serviceColumn: ColumnDef<Service>[] = [
   {
-    accessorKey: "service_id",
-    header: "Service ID",
-  },
-  {
     accessorKey: "service_name",
     header: "Service Name",
   },
