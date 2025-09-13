@@ -12,10 +12,7 @@ export const userFormSchema = z.object({
   middle_initial: z.string().max(1, "Maximum of one character"),
   image: z
     .any()
-    .refine(
-      (file) => !file || file instanceof File || typeof file === "string",
-      "Invalid file type"
-    ),
+    .refine((file) => file !== null && file !== undefined, "Image is required"),
   birthday: z
     .string()
     .min(1, "Birthday is required")

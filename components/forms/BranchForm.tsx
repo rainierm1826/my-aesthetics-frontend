@@ -52,7 +52,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
   const form = useForm<BranchFormValues>({
     resolver: zodResolver(branchFormSchema),
     defaultValues: {
-      image: image || null,
+      image: image ?? null,
       branch_name: branchName || "",
       address: {
         region: region || "",
