@@ -28,7 +28,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
     accessorKey: "to_pay",
     header: "To Pay",
     cell: ({ row }) => {
-      return `₱${row.original.to_pay}`;
+      return `₱${row.original.to_pay.toFixed(2)}`;
     },
   },
   {
