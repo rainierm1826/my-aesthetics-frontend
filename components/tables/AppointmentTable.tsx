@@ -12,18 +12,17 @@ import DropDownBranch from "../selects/DropDownBranch";
 import DropDownAppointmentStatus from "../selects/DropDownAppointmentStatus";
 import AppointmentForm from "../forms/AppointmentForm";
 import { useAuthStore } from "@/provider/store/authStore";
-import { useUserStore } from "@/provider/store/userStore";
 
 export default function AppointmentTable() {
   const { data, isFetching, isError } = useAppointments();
   const { auth, isAuthLoading } = useAuthStore();
-  const { user } = useUserStore();
+
+  const appointments: Appointment[] = data?.appointment ?? [];
 
   if (isAuthLoading) {
     return <SkeletonTable />;
   }
 
-  const appointments: Appointment[] = data?.appointment ?? [];
 
   return (
     <>
@@ -33,13 +32,11 @@ export default function AppointmentTable() {
       <div className="flex justify-between items-center mb-5">
         <div className="flex gap-3 w-full">
           <SearchInput placeholder="Search by appointment id..." size="w-1/3" />
-          {auth?.role != "admin" && (
-            <DropDownBranch
-              useUrlParams={true}
-              value={user?.branch?.branch_id}
-            />
-          )}
-          <DropDownAppointmentStatus useUrlParams={true} includeAllOption />
+          {auth?.role == "owner" && <DropDownBranch useUrlParams={true}/>}
+          <DropDownAppointmentStatus
+            useUrlParams={true}
+            includeAllOption
+          />
         </div>
         <AppointmentForm
           method="post"

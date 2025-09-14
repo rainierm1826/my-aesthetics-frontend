@@ -58,6 +58,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const { auth, isAuthLoading } = useAuthStore();
   const { user } = useUserStore();
 
+
   const form = useForm<WalkInAppointmentFormValues>({
     resolver: zodResolver(walkInAppointmentSchema),
     defaultValues: {
@@ -224,7 +225,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
             />
             {!isAuthLoading && (
               <FormField
-                disabled={auth?.role != "owner" || isAuthLoading}
                 control={control}
                 name="branch_id"
                 render={({ field }) => (
@@ -232,7 +232,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                     <FormLabel>Choose Branch</FormLabel>
                     <FormControl>
                       <DropDownBranch
-                        value={field.value ?? ""}
+                        value={field.value}
                         onValueChange={(v) => field.onChange(v)}
                       />
                     </FormControl>

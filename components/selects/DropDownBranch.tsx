@@ -12,6 +12,7 @@ import { BranchName } from "@/lib/types/branch-types";
 import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useBrancheName } from "@/hooks/useBranchName";
+import { useAuthStore } from "@/provider/store/authStore";
 
 interface DropDownBranchProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
@@ -20,7 +21,7 @@ interface DropDownBranchProps
   placeholder?: string;
   includeAllOption?: boolean;
   useUrlParams?: boolean;
-  disabled?:boolean
+  readonly?: boolean;
 }
 
 const DropDownBranch = ({
@@ -29,9 +30,10 @@ const DropDownBranch = ({
   placeholder = "Select branch",
   includeAllOption = false,
   useUrlParams = false,
-  disabled=false
+  readonly = false,
 }: DropDownBranchProps) => {
   const { data, isLoading, error } = useBrancheName();
+  const { isAuthLoading } = useAuthStore();
 
   const branches: BranchName[] = data?.branch ?? [];
   const searchParams = useSearchParams();
@@ -73,10 +75,9 @@ const DropDownBranch = ({
     ]
   );
 
-  // Handle loading state
-  if (isLoading) {
+  if (isLoading || isAuthLoading) {
     return (
-      <Select disabled={disabled}>
+      <Select disabled>
         <SelectTrigger>
           <SelectValue placeholder="Loading branches..." />
         </SelectTrigger>
@@ -106,7 +107,7 @@ const DropDownBranch = ({
   }
 
   return (
-    <Select value={currentBranch} onValueChange={handleValueChange}>
+    <Select value={currentBranch} onValueChange={readonly ? undefined : handleValueChange}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
