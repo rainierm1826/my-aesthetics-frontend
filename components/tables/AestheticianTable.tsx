@@ -12,11 +12,17 @@ import DropDownBranch from "../selects/DropDownBranch";
 import { Aesthetician } from "@/lib/types/aesthetician-types";
 import { aestheticianColumn } from "@/components/columns/aesthetician-column";
 import { useAestheticians } from "@/hooks/useAestheticians";
+import { useAuthStore } from "@/provider/store/authStore";
 
 const AestheticianTable = () => {
   const { data, isFetching, isError } = useAestheticians();
 
   const aesthetician: Aesthetician[] = data?.aesthetician ?? [];
+  const { auth, isAuthLoading } = useAuthStore();
+
+  if (isAuthLoading) {
+    return <SkeletonTable />;
+  }
 
   return (
     <>
@@ -24,7 +30,9 @@ const AestheticianTable = () => {
         <div className="flex justify-between w-full">
           <div className="flex gap-3 w-full">
             <SearchInput placeholder="Search by name..." size="w-1/3" />
-            <DropDownBranch useUrlParams={true} includeAllOption={true} />
+            {auth?.role == "owner" && (
+              <DropDownBranch useUrlParams={true} includeAllOption={true} />
+            )}
             <DropDownExperience useUrlParams={true} includeAllOption={true} />
             <DropDownAvailability useUrlParams={true} includeAllOption={true} />
             <DropDownSex useUrlParams={true} includeAllOption={true} />

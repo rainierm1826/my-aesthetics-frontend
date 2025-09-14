@@ -10,11 +10,17 @@ import { serviceColumn } from "@/components/columns/service-column";
 import ServiceForm from "../forms/ServiceForm";
 import DropDownServiceCategory from "../selects/DropDownServiceCategory";
 import DropDownBranch from "../selects/DropDownBranch";
+import { useAuthStore } from "@/provider/store/authStore";
 
 export default function ServiceTable() {
   const { data, isFetching, isError } = useServices();
 
   const services: Service[] = data?.service ?? [];
+  const { auth, isAuthLoading } = useAuthStore();
+
+  if (isAuthLoading) {
+    return <SkeletonTable />;
+  }
 
   return (
     <>
@@ -22,7 +28,9 @@ export default function ServiceTable() {
         <div className="flex justify-between mb-5">
           <div className="flex gap-3 w-full">
             <SearchInput placeholder="Search by name..." size="w-1/2" />
-            <DropDownBranch useUrlParams={true} includeAllOption={true} />
+            {auth?.role == "owner" && (
+              <DropDownBranch useUrlParams={true} includeAllOption={true} />
+            )}
             <DropDownServiceCategory
               useUrlParams={true}
               includeAllOption={true}

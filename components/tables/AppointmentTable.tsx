@@ -32,7 +32,7 @@ export default function AppointmentTable() {
       <div className="flex justify-between items-center mb-5">
         <div className="flex gap-3 w-full">
           <SearchInput placeholder="Search by appointment id..." size="w-1/3" />
-          {auth?.role == "owner" && <DropDownBranch useUrlParams={true}/>}
+          {auth?.role == "owner" && <DropDownBranch useUrlParams={true} includeAllOption={true}/>}
           <DropDownAppointmentStatus
             useUrlParams={true}
             includeAllOption
