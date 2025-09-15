@@ -58,11 +58,13 @@ export async function getAllService({
   limit,
   branch,
   category,
+  sort
 }: GetServiceParams): Promise<ServiceListResponse> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);
   params.set("page", String(page));
   params.set("limit", String(limit));
+  if (sort) params.set("sort", String(sort))
   if (branch && branch !== "all") {
     params.set("branch", String(branch));
   }

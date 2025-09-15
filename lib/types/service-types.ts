@@ -62,6 +62,7 @@ export type GetServiceParams = {
   limit?: number;
   branch?:string
   category?:string
+  sort?:string
 };
 
 export type ServiceName = {

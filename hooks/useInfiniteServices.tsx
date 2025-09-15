@@ -22,13 +22,13 @@ export function useInfiniteServices() {
         page: pageParam as number,
         branch,
         category,
+        sort: "service:asc",
       }),
 
     initialPageParam: 1,
 
     getNextPageParam: (lastPage, allPages) => {
-      const totalPages = Math.ceil(lastPage.total / limit);
-      return allPages.length < totalPages ? allPages.length + 1 : undefined;
+      return lastPage.has_next ? allPages.length + 1 : undefined;
     },
 
     refetchOnMount: false,

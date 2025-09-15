@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { Service } from "@/lib/types/service-types";
 import ServicesCard from "../cards/ServicesCard";
 import SkeletonCard from "../skeletons/SkeletonCard";
@@ -15,12 +15,20 @@ const ServiceList = ({ action }: { action: boolean }) => {
   const services: Service[] = data?.pages.flatMap((page) => page.service) ?? [];
   const loader = useRef<HTMLDivElement | null>(null);
 
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
+  const handleIntersection = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
       if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        console.log("Fetching next page..."); 
         fetchNextPage();
       }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleIntersection, {
+      threshold: 0.1,
+      rootMargin: "20px",
     });
 
     const currentLoader = loader.current;
@@ -34,7 +42,7 @@ const ServiceList = ({ action }: { action: boolean }) => {
         observer.unobserve(currentLoader);
       }
     };
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [handleIntersection]); 
 
   return (
     <main className="bg-[#fffcf9]">
@@ -82,6 +90,13 @@ const ServiceList = ({ action }: { action: boolean }) => {
             <div className="w-6 h-6 border-4 border-gray-300 border-primary-500 rounded-full animate-spin"></div>
           </div>
         )}
+
+        {/* Loader element - make sure it's visible */}
+        <div ref={loader} className="my-10 flex items-center justify-center">
+          {hasNextPage && !isFetchingNextPage && (
+            <div className="text-gray-500">Scroll to load more...</div>
+          )}
+        </div>
       </div>
     </main>
   );
