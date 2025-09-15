@@ -67,7 +67,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       image: image ?? null,
       description: description ?? "",
       branch_id: branchId ?? "",
-      discount_type: discountType ?? "percentage", // or "fixed"
+      discount_type: discountType ?? "percentage", 
     },
   });
 

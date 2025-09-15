@@ -1,17 +1,39 @@
 "use client";
 
-import React from "react";
-import { useServices } from "@/hooks/useServices";
+import React, { useEffect, useRef } from "react";
 import { Service } from "@/lib/types/service-types";
 import ServicesCard from "../cards/ServicesCard";
 import SkeletonCard from "../skeletons/SkeletonCard";
 import DropDownServiceCategory from "../selects/DropDownServiceCategory";
 import DropDownBranch from "../selects/DropDownBranch";
 import SearchInput from "../SearchInput";
+import { useInfiniteServices } from "@/hooks/useInfiniteServices";
 
 const ServiceList = ({ action }: { action: boolean }) => {
-  const { data, isFetching } = useServices();
-  const services: Service[] = data?.service ?? [];
+  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteServices();
+  const services: Service[] = data?.pages.flatMap((page) => page.service) ?? [];
+  const loader = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    });
+
+    const currentLoader = loader.current;
+
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
     <main className="bg-[#fffcf9]">
@@ -54,6 +76,9 @@ const ServiceList = ({ action }: { action: boolean }) => {
                   rating={service.average_rate}
                 />
               ))}
+        </div>
+        <div ref={loader} className="h-10 flex justify-center items-center">
+          {isFetchingNextPage && <p>Loading more...</p>}
         </div>
       </div>
     </main>

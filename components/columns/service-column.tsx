@@ -75,10 +75,10 @@ export const serviceColumn: ColumnDef<Service>[] = [
         <p>
           {is_sale && (
             <span className="line-through decoration- text-[#7C7C7C]">
-              ₱{price}
+              ₱{price.toFixed(2)}
             </span>
           )}{" "}
-          ₱{discounted_price}
+          ₱{discounted_price.toFixed(2)}
         </p>
       );
     },
