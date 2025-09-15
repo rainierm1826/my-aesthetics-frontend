@@ -11,12 +11,14 @@ import ServiceForm from "../forms/ServiceForm";
 import DropDownServiceCategory from "../selects/DropDownServiceCategory";
 import DropDownBranch from "../selects/DropDownBranch";
 import { useAuthStore } from "@/provider/store/authStore";
+import { useUserStore } from "@/provider/store/userStore";
 
 export default function ServiceTable() {
-  const { data, isFetching, isError } = useServices();
+  const { auth, isAuthLoading } = useAuthStore();
+  const {user} = useUserStore()
+  const { data, isFetching, isError } = useServices(user?.branch?.branch_id);
 
   const services: Service[] = data?.service ?? [];
-  const { auth, isAuthLoading } = useAuthStore();
 
   if (isAuthLoading) {
     return <SkeletonTable />;

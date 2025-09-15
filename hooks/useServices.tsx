@@ -5,10 +5,10 @@ import { ServiceListResponse } from "@/lib/types/service-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-export function useServices() {
+export function useServices(branchId?:string) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
-  const branch = searchParams.get("branch") ?? "all";
+  const branch = searchParams.get("branch") ?? branchId ?? "all" ;
   const category = searchParams.get("category") ?? "all";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
