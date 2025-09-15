@@ -13,11 +13,7 @@ export const userFormSchema = z.object({
   image: z
     .any()
     .refine((file) => file !== null && file !== undefined, "Image is required"),
-  birthday: z
-    .string()
-    .min(1, "Birthday is required")
-    .max(Date.now())
-    .or(z.literal("")),
+  birthday: z.string().min(1, "Select a valid date."),
   email: z.email().readonly(),
   password: z
     .string()
@@ -31,11 +27,7 @@ export const userFormSchema = z.object({
     )
     .optional()
     .or(z.literal("")),
-  phone_number: z
-    .string()
-    .min(1, "Phone number is required")
-    .optional()
-    .or(z.literal("")),
+  phone_number: z.string().min(1, "Phone number is required"),
   role: z.string().readonly(),
 });
 

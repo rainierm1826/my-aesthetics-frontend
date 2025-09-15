@@ -43,10 +43,10 @@ import { patchUser } from "@/api/user";
 
 export default function UserForm() {
   const [isEditing, setIsEditing] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const { user, updateUser } = useUserStore();
   const { auth, isAuth, access_token } = useAuthStore();
-  console.log(user);
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
@@ -68,6 +68,7 @@ export default function UserForm() {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { isDirty },
   } = form;
 
@@ -83,7 +84,7 @@ export default function UserForm() {
 
   useEffect(() => {
     if (user && auth) {
-      reset({
+      const userData = {
         first_name: user.first_name || "",
         last_name: user.last_name || "",
         middle_initial: user.middle_initial || "",
@@ -93,7 +94,10 @@ export default function UserForm() {
         email: auth.email || "",
         role: auth.role || "customer",
         password: "",
-      });
+      };
+      reset(userData);
+      // Set image preview to current user image
+      setImagePreview(user.image || "https://github.com/shadcn.png");
     }
   }, [user, auth, reset]);
 
@@ -102,6 +106,8 @@ export default function UserForm() {
     updateFn: patchUser,
     onSuccess: (data) => {
       updateUser(data.user);
+      // Update image preview after successful save
+      setImagePreview(data.user.image || "https://github.com/shadcn.png");
     },
     successMessages: {
       update: "User updated successfully.",
@@ -112,21 +118,26 @@ export default function UserForm() {
 
   const handleSave = async (values: UserFormValues) => {
     const formData = new FormData();
-    formData.append("first_name", values.first_name);
-    formData.append("last_name", values.last_name);
-    formData.append("middle_initial", values.middle_initial);
-    formData.append("birthday", values.birthday);
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (key === "image" && value instanceof File) {
+        formData.append("image", value);
+      } else if (value !== undefined && value !== null && key !== "image") {
+        formData.append(key, value as string);
+      }
+    });
+
+    // Handle image specifically
     if (values.image instanceof File) {
       formData.append("image", values.image);
-    } else if (typeof values.image === "string" && values.image) {
-      formData.append("image", values.image);
     }
+
     userMutation.mutate({ data: formData, token: access_token });
   };
 
   const handleCancel = () => {
     if (user && auth) {
-      reset({
+      const userData = {
         first_name: user.first_name || "",
         last_name: user.last_name || "",
         middle_initial: user.middle_initial || "",
@@ -136,7 +147,10 @@ export default function UserForm() {
         email: auth.email || "",
         role: auth.role || "customer",
         password: "",
-      });
+      };
+      reset(userData);
+      // Reset image preview to original
+      setImagePreview(user.image || "https://github.com/shadcn.png");
     }
     setIsEditing(false);
   };
@@ -145,11 +159,18 @@ export default function UserForm() {
     setIsEditing(true);
   };
 
+  // Update image change handler like AestheticianForm
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      form.setValue("image", file, { shouldDirty: true }); // store File, not base64
-    }
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview((reader.result as string) ?? null);
+      setValue("image", file, { shouldValidate: true, shouldDirty: true });
+    };
+    reader.readAsDataURL(file);
   };
 
   const formatDate = (dateString: string) => {
@@ -207,10 +228,14 @@ export default function UserForm() {
                 <FormField
                   control={control}
                   name="image"
-                  render={({ field }) => (
+                  render={() => (
                     <div className="relative">
                       <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                        <AvatarImage src={field.value} alt={fullName} />
+                        {/* Use imagePreview instead of field.value */}
+                        <AvatarImage
+                          src={imagePreview || undefined}
+                          alt={fullName}
+                        />
                         <AvatarFallback className="text-lg font-semibold">
                           {watchedValues.first_name?.[0] ||
                             user?.first_name?.[0] ||
@@ -229,6 +254,7 @@ export default function UserForm() {
                             accept="image/*"
                             onChange={handleImageChange}
                             className="hidden"
+                            id="user-image"
                           />
                         </label>
                       )}
