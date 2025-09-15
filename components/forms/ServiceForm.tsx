@@ -33,6 +33,8 @@ import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchService, postService } from "@/api/service";
 import DropDownDiscountType from "../selects/DropDownDiscountType";
 import { ServiceFormProps } from "@/lib/types/service-types";
+import { useUserStore } from "@/provider/store/userStore";
+import { useAuthStore } from "@/provider/store/authStore";
 
 const ServiceForm: React.FC<ServiceFormProps> = ({
   renderDialog = true,
@@ -56,6 +58,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ?? null
   );
+  const { user } = useUserStore();
+  const { auth } = useAuthStore();
+
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {
@@ -66,8 +71,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       is_sale: isOnSale ?? false,
       image: image ?? null,
       description: description ?? "",
-      branch_id: branchId ?? "",
-      discount_type: discountType ?? "percentage", 
+      branch_id:
+        (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
+      discount_type: discountType ?? "percentage",
     },
   });
 
@@ -91,7 +97,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           is_sale: false,
           image: null,
           description: "",
-          branch_id: "",
+          branch_id:
+            (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
           discount_type: "percentage",
         });
         setImagePreview(null);
@@ -377,23 +384,25 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           </div>
 
           {/* branch */}
-          <FormField
-            control={control}
-            name="branch_id"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel>Branch</FormLabel>
-                <FormControl>
-                  <DropDownBranch
-                    includeAllOption
-                    value={field.value ?? ""}
-                    onValueChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {auth?.role === "owner" && (
+            <FormField
+              control={control}
+              name="branch_id"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Branch</FormLabel>
+                  <FormControl>
+                    <DropDownBranch
+                      includeAllOption
+                      value={field.value ?? ""}
+                      onValueChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           {/* is sale */}
           <FormField

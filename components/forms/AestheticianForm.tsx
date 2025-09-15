@@ -34,6 +34,8 @@ import {
   aestheticianFormSchema,
   AestheticianFormValues,
 } from "@/schema/aestheticianSchema";
+import { useUserStore } from "@/provider/store/userStore";
+import { useAuthStore } from "@/provider/store/authStore";
 
 const AestheticianForm: React.FC<FormAesthetician> = ({
   renderDialog = true,
@@ -57,6 +59,9 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
     image ?? null
   );
 
+  const { user } = useUserStore();
+  const { auth } = useAuthStore();
+
   const form = useForm<AestheticianFormValues>({
     resolver: zodResolver(aestheticianFormSchema),
     defaultValues: {
@@ -66,7 +71,8 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
       phone_number: phoneNumber || "",
       experience: experience || "",
       sex: sex || "",
-      branch_id: branchId || "",
+      branch_id:
+        (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
       image: image || null,
       availability: availability || "available",
     },
@@ -91,7 +97,8 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
           phone_number: "",
           experience: "",
           sex: "",
-          branch_id: "",
+          branch_id:
+            (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
           image: null,
           availability: "",
         });
@@ -120,7 +127,6 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
     if (method === "patch" && aestheticianId) {
       formData.append("aesthetician_id", aestheticianId.toString());
     }
-
 
     aestheticianMutation.mutate(formData);
   };
@@ -416,24 +422,27 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
                 />
 
                 {/* Branch */}
-                <FormField
-                  control={control}
-                  name="branch_id"
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel className="text-xs text-gray-600">
-                        Assigned Branch
-                      </FormLabel>
-                      <FormControl>
-                        <DropDownBranch
-                          value={field.value ?? ""}
-                          onValueChange={(v) => field.onChange(v)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
+                {auth?.role === "owner" && (
+                  <FormField
+                    control={control}
+                    name="branch_id"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel className="text-xs text-gray-600">
+                          Assigned Branch
+                        </FormLabel>
+                        <FormControl>
+                          <DropDownBranch
+                            value={field.value ?? ""}
+                            onValueChange={(v) => field.onChange(v)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
             </div>
 
