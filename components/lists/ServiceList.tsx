@@ -10,7 +10,7 @@ import SearchInput from "../SearchInput";
 import { useInfiniteServices } from "@/hooks/useInfiniteServices";
 
 const ServiceList = ({ action }: { action: boolean }) => {
-  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
+  const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteServices();
   const services: Service[] = data?.pages.flatMap((page) => page.service) ?? [];
   const loader = useRef<HTMLDivElement | null>(null);
@@ -56,15 +56,14 @@ const ServiceList = ({ action }: { action: boolean }) => {
       )}
       <div className="flex justify-center flex-col w-full mx-auto sm:w-3/4">
         <div className="grid grid-cols-1 place-items-center sm:grid-cols-3 gap-4 justify-center mt-10 w-full sm:mx-auto">
-          {isFetching
-            ? Array.from({ length: 6 }).map((_, index) => (
-                <SkeletonCard key={index} />
-              ))
+          {isLoading && !data
+            ? // 👇 only show skeletons first time
+              Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
             : services.map((service) => (
                 <ServicesCard
+                  key={service.service_id}
                   service_id={service.service_id}
                   action
-                  key={service.service_id}
                   category={service.category}
                   isSale={service.is_sale}
                   serviceName={service.service_name}
@@ -77,6 +76,15 @@ const ServiceList = ({ action }: { action: boolean }) => {
                 />
               ))}
         </div>
+
+        {/* 👇 Loader for infinite scroll only */}
+        <div ref={loader} className="h-12 flex justify-center items-center">
+          {isFetchingNextPage && <SkeletonCard />}
+          {!hasNextPage && data && (
+            <p className="text-gray-500">No more services</p>
+          )}
+        </div>
+
         <div ref={loader} className="h-10 flex justify-center items-center">
           {isFetchingNextPage && <p>Loading more...</p>}
         </div>
