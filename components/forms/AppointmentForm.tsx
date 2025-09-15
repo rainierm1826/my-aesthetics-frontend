@@ -55,9 +55,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   method,
   voucherCode,
 }) => {
-  const { auth, isAuthLoading } = useAuthStore();
+  const { auth } = useAuthStore();
   const { user } = useUserStore();
-
 
   const form = useForm<WalkInAppointmentFormValues>({
     resolver: zodResolver(walkInAppointmentSchema),
@@ -67,7 +66,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       middle_initial: middleInitial || "",
       phone_number: phoneNumber || "",
       branch_id:
-        auth?.role !== "owner" ? user?.branch?.branch_id || "" : branchId || "",
+        (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
       service_id: serviceId || "",
       aesthetician_id: aestheticianId || "",
       final_payment_method: finalPaymentMethod || "",
@@ -99,7 +98,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           last_name: "",
           middle_initial: "",
           phone_number: "",
-          branch_id: "",
+          branch_id: (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
           voucher_code: undefined,
         });
       }
@@ -223,7 +222,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 </FormItem>
               )}
             />
-            {!isAuthLoading && (
+            {auth?.role === "owner" && (
               <FormField
                 control={control}
                 name="branch_id"
@@ -232,7 +231,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                     <FormLabel>Choose Branch</FormLabel>
                     <FormControl>
                       <DropDownBranch
-                        value={field.value}
+                        value={field.value || ""}
                         onValueChange={(v) => field.onChange(v)}
                       />
                     </FormControl>
@@ -253,7 +252,28 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                     <FormLabel>Choose Service</FormLabel>
                     <FormControl>
                       <DropDownService
-                        value={field.value ?? ""}
+                        value={field.value}
+                        onValueChange={(v) => field.onChange(v)}
+                        branchId={branch}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {(method === "patch" ||
+              (method === "post" && branch && service)) && (
+              <FormField
+                control={control}
+                name="aesthetician_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Choose Aesthetician</FormLabel>
+                    <FormControl>
+                      <DropDownAesthetician
+                        value={field.value}
                         onValueChange={(v) => field.onChange(v)}
                         branchId={branch}
                       />
@@ -266,26 +286,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {(method === "patch" ||
-              (method === "post" && branch && service)) && (
-              <FormField
-                control={control}
-                name="aesthetician_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Choose Aesthetician</FormLabel>
-                    <FormControl>
-                      <DropDownAesthetician
-                        value={field.value ?? ""}
-                        onValueChange={(v) => field.onChange(v)}
-                        branchId={branch}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
             <FormField
               control={control}
               name="final_payment_method"

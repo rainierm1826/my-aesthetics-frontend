@@ -142,7 +142,7 @@ function ActionCell({
 
   const statusUpdateMutation = useBaseMutation("patch", {
     updateFn: patchAppointment,
-    queryKey: ["appointment"],
+    queryKey: [["appointment"], ["aesthetician-name"]],
     successMessages: {
       update: "Appointment updated successfully",
     },

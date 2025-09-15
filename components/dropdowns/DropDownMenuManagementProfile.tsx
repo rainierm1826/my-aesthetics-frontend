@@ -19,7 +19,7 @@ import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { signOut } from "@/api/auth";
 
 const DropDownMenuManagementProfile = () => {
-  const { clearAuth } = useAuthStore();
+  const { clearAuth, auth } = useAuthStore();
   const { user, clearUser } = useUserStore();
   const router = useRouter();
 
@@ -36,6 +36,8 @@ const DropDownMenuManagementProfile = () => {
     },
   });
 
+  const dashboardLink = auth?.role == "admin" ? "/manage/appointments" : "/manage/dashboard/appointments"
+
   const isLoading = signOutMutation.isPending;
 
   return (
@@ -49,7 +51,7 @@ const DropDownMenuManagementProfile = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/manage/dashboard/appointments">Dashboard</Link>
+          <Link href={dashboardLink}>Dashboard</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/manage/profile">Profile</Link>

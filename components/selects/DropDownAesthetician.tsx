@@ -34,8 +34,6 @@ const DropDownAesthetician = ({
 }: DropDownAestheticianProps) => {
   const { data, isLoading, error } = useAestheticianName(branchId);
 
-  console.log(data)
-
   const aestheticians: AestheticianName[] = data?.aesthetician ?? [];
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -76,7 +74,6 @@ const DropDownAesthetician = ({
     ]
   );
 
-  // Handle loading state
   if (isLoading) {
     return (
       <Select disabled>
