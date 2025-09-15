@@ -12,10 +12,14 @@ import DropDownBranch from "../selects/DropDownBranch";
 import DropDownAppointmentStatus from "../selects/DropDownAppointmentStatus";
 import AppointmentForm from "../forms/AppointmentForm";
 import { useAuthStore } from "@/provider/store/authStore";
+import { useUserStore } from "@/provider/store/userStore";
 
 export default function AppointmentTable() {
-  const { data, isFetching, isError } = useAppointments();
+
+
   const { auth, isAuthLoading } = useAuthStore();
+  const {user} = useUserStore()
+  const { data, isFetching, isError } = useAppointments(user?.branch?.branch_id);
 
   const appointments: Appointment[] = data?.appointment ?? [];
 

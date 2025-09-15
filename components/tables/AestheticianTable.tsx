@@ -13,12 +13,14 @@ import { Aesthetician } from "@/lib/types/aesthetician-types";
 import { aestheticianColumn } from "@/components/columns/aesthetician-column";
 import { useAestheticians } from "@/hooks/useAestheticians";
 import { useAuthStore } from "@/provider/store/authStore";
+import { useUserStore } from "@/provider/store/userStore";
 
 const AestheticianTable = () => {
-  const { data, isFetching, isError } = useAestheticians();
+  const { auth, isAuthLoading } = useAuthStore();
+  const {user} = useUserStore()
+  const { data, isFetching, isError } = useAestheticians(user?.branch?.branch_id);
 
   const aesthetician: Aesthetician[] = data?.aesthetician ?? [];
-  const { auth, isAuthLoading } = useAuthStore();
 
   if (isAuthLoading) {
     return <SkeletonTable />;

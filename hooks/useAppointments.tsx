@@ -5,9 +5,9 @@ import { AppointmentListResponse } from "@/lib/types/appointment-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-export function useAppointments() {
+export function useAppointments(branchId?: string) {
   const searchParams = useSearchParams();
-  const query = searchParams.get("query") ?? "";
+  const query = searchParams.get("query") ?? branchId ?? "";
   const branch = searchParams.get("branch") ?? "";
   const status = searchParams.get("status") ?? "";
   const page = Number(searchParams.get("page") ?? 1);

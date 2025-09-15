@@ -5,10 +5,10 @@ import { AestheticianListResponse } from "@/lib/types/aesthetician-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-export function useAestheticians() {
+export function useAestheticians(branchId?:string) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
-  const branch = searchParams.get("branch") ?? "";
+  const branch = searchParams.get("branch") ?? branchId ??"";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
   const availability = searchParams.get("availability") ?? "";
