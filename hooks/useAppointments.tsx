@@ -7,8 +7,8 @@ import { useSearchParams } from "next/navigation";
 
 export function useAppointments(branchId?: string) {
   const searchParams = useSearchParams();
-  const query = searchParams.get("query") ?? branchId ?? "";
-  const branch = searchParams.get("branch") ?? "";
+  const query = searchParams.get("query") ?? "";
+  const branch = searchParams.get("branch") ?? branchId ?? "";
   const status = searchParams.get("status") ?? "";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
