@@ -9,11 +9,15 @@ import DropDownBranch from "../selects/DropDownBranch";
 import SearchInput from "../SearchInput";
 import { useInfiniteServices } from "@/hooks/useInfiniteServices";
 
-const ServiceList = ({ action }: { action: boolean }) => {
+const ServiceList = ({ action, limit }: { action: boolean, limit?:number }) => {
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteServices();
-  const services: Service[] = data?.pages.flatMap((page) => page.service) ?? [];
+  let services: Service[] = data?.pages.flatMap((page) => page.service) ?? [];
   const loader = useRef<HTMLDivElement | null>(null);
+
+  if (limit) {
+    services = services.slice(0, limit)
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -57,8 +61,7 @@ const ServiceList = ({ action }: { action: boolean }) => {
       <div className="flex justify-center flex-col w-full mx-auto sm:w-3/4">
         <div className="grid grid-cols-1 place-items-center sm:grid-cols-3 gap-4 justify-center mt-10 w-full sm:mx-auto">
           {isLoading && !data
-            ? // 👇 only show skeletons first time
-              Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+            ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
             : services.map((service) => (
                 <ServicesCard
                   key={service.service_id}
@@ -77,17 +80,11 @@ const ServiceList = ({ action }: { action: boolean }) => {
               ))}
         </div>
 
-        {/* 👇 Loader for infinite scroll only */}
-        <div ref={loader} className="h-12 flex justify-center items-center">
-          {isFetchingNextPage && <SkeletonCard />}
-          {!hasNextPage && data && (
-            <p className="text-gray-500">No more services</p>
-          )}
-        </div>
-
-        <div ref={loader} className="h-10 flex justify-center items-center">
-          {isFetchingNextPage && <p>Loading more...</p>}
-        </div>
+        {isFetchingNextPage && (
+          <div className="flex justify-center items-center py-4">
+            <div className="w-6 h-6 border-4 border-gray-300 border-primary-500 rounded-full animate-spin"></div>
+          </div>
+        )}
       </div>
     </main>
   );
