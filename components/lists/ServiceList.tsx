@@ -9,15 +9,12 @@ import DropDownBranch from "../selects/DropDownBranch";
 import SearchInput from "../SearchInput";
 import { useInfiniteServices } from "@/hooks/useInfiniteServices";
 
-const ServiceList = ({ action, limit }: { action: boolean, limit?:number }) => {
+const ServiceList = ({ action }: { action: boolean }) => {
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteServices();
-  let services: Service[] = data?.pages.flatMap((page) => page.service) ?? [];
+  const services: Service[] = data?.pages.flatMap((page) => page.service) ?? [];
   const loader = useRef<HTMLDivElement | null>(null);
 
-  if (limit) {
-    services = services.slice(0, limit)
-  }
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {

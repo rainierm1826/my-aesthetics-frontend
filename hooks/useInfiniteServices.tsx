@@ -10,7 +10,7 @@ export function useInfiniteServices() {
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? "all";
   const category = searchParams.get("category") ?? "all";
-  const limit = Number(searchParams.get("limit") ?? 3);
+  const limit = Number(searchParams.get("limit") ?? 6);
 
   return useInfiniteQuery<ServiceListResponse, Error>({
     queryKey: ["service", { query, limit, branch, category }],

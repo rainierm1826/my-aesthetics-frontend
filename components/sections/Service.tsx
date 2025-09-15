@@ -29,7 +29,7 @@ const Service = () => {
           </div>
         }
       >
-        <ServiceList action={false} limit={6}/>
+        <ServiceList action={false}/>
       </Suspense>
     </section>
   );
