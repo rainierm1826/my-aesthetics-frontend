@@ -14,6 +14,11 @@ import {
 } from "@/lib/types/analytics-type";
 import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
 import { useAnalyticsAppointment } from "@/hooks/useAnalyticsAppointment";
+import { statusChartConfig } from "@/config/appointmentConfig";
+import {
+  aestheticianRevenueChartConfig,
+  serviceCategoryChartConfig,
+} from "@/config/salesConfig";
 
 const AppointmentDashboard = () => {
   const { data: summaryData, isFetching: isFetchingSummaryData } =
@@ -23,25 +28,6 @@ const AppointmentDashboard = () => {
   const { data: appointmentData, isFetching: isFetchingAppointmentData } =
     useAnalyticsAppointment({});
   const appointment = (appointmentData as AppointmentAnalyticsResponse) || {};
-
-  const statusChartConfig = {
-    completed: {
-      label: "Completed",
-      color: "#BDA658", 
-    },
-    cancelled: {
-      label: "Cancelled",
-      color: "#8C7840", 
-    },
-    "on-process": {
-      label: "On Process",
-      color: "#D4C07C",
-    },
-    waiting: {
-      label: "Waiting",
-      color: "#E5D7A1", 
-    },
-  };
 
   return (
     <>
@@ -55,7 +41,7 @@ const AppointmentDashboard = () => {
         <>
           <div className="mb-5 flex justify-between items-center">
             <ToggleDates />
-            <DropDownBranch />
+            <DropDownBranch useUrlParams={true} includeAllOption={true} />
           </div>
           <div className="flex flex-wrap gap-3 mb-5">
             <DashboardCard
@@ -94,16 +80,106 @@ const AppointmentDashboard = () => {
             <SkeletonScoreBoard />
           ) : (
             <PieChartComponent
-              title="Appointment Status"
+              title="Appointments By Category"
               dataKey="count"
-              nameKey="status"
-              chartConfig={statusChartConfig}
-              chartData={appointment.appointments_status}
+              nameKey="category"
+              chartConfig={serviceCategoryChartConfig}
+              chartData={appointment.appointments_by_service_category}
             />
           )}
         </div>
+
+        {isFetchingAppointmentData ? (
+          <p>Loading...</p>
+        ) : (
+          <LineChartComponent
+            value="Number of Appointments"
+            title="Appointments Overtime"
+            dataKey="count"
+            nameKey="weekday"
+            chartConfig={aestheticianRevenueChartConfig}
+            chartData={appointment.appointments_overtime}
+          />
+        )}
+
         {/* <BarChartComponent /> */}
-        <LineChartComponent />
+        {isFetchingAppointmentData ? (
+          <>Loading...</>
+        ) : (
+          <BarChartComponent
+            value="Number of Appointments"
+            title="Appointments By Branch"
+            dataKey="count"
+            nameKey="aesthetician"
+            chartConfig={aestheticianRevenueChartConfig}
+            chartData={appointment.appointments_by_aesthetician}
+          />
+        )}
+
+        {isFetchingAppointmentData ? (
+          <>Loading...</>
+        ) : (
+          <BarChartComponent
+            value="Number of Appointments"
+            title="Appointments By Branch"
+            dataKey="count"
+            nameKey="aesthetician"
+            chartConfig={aestheticianRevenueChartConfig}
+            chartData={appointment.appointments_by_aesthetician}
+          />
+        )}
+
+        {isFetchingAppointmentData ? (
+          <>Loading...</>
+        ) : (
+          <BarChartComponent
+            value="Number of Appointments"
+            title="Appointments By Service"
+            dataKey="count"
+            nameKey="service"
+            chartConfig={aestheticianRevenueChartConfig}
+            chartData={appointment.appointments_by_service}
+          />
+        )}
+
+        {isFetchingAppointmentData ? (
+          <>Loading...</>
+        ) : (
+          <BarChartComponent
+            value="Avarage"
+            title="Top Rated Aesthetician"
+            dataKey="average_rate"
+            nameKey="aesthetician"
+            chartConfig={aestheticianRevenueChartConfig}
+            chartData={appointment.top_rated_aesthetician}
+          />
+        )}
+
+        {isFetchingAppointmentData ? (
+          <>Loading...</>
+        ) : (
+          <BarChartComponent
+            value="Avarage"
+            title="Top Rated Service"
+            dataKey="average_rate"
+            nameKey="service_name"
+            chartConfig={aestheticianRevenueChartConfig}
+            chartData={appointment.top_rated_service}
+          />
+        )}
+
+        {isFetchingAppointmentData ? (
+          <>Loading...</>
+        ) : (
+          <BarChartComponent
+            value="Avarage"
+            title="Top Rated Branch"
+            dataKey="average_rate"
+            nameKey="branch_name"
+            chartConfig={aestheticianRevenueChartConfig}
+            chartData={appointment.top_rated_branch}
+          />
+        )}
       </div>
     </>
   );

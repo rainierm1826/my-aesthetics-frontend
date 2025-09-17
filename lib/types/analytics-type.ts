@@ -74,6 +74,10 @@ export interface SalesAnalyticsResponse {
     category_snapshot: string;
     revenue: number;
   }[];
+  revenue_by_branch: {
+    branch: string;
+    revenue: number;
+  }[];
   payment_popularity: {
     final_payment_method: string;
     count: number;

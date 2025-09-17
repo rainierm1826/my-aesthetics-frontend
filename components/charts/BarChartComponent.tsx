@@ -8,7 +8,6 @@ import {
   Tooltip,
   CartesianGrid,
   Label,
-  Cell,
 } from "recharts";
 
 import { ChartContainer } from "@/components/ui/chart";
@@ -21,8 +20,8 @@ type ChartConfig = Record<string, { label: string; color: string }>;
 type BarChartProps<T extends Record<string, unknown>> = {
   title: string;
   value: string;
-  dataKey: Extract<keyof T, string | number>; // numeric value (y-axis)
-  nameKey: Extract<keyof T, string | number>; // category (x-axis)
+  dataKey: Extract<keyof T, string | number>; 
+  nameKey: Extract<keyof T, string | number>; 
   chartConfig: ChartConfig;
   chartData: ChartData<T>;
 };
@@ -73,19 +72,11 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
 
           <Tooltip />
 
-          {/* Bars with dynamic colors */}
-          <Bar dataKey={dataKey} radius={4}>
-            {chartData.map((entry, index) => {
-              const key = String(entry[nameKey]);
-              const config = chartConfig[key];
-              return (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={config ? config.color : "#BDA658"} // fallback to brand color
-                />
-              );
-            })}
-          </Bar>
+          <Bar
+            dataKey={dataKey}
+            fill={Object.values(chartConfig)[0]?.color || "#BDA658"}
+            radius={4}
+          />
         </BarChart>
       </ChartContainer>
     </Card>

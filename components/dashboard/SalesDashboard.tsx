@@ -13,6 +13,13 @@ import {
 import { useAnalyticsSummary } from "@/hooks/useAnalyticsSummary";
 import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
 import { useAnalyticsSales } from "@/hooks/useAnalyticsSales";
+import {
+  aestheticianRevenueChartConfig,
+  branchRevenueChartConfig,
+  paymentMethodChartConfig,
+  serviceCategoryChartConfig,
+  serviceRevenueChartConfig,
+} from "@/config/salesConfig";
 
 const SalesDashboard = () => {
   const { data: summaryData, isFetching: isFetchingSummaryData } =
@@ -22,36 +29,6 @@ const SalesDashboard = () => {
   const { data: salesData, isFetching: isFetchingSalesData } =
     useAnalyticsSales({});
   const sales = (salesData as SalesAnalyticsResponse) || {};
-
-  const paymentMethodChartConfig = {
-    cash: {
-      label: "Cash",
-      color: "#4CAF50",
-    },
-    "e-wallet": {
-      label: "E-Wallet",
-      color: "#2196F3",
-    },
-    "bank-transfer": {
-      label: "Bank Transfer",
-      color: "#9C27B0",
-    },
-    "credit-card": {
-      label: "Credit Card",
-      color: "#FF9800",
-    },
-    "debit-card": {
-      label: "Debit Card",
-      color: "#F44336",
-    },
-  };
-
-  const aestheticianRevenueChartConfig = {
-    aesthetician: {
-      label: "Aesthetician",
-      color: "#D6C285",
-    },
-  };
 
   return (
     <>
@@ -77,14 +54,28 @@ const SalesDashboard = () => {
             <SkeletonScoreBoard />
           ) : (
             <PieChartComponent
-              title="Most Used Payment Method"
-              dataKey="count"
-              nameKey="final_payment_method"
-              chartConfig={paymentMethodChartConfig}
-              chartData={sales.payment_popularity}
+              title="Revenue By Category"
+              dataKey="revenue"
+              nameKey="category_snapshot"
+              chartConfig={serviceCategoryChartConfig}
+              chartData={sales.revenue_by_category}
             />
           )}
         </div>
+
+        {isFetchingSalesData ? (
+          <p>Loading...</p>
+        ) : (
+          <LineChartComponent
+            value="Number of Appointments"
+            title="Appointments Overtime"
+            dataKey="revenue"
+            nameKey="weekday"
+            chartConfig={aestheticianRevenueChartConfig}
+            chartData={sales.revenue_overtime}
+          />
+        )}
+
         {isFetchingSalesData ? (
           <>Loading...</>
         ) : (
@@ -98,7 +89,31 @@ const SalesDashboard = () => {
           />
         )}
 
-        <LineChartComponent />
+        {isFetchingSalesData ? (
+          <>Loading...</>
+        ) : (
+          <BarChartComponent
+            value="Revenue"
+            title="Revenue by Service"
+            dataKey="revenue"
+            nameKey="service"
+            chartConfig={serviceRevenueChartConfig}
+            chartData={sales.revenue_by_service}
+          />
+        )}
+
+        {isFetchingSalesData ? (
+          <>Loading...</>
+        ) : (
+          <BarChartComponent
+            value="Revenue"
+            title="Revenue by Branch"
+            dataKey="revenue"
+            nameKey="branch"
+            chartConfig={branchRevenueChartConfig}
+            chartData={sales.revenue_by_branch}
+          />
+        )}
       </div>
     </>
   );

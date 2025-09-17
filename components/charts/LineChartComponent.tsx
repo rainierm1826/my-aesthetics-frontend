@@ -9,36 +9,34 @@ import {
   Label,
 } from "recharts";
 
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { ChartContainer } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle } from "../ui/card";
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-  { month: "July", desktop: 180 },
-  { month: "August", desktop: 195 },
-  { month: "September", desktop: 220 },
-  { month: "October", desktop: 245 },
-  { month: "November", desktop: 260 },
-  { month: "December", desktop: 275 },
-];
+type ChartData<T> = T[];
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#BDA658",
-  },
-} satisfies ChartConfig;
+type ChartConfig = Record<string, { label: string; color: string }>;
 
-const LineChartComponent = () => {
+type LineChartProps<T extends Record<string, unknown>> = {
+  title: string;
+  value: string;
+  dataKey: Extract<keyof T, string | number>;
+  nameKey: Extract<keyof T, string | number>;
+  chartConfig: ChartConfig;
+  chartData: ChartData<T>;
+};
+
+export const LineChartComponent = <T extends Record<string, unknown>>({
+  title,
+  value,
+  dataKey,
+  nameKey,
+  chartConfig,
+  chartData,
+}: LineChartProps<T>) => {
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
       <CardHeader>
-        <CardTitle>Title</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <ChartContainer
         config={chartConfig}
@@ -52,14 +50,20 @@ const LineChartComponent = () => {
           <CartesianGrid strokeDasharray="3 3" />
 
           {/* X axis */}
-          <XAxis dataKey="month">
-            <Label value="Month" offset={-5} position="insideBottom" />
+          <XAxis dataKey={nameKey}>
+            <Label
+              value={String(nameKey)
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase())}
+              offset={-5}
+              position="insideBottom"
+            />
           </XAxis>
 
           {/* Y axis */}
           <YAxis>
             <Label
-              value="Number of Users"
+              value={value}
               angle={-90}
               position="insideLeft"
               style={{ textAnchor: "middle" }}
@@ -71,11 +75,20 @@ const LineChartComponent = () => {
 
           {/* Bars */}
           <Line
-            type={"monotone"}
-            stroke="var(--color-desktop)"
-            dataKey="desktop"
-            fill="var(--color-desktop)"
-            radius={4}
+            type="monotone"
+            dataKey={dataKey}
+            stroke={Object.values(chartConfig)[0]?.color || "#BDA658"}
+            strokeWidth={2}
+            dot={{
+              fill: Object.values(chartConfig)[0]?.color || "#BDA658",
+              strokeWidth: 2,
+              r: 4,
+            }}
+            activeDot={{
+              r: 6,
+              stroke: Object.values(chartConfig)[0]?.color || "#BDA658",
+              strokeWidth: 2,
+            }}
           />
         </LineChart>
       </ChartContainer>
