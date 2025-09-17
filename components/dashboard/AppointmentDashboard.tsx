@@ -102,7 +102,7 @@ const AppointmentDashboard = () => {
             />
           )}
         </div>
-        <BarChartComponent />
+        {/* <BarChartComponent /> */}
         <LineChartComponent />
       </div>
     </>
