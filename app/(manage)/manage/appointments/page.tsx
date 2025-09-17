@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import DashboardCard from "@/components/cards/DashboardCard";
 import OwnerWrapper from "@/components/ManagementWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
@@ -32,12 +31,7 @@ export default async function AppointmentsPage({
   return (
     <OwnerWrapper title="Manage Appointments">
       <div className="">
-        <div className="flex flex-wrap gap-3 mb-5">
-          <DashboardCard />
-          <DashboardCard />
-          <DashboardCard />
-          <DashboardCard />
-        </div>
+        
         <Suspense fallback={<Skeleton />}>
           <HydrationBoundary state={dehydratedState}>
             <AppointmentTable />

@@ -8,38 +8,37 @@ import {
   Tooltip,
   CartesianGrid,
   Label,
+  Cell,
 } from "recharts";
 
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { ChartContainer } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle } from "../ui/card";
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-  { month: "July", desktop: 180 },
-  { month: "August", desktop: 195 },
-  { month: "September", desktop: 220 },
-  { month: "October", desktop: 245 },
-  { month: "November", desktop: 260 },
-  { month: "December", desktop: 275 },
-];
+type ChartData<T> = T[];
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#BDA658",
-  },
-} satisfies ChartConfig;
+type ChartConfig = Record<string, { label: string; color: string }>;
 
-export function BarChartComponent() {
+type BarChartProps<T extends Record<string, unknown>> = {
+  title: string;
+  value: string;
+  dataKey: Extract<keyof T, string | number>; // numeric value (y-axis)
+  nameKey: Extract<keyof T, string | number>; // category (x-axis)
+  chartConfig: ChartConfig;
+  chartData: ChartData<T>;
+};
+
+export const BarChartComponent = <T extends Record<string, unknown>>({
+  title,
+  value,
+  dataKey,
+  nameKey,
+  chartConfig,
+  chartData,
+}: BarChartProps<T>) => {
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
       <CardHeader>
-        <CardTitle>Title</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <ChartContainer
         config={chartConfig}
@@ -49,31 +48,46 @@ export function BarChartComponent() {
           data={chartData}
           margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
         >
-          {/* Grid lines */}
           <CartesianGrid strokeDasharray="3 3" />
 
-          {/* X axis */}
-          <XAxis dataKey="month">
-            <Label value="Month" offset={-5} position="insideBottom" />
+          {/* X axis = categories */}
+          <XAxis dataKey={nameKey}>
+            <Label
+              value={String(nameKey)
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase())}
+              offset={-5}
+              position="insideBottom"
+            />
           </XAxis>
 
-          {/* Y axis */}
+          {/* Y axis = values */}
           <YAxis>
             <Label
-              value="Number of Users"
+              value={value}
               angle={-90}
               position="insideLeft"
               style={{ textAnchor: "middle" }}
             />
           </YAxis>
 
-          {/* Tooltip on hover */}
           <Tooltip />
 
-          {/* Bars */}
-          <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+          {/* Bars with dynamic colors */}
+          <Bar dataKey={dataKey} radius={4}>
+            {chartData.map((entry, index) => {
+              const key = String(entry[nameKey]);
+              const config = chartConfig[key];
+              return (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={config ? config.color : "#BDA658"} // fallback to brand color
+                />
+              );
+            })}
+          </Bar>
         </BarChart>
       </ChartContainer>
     </Card>
   );
-}
+};

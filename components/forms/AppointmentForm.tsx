@@ -83,7 +83,14 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const appointmentMutation = useBaseMutation(method, {
     createFn: postAppointment,
     updateFn: patchAppointment,
-    queryKey: [["appointment"], ["aesthetician-name"], ["aesthetician"]],
+    queryKey: [
+      ["appointment"],
+      ["aesthetician-name"],
+      ["aesthetician"],
+      ["analytics-summary"],
+      ["analytics-appointments"],
+      ["analytics-sales"],
+    ],
     successMessages: {
       create: "Appointment has been created.",
       update: "Appointment has been updated.",
@@ -98,7 +105,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           last_name: "",
           middle_initial: "",
           phone_number: "",
-          branch_id: (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
+          branch_id:
+            (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
           voucher_code: undefined,
         });
       }
