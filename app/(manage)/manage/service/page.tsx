@@ -38,10 +38,10 @@ export default async function ServicePage({
     <OwnerWrapper title="Manage Services">
       <div className="">
         <div className="flex flex-wrap gap-3 mb-5">
+          {/* <DashboardCard />
           <DashboardCard />
           <DashboardCard />
-          <DashboardCard />
-          <DashboardCard />
+          <DashboardCard /> */}
         </div>
         <Suspense fallback={<Skeleton />}>
           <HydrationBoundary state={dehydratedState}>
