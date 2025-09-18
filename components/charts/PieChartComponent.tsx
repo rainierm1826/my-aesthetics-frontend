@@ -3,6 +3,7 @@ import { Pie, PieChart, Cell, Tooltip } from "recharts";
 
 import { ChartContainer } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle } from "../ui/card";
+import { formatNumber } from "@/lib/function";
 
 type ChartData<T> = T[];
 
@@ -34,8 +35,9 @@ const PieChartComponent = <T extends Record<string, unknown>>({
         config={chartConfig}
         className="min-h-[150px] h-auto w-full"
       >
-        <PieChart>
+        <PieChart >
           <Pie
+          
             data={chartData}
             dataKey={dataKey}
             nameKey={nameKey}
@@ -44,7 +46,7 @@ const PieChartComponent = <T extends Record<string, unknown>>({
             outerRadius={100}
             stroke="#ffffff"
             strokeWidth={2}
-            label
+            label={({value }) => `${formatNumber(value as number)}`}
             labelLine={{ stroke: "#000000", strokeWidth: 1 }}
           >
             {chartData.map((entry, index) => {
@@ -54,7 +56,7 @@ const PieChartComponent = <T extends Record<string, unknown>>({
             })}
           </Pie>
 
-          <Tooltip />
+          <Tooltip formatter={(value: number) => formatNumber(value)} />
         </PieChart>
       </ChartContainer>
     </Card>

@@ -11,6 +11,7 @@ import {
 
 import { ChartContainer } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle } from "../ui/card";
+import { formatNumber } from "@/lib/function";
 
 type ChartData<T> = T[];
 
@@ -61,7 +62,7 @@ export const LineChartComponent = <T extends Record<string, unknown>>({
           </XAxis>
 
           {/* Y axis */}
-          <YAxis>
+          <YAxis tickFormatter={(value: number) => formatNumber(value)}>
             <Label
               value={value}
               angle={-90}
@@ -71,7 +72,8 @@ export const LineChartComponent = <T extends Record<string, unknown>>({
           </YAxis>
 
           {/* Tooltip on hover */}
-          <Tooltip />
+          <Tooltip formatter={(value: number) => formatNumber(value)} />
+          
 
           {/* Bars */}
           <Line

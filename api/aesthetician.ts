@@ -16,9 +16,12 @@ export async function getAllAesthetician({
   branch = "",
   experience = "",
   sex = "",
+  sort
+
 }: GetAestheticianParams): Promise<AestheticianListResponse> {
   const params = new URLSearchParams();
   if (query) params.set("query", query);
+  if (sort) params.set("sort", String(sort))
   params.set("page", String(page));
   params.set("limit", String(limit));
   params.set("availability", String(availability));

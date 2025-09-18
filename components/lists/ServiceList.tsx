@@ -91,7 +91,6 @@ const ServiceList = ({ action }: { action: boolean }) => {
           </div>
         )}
 
-        {/* Loader element - make sure it's visible */}
         <div ref={loader} className="my-10 flex items-center justify-center">
           {hasNextPage && !isFetchingNextPage && (
             <div className="text-gray-500">Scroll to load more...</div>

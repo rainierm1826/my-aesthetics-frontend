@@ -1,19 +1,51 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import AestheticianCard from "../cards/AestheticianCard";
 import { Aesthetician } from "@/lib/types/aesthetician-types";
-import { useAestheticians } from "@/hooks/useAestheticians";
 import SkeletonCard from "../skeletons/SkeletonCard";
 import SearchInput from "../SearchInput";
 import DropDownBranch from "../selects/DropDownBranch";
 import DropDownAvailability from "../selects/DropDownAvailability";
 import DropDownSex from "../selects/DropDownSex";
 import DropDownExperience from "../selects/DropDownExperience";
+import { useInfiniteAestheticians } from "@/hooks/useInfiniteAestheticians";
 
 const AestheticianList = ({ action }: { action: boolean }) => {
-  const { data, isFetching } = useAestheticians();
-  const aestheticians: Aesthetician[] = data?.aesthetician ?? [];
+  const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteAestheticians();
+  const aestheticians: Aesthetician[] =
+    data?.pages.flatMap((page) => page.aesthetician) ?? [];
+  const loader = useRef<HTMLDivElement | null>(null);
+
+  const handleIntersection = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        console.log("Fetching next page...");
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleIntersection, {
+      threshold: 0.1,
+      rootMargin: "20px",
+    });
+
+    const currentLoader = loader.current;
+
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [handleIntersection]);
 
   return (
     <div className="flex justify-center flex-col w-full mx-auto bg-[#fffcf9]">
@@ -39,12 +71,13 @@ const AestheticianList = ({ action }: { action: boolean }) => {
         </div>
       )}
       <div className="grid grid-cols-1 mx-10 md:grid-cols-4 justify-center px-4 gap-3">
-        {isFetching
+        {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))
-          : aestheticians.map((aesthetician) => (
+          : aestheticians.map((aesthetician, index) => (
               <AestheticianCard
+            
                 aesthetician_id={aesthetician.aesthetician_id}
                 action
                 availability={aesthetician.availability}
@@ -54,9 +87,20 @@ const AestheticianList = ({ action }: { action: boolean }) => {
                 experience={aesthetician.experience}
                 image={aesthetician.image}
                 rating={aesthetician.average_rate}
-                key={aesthetician.aesthetician_id}
+                key={index}
               />
             ))}
+      </div>
+      {isFetchingNextPage && (
+        <div className="flex justify-center items-center py-4">
+          <div className="w-6 h-6 border-4 border-gray-300 border-primary-500 rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      <div ref={loader} className="my-10 flex items-center justify-center">
+        {hasNextPage && !isFetchingNextPage && (
+          <div className="text-gray-500">Scroll to load more...</div>
+        )}
       </div>
     </div>
   );

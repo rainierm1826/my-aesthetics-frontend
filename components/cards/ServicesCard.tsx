@@ -40,7 +40,7 @@ const ServicesCard = ({
           <div className="relative w-full aspect-[4/3] overflow-hidden">
             <Image
               alt="Ombre Shading Eyebrows service"
-              src={image}
+              src={image ?? "/fallbackImage.jpg"}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-110"
             />

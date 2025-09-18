@@ -33,7 +33,7 @@ const BranchCard = ({
           <div className="relative w-full aspect-[16/8] flex-shrink-0 overflow-hidden">
             <Image
               alt={branchName}
-              src={image}
+              src={image ?? "/fallbackImage.jpg"}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-110"
             />

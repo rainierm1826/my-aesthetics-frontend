@@ -46,7 +46,7 @@ const DropDownMenuCustomerProfile = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-0 cursor-pointer">
         <ProfilePicture
-          image={user?.image || "https://github.com/shadcn.png"}
+          image={user?.image || "/profileFallback.jpg"}
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

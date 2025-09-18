@@ -28,6 +28,10 @@ export interface AppointmentAnalyticsResponse {
     category: string;
     count: number;
   }[];
+  appointments_by_branch: {
+    branch: string;
+    count: number;
+  }[];
   appointments_by_service: {
     service: string;
     count: number;

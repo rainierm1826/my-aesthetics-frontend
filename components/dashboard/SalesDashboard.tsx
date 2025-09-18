@@ -20,6 +20,7 @@ import {
   serviceCategoryChartConfig,
   serviceRevenueChartConfig,
 } from "@/config/salesConfig";
+import { formatNumber } from "@/lib/function";
 
 const SalesDashboard = () => {
   const { data: summaryData, isFetching: isFetchingSummaryData } =
@@ -36,7 +37,33 @@ const SalesDashboard = () => {
         <ToggleDates />
         <DropDownBranch />
       </div>
-      <div className="flex flex-wrap gap-3 mb-5">{/* <DashboardCard /> */}</div>
+      {isFetchingSummaryData ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <SkeletonScoreBoard key={index} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard
+            title="Total Revenue"
+            content={`${formatNumber(summary.total_revenue)}`}
+          />
+
+          <DashboardCard
+            title="Total Revenue"
+            content={`${formatNumber(summary.total_revenue)}`}
+          />
+          <DashboardCard
+            title="Total Revenue"
+            content={`${formatNumber(summary.total_revenue)}`}
+          />
+          <DashboardCard
+            title="Total Revenue"
+            content={`${formatNumber(summary.total_revenue)}`}
+          />
+        </div>
+      )}
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap gap-3">
           {isFetchingSalesData ? (
@@ -70,7 +97,7 @@ const SalesDashboard = () => {
             value="Number of Appointments"
             title="Appointments Overtime"
             dataKey="revenue"
-            nameKey="weekday"
+            nameKey="year"
             chartConfig={aestheticianRevenueChartConfig}
             chartData={sales.revenue_overtime}
           />

@@ -9,6 +9,7 @@ export type GetAestheticianParams = {
   sex?: "male" | "female" | "other" | string;
   branch?: string;
   experience?: "pro" | "regular" | string;
+  sort?: string
 };
 
 export type Aesthetician = {

@@ -8,7 +8,7 @@ export function useTopRatedServices() {
 
   return useQuery<ServiceListResponse, Error>({
     queryKey: ["top-rated-services"],
-    queryFn: () => getAllService({sort:"rate:asc", limit:6, page:1}),
+    queryFn: () => getAllService({sort:"rate:desc", limit:6, page:1}),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

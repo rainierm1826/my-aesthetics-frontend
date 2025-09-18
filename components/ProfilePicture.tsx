@@ -12,8 +12,8 @@ const ProfilePicture = ({
 }) => {
   return (
     <Avatar className={`${size}`}>
-      <AvatarImage src={image || `https://github.com/shadcn.png`} />
-      <AvatarFallback>{fallback || "CN"}</AvatarFallback>
+      <AvatarImage src={image ?? "/fallbackImage"} />
+      <AvatarFallback>{fallback ?? ""}</AvatarFallback>
     </Avatar>
   );
 };

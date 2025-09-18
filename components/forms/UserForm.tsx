@@ -56,7 +56,7 @@ export default function UserForm() {
       middle_initial: "",
       phone_number: undefined,
       birthday: undefined,
-      image: "https://github.com/shadcn.png",
+      image: "/profileFallback.jpg",
       email: "",
       role: "customer",
       password: undefined,
@@ -90,14 +90,14 @@ export default function UserForm() {
         middle_initial: user.middle_initial || "",
         phone_number: user.phone_number || "",
         birthday: user.birthday || "",
-        image: user.image || "https://github.com/shadcn.png",
+        image: user.image || "/profileFallback.jpg",
         email: auth.email || "",
         role: auth.role || "customer",
         password: "",
       };
       reset(userData);
       // Set image preview to current user image
-      setImagePreview(user.image || "https://github.com/shadcn.png");
+      setImagePreview(user.image || "/profileFallback.jpg");
     }
   }, [user, auth, reset]);
 
@@ -107,7 +107,7 @@ export default function UserForm() {
     onSuccess: (data) => {
       updateUser(data.user);
       // Update image preview after successful save
-      setImagePreview(data.user.image || "https://github.com/shadcn.png");
+      setImagePreview(data.user.image || "/profileFallback.jpg");
     },
     successMessages: {
       update: "User updated successfully.",
@@ -143,14 +143,14 @@ export default function UserForm() {
         middle_initial: user.middle_initial || "",
         phone_number: user.phone_number || "",
         birthday: user.birthday || "",
-        image: user.image || "https://github.com/shadcn.png",
+        image: user.image || "/profileFallback.jpg",
         email: auth.email || "",
         role: auth.role || "customer",
         password: "",
       };
       reset(userData);
       // Reset image preview to original
-      setImagePreview(user.image || "https://github.com/shadcn.png");
+      setImagePreview(user.image || "/profileFallback.jpg");
     }
     setIsEditing(false);
   };

@@ -17,18 +17,15 @@ const AestheticianCard = ({
   availability,
   aesthetician_id,
 }: AestheticianCardProps) => {
-
   return (
     <Link href={`/aesthetician/${aesthetician_id}`} passHref>
-      <Card
-        className="cursor-pointer py-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col"
-      >
+      <Card className="cursor-pointer py-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col">
         <CardContent className="p-0 flex flex-col h-full min-w-[300px]">
           {/* Profile Image Container */}
           <div className="relative w-full aspect-square overflow-hidden">
             <Image
               alt={firstName}
-              src={image || ""}
+              src={image ?? "/fallbackImage.jpg"}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-110 mt-5"
             />

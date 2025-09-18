@@ -46,7 +46,7 @@ const AppointmentDashboard = () => {
           <div className="flex flex-wrap gap-3 mb-5">
             <DashboardCard
               title="Total Appointments"
-              content={summary.total_appointments}
+              content={summary.total_appointments.toLocaleString()}
             />
             <DashboardCard
               title="Completion Rate"
@@ -96,7 +96,7 @@ const AppointmentDashboard = () => {
             value="Number of Appointments"
             title="Appointments Overtime"
             dataKey="count"
-            nameKey="weekday"
+            nameKey="year"
             chartConfig={aestheticianRevenueChartConfig}
             chartData={appointment.appointments_overtime}
           />
@@ -108,7 +108,7 @@ const AppointmentDashboard = () => {
         ) : (
           <BarChartComponent
             value="Number of Appointments"
-            title="Appointments By Branch"
+            title="Appointments By Aesthetician"
             dataKey="count"
             nameKey="aesthetician"
             chartConfig={aestheticianRevenueChartConfig}
@@ -123,9 +123,9 @@ const AppointmentDashboard = () => {
             value="Number of Appointments"
             title="Appointments By Branch"
             dataKey="count"
-            nameKey="aesthetician"
+            nameKey="branch"
             chartConfig={aestheticianRevenueChartConfig}
-            chartData={appointment.appointments_by_aesthetician}
+            chartData={appointment.appointments_by_branch}
           />
         )}
 

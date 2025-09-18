@@ -36,6 +36,7 @@ const DropDownServiceCategory = ({
     { value: "Facial & Laser Treatments", label: "Facial & Laser Treatments" },
     { value: "Waxing Services", label: "Waxing Services" },
     { value: "Diode Laser Hair Removal", label: "Diode Laser Hair Removal" },
+    { value: "Slimming & Contouring", label: "Slimming & Contouring" },
     { value: "Others", label: "Others" },
   ];
 
