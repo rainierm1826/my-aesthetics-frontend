@@ -1,4 +1,5 @@
 import {
+  AestheticianAnalyticsResponse,
   AppointmentAnalyticsResponse,
   AppointmentSummaryResponse,
   BranchAnalyticsResponse,
@@ -90,6 +91,27 @@ export async function getBranchSummary(): Promise<BranchAnalyticsResponse> {
     }
 
     const result: BranchAnalyticsResponse = await res.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getAestheticianSummary(): Promise<AestheticianAnalyticsResponse> {
+
+  try {
+    const res = await fetch(`${backendUrl}/analytics/aesthetician`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
+    }
+
+    const result: AestheticianAnalyticsResponse = await res.json();
     return result;
   } catch (error) {
     throw error;

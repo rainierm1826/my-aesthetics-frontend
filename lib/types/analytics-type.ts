@@ -6,7 +6,7 @@ export interface AppointmentSummaryResponse {
 }
 
 export interface SalesSummaryResponse {
-  total_revenue: number
+  total_revenue: number;
 }
 
 export interface AppointmentAnalyticsResponse {
@@ -88,8 +88,18 @@ export type GetAnalyticsParams = {
   year?: string;
 };
 
-
 export type BranchAnalyticsResponse = {
   branch_completion_rate: Record<string, number>;
-  average_branch_rating: number
+  average_branch_rating: number;
+};
+
+export type AestheticianExperience = {
+  count: number;
+  experience: string;
+};
+
+export type AestheticianAnalyticsResponse = {
+  aesthetician_experience: AestheticianExperience[];
+  average_aesthetician_rating: number;
+  total_aestheticians: number;
 };

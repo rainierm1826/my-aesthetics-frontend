@@ -20,6 +20,7 @@ import {
   AppointmentSummaryResponse,
 } from "@/lib/types/analytics-type";
 import { useAnalyticsAppointment } from "@/hooks/useAnalyticsAppointment";
+import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
 
 export default function AppointmentTable() {
   const { auth, isAuthLoading } = useAuthStore();
@@ -45,28 +46,36 @@ export default function AppointmentTable() {
 
   return (
     <>
-      <div className="flex flex-wrap gap-3 mb-5">
-        <DashboardCard
-          title="Total Appointments"
-          content={summary.total_appointments.toLocaleString()}
-          info="All scheduled bookings in the period"
-        />
-        <DashboardCard
-          title="Total Appointments"
-          content={summary.total_appointments.toLocaleString()}
-          info="All scheduled bookings in the period"
-        />
-        <DashboardCard
-          title="Total Appointments"
-          content={summary.total_appointments.toLocaleString()}
-          info="All scheduled bookings in the period"
-        />
-        <DashboardCard
-          title="Total Appointments"
-          content={summary.total_appointments.toLocaleString()}
-          info="All scheduled bookings in the period"
-        />
-      </div>
+      {isFetchingSummaryData ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <SkeletonScoreBoard key={index} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard
+            title="Total Appointments"
+            content={summary.total_appointments.toLocaleString()}
+            info="All scheduled bookings in the period"
+          />
+          <DashboardCard
+            title="Total Appointments"
+            content={summary.total_appointments.toLocaleString()}
+            info="All scheduled bookings in the period"
+          />
+          <DashboardCard
+            title="Total Appointments"
+            content={summary.total_appointments.toLocaleString()}
+            info="All scheduled bookings in the period"
+          />
+          <DashboardCard
+            title="Total Appointments"
+            content={summary.total_appointments.toLocaleString()}
+            info="All scheduled bookings in the period"
+          />
+        </div>
+      )}
       <div className="mb-5 flex">
         <DatePagination />
       </div>
