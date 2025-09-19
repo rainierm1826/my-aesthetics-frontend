@@ -19,6 +19,9 @@ import {
   serviceCategoryChartConfig,
 } from "@/config/salesConfig";
 import { useAppointmentSummary } from "@/hooks/useAppointmentSummary";
+import SkeletonLineChart from "../skeletons/SkeletonLineChart";
+import { SkeletonBarChart } from "../skeletons/SkeletonBarChart";
+import { SkeletonPieChart } from "../skeletons/SkeletonPieChart";
 
 const AppointmentDashboard = () => {
   const { data: summaryData, isFetching: isFetchingSummaryData } =
@@ -46,7 +49,7 @@ const AppointmentDashboard = () => {
           <div className="flex flex-wrap gap-3 mb-5">
             <DashboardCard
               title="Total Appointments"
-              content={summary.total_appointments.toLocaleString()}
+              content={summary?.total_appointments?.toLocaleString() ?? '0'}
               info="All scheduled bookings in the period"
             />
 
@@ -73,7 +76,7 @@ const AppointmentDashboard = () => {
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap gap-3">
           {isFetchingAppointmentData ? (
-            <SkeletonScoreBoard />
+            <SkeletonPieChart />
           ) : (
             <PieChartComponent
               title="Appointment Status"
@@ -84,7 +87,7 @@ const AppointmentDashboard = () => {
             />
           )}
           {isFetchingAppointmentData ? (
-            <SkeletonScoreBoard />
+            <SkeletonPieChart />
           ) : (
             <PieChartComponent
               title="Appointments By Category"
@@ -97,7 +100,9 @@ const AppointmentDashboard = () => {
         </div>
 
         {isFetchingAppointmentData ? (
-          <p>Loading...</p>
+          <div>
+            <SkeletonLineChart />
+          </div>
         ) : (
           <LineChartComponent
             value="Number of Appointments"
@@ -111,7 +116,7 @@ const AppointmentDashboard = () => {
 
         {/* <BarChartComponent /> */}
         {isFetchingAppointmentData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Number of Appointments"
@@ -124,7 +129,7 @@ const AppointmentDashboard = () => {
         )}
 
         {isFetchingAppointmentData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Number of Appointments"
@@ -137,7 +142,7 @@ const AppointmentDashboard = () => {
         )}
 
         {isFetchingAppointmentData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Number of Appointments"
@@ -150,7 +155,7 @@ const AppointmentDashboard = () => {
         )}
 
         {isFetchingAppointmentData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Avarage"
@@ -163,7 +168,7 @@ const AppointmentDashboard = () => {
         )}
 
         {isFetchingAppointmentData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Avarage"
@@ -176,7 +181,7 @@ const AppointmentDashboard = () => {
         )}
 
         {isFetchingAppointmentData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Avarage"

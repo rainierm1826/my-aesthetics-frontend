@@ -21,6 +21,9 @@ import {
 } from "@/config/salesConfig";
 import { formatNumber } from "@/lib/function";
 import { useSalesSummary } from "@/hooks/useSalesSummary";
+import { SkeletonPieChart } from "../skeletons/SkeletonPieChart";
+import SkeletonLineChart from "../skeletons/SkeletonLineChart";
+import { SkeletonBarChart } from "../skeletons/SkeletonBarChart";
 
 const SalesDashboard = () => {
   const { data: summaryData, isFetching: isFetchingSummaryData } =
@@ -73,7 +76,7 @@ const SalesDashboard = () => {
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap gap-3">
           {isFetchingSalesData ? (
-            <SkeletonScoreBoard />
+            <SkeletonPieChart />
           ) : (
             <PieChartComponent
               title="Most Used Payment Method"
@@ -84,7 +87,7 @@ const SalesDashboard = () => {
             />
           )}
           {isFetchingSalesData ? (
-            <SkeletonScoreBoard />
+            <SkeletonPieChart />
           ) : (
             <PieChartComponent
               title="Revenue By Category"
@@ -97,7 +100,7 @@ const SalesDashboard = () => {
         </div>
 
         {isFetchingSalesData ? (
-          <p>Loading...</p>
+          <SkeletonLineChart />
         ) : (
           <LineChartComponent
             value="Number of Appointments"
@@ -110,7 +113,7 @@ const SalesDashboard = () => {
         )}
 
         {isFetchingSalesData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Revenue"
@@ -123,7 +126,7 @@ const SalesDashboard = () => {
         )}
 
         {isFetchingSalesData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Revenue"
@@ -136,7 +139,7 @@ const SalesDashboard = () => {
         )}
 
         {isFetchingSalesData ? (
-          <>Loading...</>
+          <SkeletonBarChart />
         ) : (
           <BarChartComponent
             value="Revenue"
