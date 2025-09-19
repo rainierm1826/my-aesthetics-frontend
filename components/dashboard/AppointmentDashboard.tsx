@@ -7,10 +7,9 @@ import { BarChartComponent } from "@/components/charts/BarChartComponent";
 import DashboardCard from "@/components/cards/DashboardCard";
 import DropDownBranch from "@/components/selects/DropDownBranch";
 import LineChartComponent from "@/components/charts/LineChartComponent";
-import { useAnalyticsSummary } from "@/hooks/useAnalyticsSummary";
 import {
-  AnalyticsSummaryResponse,
   AppointmentAnalyticsResponse,
+  AppointmentSummaryResponse,
 } from "@/lib/types/analytics-type";
 import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
 import { useAnalyticsAppointment } from "@/hooks/useAnalyticsAppointment";
@@ -19,11 +18,12 @@ import {
   aestheticianRevenueChartConfig,
   serviceCategoryChartConfig,
 } from "@/config/salesConfig";
+import { useAppointmentSummary } from "@/hooks/useAppointmentSummary";
 
 const AppointmentDashboard = () => {
   const { data: summaryData, isFetching: isFetchingSummaryData } =
-    useAnalyticsSummary({});
-  const summary = (summaryData as AnalyticsSummaryResponse) || {};
+    useAppointmentSummary({});
+  const summary = (summaryData as AppointmentSummaryResponse) || {};
 
   const { data: appointmentData, isFetching: isFetchingAppointmentData } =
     useAnalyticsAppointment({});
@@ -47,18 +47,25 @@ const AppointmentDashboard = () => {
             <DashboardCard
               title="Total Appointments"
               content={summary.total_appointments.toLocaleString()}
+              info="All scheduled bookings in the period"
             />
+
             <DashboardCard
               title="Completion Rate"
               content={`${summary.completion_rate}%`}
+              info="Percentage of finished appointments"
             />
+
             <DashboardCard
               title="Cancellation Rate"
               content={`${summary.cancellation_rate}%`}
+              info="Share of canceled bookings"
             />
+
             <DashboardCard
               title="Overall Rating"
               content={summary.avarage_overall_rating}
+              info="Combined average of aestheticians, branches, and services"
             />
           </div>
         </>

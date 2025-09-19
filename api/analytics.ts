@@ -1,18 +1,20 @@
 import {
-  AnalyticsSummaryResponse,
   AppointmentAnalyticsResponse,
+  AppointmentSummaryResponse,
+  BranchAnalyticsResponse,
   GetAnalyticsParams,
   SalesAnalyticsResponse,
+  SalesSummaryResponse,
 } from "@/lib/types/analytics-type";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export async function getAnalyticsSummary({
+export async function getAppointmentSummary({
   branch,
   group_by,
   month,
   year,
-}: GetAnalyticsParams): Promise<AnalyticsSummaryResponse> {
+}: GetAnalyticsParams): Promise<AppointmentSummaryResponse> {
 
   const params = new URLSearchParams();
 
@@ -22,7 +24,7 @@ export async function getAnalyticsSummary({
   if (year) params.set("year", year);
 
   try {
-    const res = await fetch(`${backendUrl}/analytics/summary${params.toString()}`, {
+    const res = await fetch(`${backendUrl}/analytics/appointment/summary${params.toString()}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +35,61 @@ export async function getAnalyticsSummary({
       throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
     }
 
-    const result: AnalyticsSummaryResponse = await res.json();
+    const result: AppointmentSummaryResponse = await res.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getSalesSummary({
+  branch,
+  group_by,
+  month,
+  year,
+}: GetAnalyticsParams): Promise<SalesSummaryResponse> {
+
+  const params = new URLSearchParams();
+
+  if (branch) params.set("branch", branch);
+  if (group_by) params.set("group-by", group_by);
+  if (month) params.set("month", month);
+  if (year) params.set("year", year);
+
+  try {
+    const res = await fetch(`${backendUrl}/analytics/sales/summary${params.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
+    }
+
+    const result: SalesSummaryResponse = await res.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getBranchSummary(): Promise<BranchAnalyticsResponse> {
+
+  try {
+    const res = await fetch(`${backendUrl}/analytics/branch`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
+    }
+
+    const result: BranchAnalyticsResponse = await res.json();
     return result;
   } catch (error) {
     throw error;

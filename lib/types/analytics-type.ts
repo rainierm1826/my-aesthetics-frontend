@@ -1,19 +1,12 @@
-export interface AnalyticsSummaryResponse {
+export interface AppointmentSummaryResponse {
   total_appointments: number;
-  total_revenue: number;
-  average_service_rating: number;
-  average_aesthetician_rating: number;
-  average_branch_rating: number;
   avarage_overall_rating: number;
-  total_service: number;
-  total_branches: number;
-  total_aestheticians: number;
   completion_rate: number;
   cancellation_rate: number;
-  sex_count_by_aesthetician: {
-    sex: string;
-    count: number;
-  }[];
+}
+
+export interface SalesSummaryResponse {
+  total_revenue: number
 }
 
 export interface AppointmentAnalyticsResponse {
@@ -93,4 +86,10 @@ export type GetAnalyticsParams = {
   group_by?: string;
   month?: string;
   year?: string;
+};
+
+
+export type BranchAnalyticsResponse = {
+  branch_completion_rate: Record<string, number>;
+  average_branch_rating: number
 };

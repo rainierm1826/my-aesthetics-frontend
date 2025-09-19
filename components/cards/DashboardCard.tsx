@@ -1,8 +1,9 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartArea, Info } from "lucide-react";
+import { ChartArea } from "lucide-react";
+import InfoTooltip from "../InfoTooltip";
 
-const DashboardCard = ({title, content }:{title:string, content:string|number}) => {
+const DashboardCard = ({title, content, info }:{title:string, content:string|number, info:string}) => {
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef] border-none">
       <CardHeader className="w-full">
@@ -12,7 +13,7 @@ const DashboardCard = ({title, content }:{title:string, content:string|number}) 
           </span>
           {title}
           <div className="flex justify-end w-full">
-            <Info className="w-4 h-4" />
+            <InfoTooltip content={info}/>
           </div>
         </CardTitle>
       </CardHeader>

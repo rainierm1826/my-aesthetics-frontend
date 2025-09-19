@@ -7,10 +7,9 @@ import DashboardCard from "@/components/cards/DashboardCard";
 import DropDownBranch from "@/components/selects/DropDownBranch";
 import LineChartComponent from "@/components/charts/LineChartComponent";
 import {
-  AnalyticsSummaryResponse,
   SalesAnalyticsResponse,
+  SalesSummaryResponse,
 } from "@/lib/types/analytics-type";
-import { useAnalyticsSummary } from "@/hooks/useAnalyticsSummary";
 import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
 import { useAnalyticsSales } from "@/hooks/useAnalyticsSales";
 import {
@@ -21,11 +20,12 @@ import {
   serviceRevenueChartConfig,
 } from "@/config/salesConfig";
 import { formatNumber } from "@/lib/function";
+import { useSalesSummary } from "@/hooks/useSalesSummary";
 
 const SalesDashboard = () => {
   const { data: summaryData, isFetching: isFetchingSummaryData } =
-    useAnalyticsSummary({});
-  const summary = (summaryData as AnalyticsSummaryResponse) || {};
+    useSalesSummary({});
+  const summary = (summaryData as SalesSummaryResponse) || {};
 
   const { data: salesData, isFetching: isFetchingSalesData } =
     useAnalyticsSales({});
@@ -47,20 +47,26 @@ const SalesDashboard = () => {
         <div className="flex flex-wrap gap-3 mb-5">
           <DashboardCard
             title="Total Revenue"
-            content={`${formatNumber(summary.total_revenue)}`}
+            content={`₱${formatNumber(summary.total_revenue)}`}
+            info="Overall income generated across all branches"
           />
 
           <DashboardCard
             title="Total Revenue"
-            content={`${formatNumber(summary.total_revenue)}`}
+            content={`₱${formatNumber(summary.total_revenue)}`}
+            info="Sum of all completed sales and services"
           />
+
           <DashboardCard
             title="Total Revenue"
-            content={`${formatNumber(summary.total_revenue)}`}
+            content={`₱${formatNumber(summary.total_revenue)}`}
+            info="Gross revenue before expenses and deductions"
           />
+
           <DashboardCard
             title="Total Revenue"
-            content={`${formatNumber(summary.total_revenue)}`}
+            content={`₱${formatNumber(summary.total_revenue)}`}
+            info="Represents earnings within the selected period"
           />
         </div>
       )}

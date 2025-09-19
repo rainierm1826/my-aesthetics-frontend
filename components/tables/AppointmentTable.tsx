@@ -13,9 +13,13 @@ import DropDownAppointmentStatus from "../selects/DropDownAppointmentStatus";
 import AppointmentForm from "../forms/AppointmentForm";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useUserStore } from "@/provider/store/userStore";
-import { useAnalyticsSummary } from "@/hooks/useAnalyticsSummary";
-import { AnalyticsSummaryResponse } from "@/lib/types/analytics-type";
 import DashboardCard from "../cards/DashboardCard";
+import { useAppointmentSummary } from "@/hooks/useAppointmentSummary";
+import {
+  AppointmentAnalyticsResponse,
+  AppointmentSummaryResponse,
+} from "@/lib/types/analytics-type";
+import { useAnalyticsAppointment } from "@/hooks/useAnalyticsAppointment";
 
 export default function AppointmentTable() {
   const { auth, isAuthLoading } = useAuthStore();
@@ -27,10 +31,13 @@ export default function AppointmentTable() {
     data: summaryData,
     isFetching: isFetchingSummaryData,
     isError: isErrorSummaryData,
-  } = useAnalyticsSummary({});
+  } = useAppointmentSummary({});
+  const summary = (summaryData as AppointmentSummaryResponse) || {};
 
   const appointments: Appointment[] = data?.appointment ?? [];
-  const summary = (summaryData as AnalyticsSummaryResponse) || {};
+  const { data: appointmentData, isFetching: isFetchingAppointmentData } =
+    useAnalyticsAppointment({});
+  const appointment = (appointmentData as AppointmentAnalyticsResponse) || {};
 
   if (isAuthLoading) {
     return <SkeletonTable />;
@@ -41,19 +48,23 @@ export default function AppointmentTable() {
       <div className="flex flex-wrap gap-3 mb-5">
         <DashboardCard
           title="Total Appointments"
-          content={summary.total_appointments ?? 0}
+          content={summary.total_appointments.toLocaleString()}
+          info="All scheduled bookings in the period"
         />
         <DashboardCard
           title="Total Appointments"
-          content={summary.total_appointments ?? 0}
+          content={summary.total_appointments.toLocaleString()}
+          info="All scheduled bookings in the period"
         />
         <DashboardCard
           title="Total Appointments"
-          content={summary.total_appointments ?? 0}
+          content={summary.total_appointments.toLocaleString()}
+          info="All scheduled bookings in the period"
         />
         <DashboardCard
           title="Total Appointments"
-          content={summary.total_appointments ?? 0}
+          content={summary.total_appointments.toLocaleString()}
+          info="All scheduled bookings in the period"
         />
       </div>
       <div className="mb-5 flex">
