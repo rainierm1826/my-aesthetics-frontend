@@ -35,7 +35,7 @@ export type Service = {
   discounted_price: number;
   category: string;
   image: string;
-  average_rate: number;
+  avarage_rate: number;
   created_at: string;
   updated_at: string;
 };

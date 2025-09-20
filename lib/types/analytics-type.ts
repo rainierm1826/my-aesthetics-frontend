@@ -103,3 +103,10 @@ export type AestheticianAnalyticsResponse = {
   average_aesthetician_rating: number;
   total_aestheticians: number;
 };
+
+export type ServiceAnalyticsResponse = {
+  average_service_rating: number;
+  sale_service: number;
+  total_services: number;
+};
+

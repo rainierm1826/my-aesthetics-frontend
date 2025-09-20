@@ -75,7 +75,9 @@ const ServicesCard = ({
             {/* Price Section */}
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold text-gray-900">{`₱${discountedPrice.toLocaleString()}`}</span>
-              <span className="text-sm text-gray-400 line-through">{`₱${price.toLocaleString()}`}</span>
+              {isSale && (
+                <span className="text-sm text-gray-400 line-through">{`₱${price.toLocaleString()}`}</span>
+              )}
               {isSale && (
                 <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded">
                   Save ₱{(price - discountedPrice).toLocaleString()}

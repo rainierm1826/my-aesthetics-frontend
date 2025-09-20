@@ -26,7 +26,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
     accessorKey: "average_rate",
     header: "Avarage Rate",
     cell: ({ row }) => {
-      return <RatingStar rating={row.original.average_rate} />;
+      return <RatingStar rating={row.original.avarage_rate} />;
     },
   },
   {
@@ -99,7 +99,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
         image,
         discount_type,
         discounted_price,
-        average_rate,
+        avarage_rate,
       } = row.original;
 
       return (
@@ -117,7 +117,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
               discountType={discount_type}
               discountedPrice={discounted_price}
               image={image}
-              rating={average_rate}
+              rating={avarage_rate}
             />
           }
           deleteMessage="Service has been deleted."

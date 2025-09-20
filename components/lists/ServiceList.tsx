@@ -80,7 +80,7 @@ const ServiceList = ({ action }: { action: boolean }) => {
                   discountType={service.discount_type}
                   discountedPrice={service.discounted_price}
                   image={service.image}
-                  rating={service.average_rate}
+                  rating={service.avarage_rate}
                 />
               ))}
         </div>

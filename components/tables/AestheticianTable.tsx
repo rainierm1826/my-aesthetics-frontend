@@ -25,12 +25,13 @@ const AestheticianTable = () => {
   const { data, isFetching, isError } = useAestheticians(
     user?.branch?.branch_id
   );
+  const aesthetician: Aesthetician[] = data?.aesthetician ?? [];
+
   const {
     data: aestheticianSummary,
     isFetching: isFetchingAestheticianSummary,
   } = useAestheticianSummary();
 
-  const aesthetician: Aesthetician[] = data?.aesthetician ?? [];
   const summary: AestheticianAnalyticsResponse = aestheticianSummary || {
     aesthetician_experience: [],
     average_aesthetician_rating: 0,

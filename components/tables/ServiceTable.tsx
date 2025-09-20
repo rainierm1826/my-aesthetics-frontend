@@ -12,13 +12,25 @@ import DropDownServiceCategory from "../selects/DropDownServiceCategory";
 import DropDownBranch from "../selects/DropDownBranch";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useUserStore } from "@/provider/store/userStore";
+import { useServiceSummary } from "@/hooks/useServiceAnalytics";
+import { ServiceAnalyticsResponse } from "@/lib/types/analytics-type";
+import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
+import DashboardCard from "../cards/DashboardCard";
 
 export default function ServiceTable() {
   const { auth, isAuthLoading } = useAuthStore();
-  const {user} = useUserStore()
+  const { user } = useUserStore();
   const { data, isFetching, isError } = useServices(user?.branch?.branch_id);
-
   const services: Service[] = data?.service ?? [];
+
+  const { data: serviceSummary, isFetching: isFetchingServiceSummary } =
+    useServiceSummary();
+
+  const summary: ServiceAnalyticsResponse = serviceSummary || {
+    average_service_rating: 0,
+    sale_service: 0,
+    total_services: 0,
+  };
 
   if (isAuthLoading) {
     return <SkeletonTable />;
@@ -26,6 +38,43 @@ export default function ServiceTable() {
 
   return (
     <>
+      {isFetchingServiceSummary ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <SkeletonScoreBoard key={index} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-3 mb-5">
+          <DashboardCard
+            title="Total Services"
+            content={summary.total_services}
+            info="Total number of active services across branches"
+          />
+          <DashboardCard
+            title="Average Rating"
+            content={summary.average_service_rating.toFixed(2)}
+            info="Overall average rating of all services across branches"
+          />
+
+          <DashboardCard
+            title="On Sale Services"
+            content={summary.sale_service}
+            info="Total number of active aestheticians across branches"
+          />
+
+          {/* {summary.service_per_category.map((value, index) => (
+            <DashboardCard
+              key={index}
+              title={`${
+                value.category.charAt(0).toUpperCase() + value.category.slice(1)
+              } `}
+              content={value.count}
+              info={`Number of ${value.count} level category across all branches`}
+            />
+          ))} */}
+        </div>
+      )}
       <div className="">
         <div className="flex justify-between mb-5">
           <div className="flex gap-3 w-full">

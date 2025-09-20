@@ -34,7 +34,7 @@ const DropDownServiceCategory = ({
   const categories = [
     { value: "Semi-Permanent Make-Up", label: "Semi-Permanent Make-Up" },
     { value: "Facial & Laser Treatments", label: "Facial & Laser Treatments" },
-    { value: "Waxing Services", label: "Waxing Services" },
+    { value: "Waxing", label: "Waxing" },
     { value: "Diode Laser Hair Removal", label: "Diode Laser Hair Removal" },
     { value: "Slimming & Contouring", label: "Slimming & Contouring" },
     { value: "Others", label: "Others" },

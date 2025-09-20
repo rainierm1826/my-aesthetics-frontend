@@ -6,6 +6,7 @@ import {
   GetAnalyticsParams,
   SalesAnalyticsResponse,
   SalesSummaryResponse,
+  ServiceAnalyticsResponse,
 } from "@/lib/types/analytics-type";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -112,6 +113,27 @@ export async function getAestheticianSummary(): Promise<AestheticianAnalyticsRes
     }
 
     const result: AestheticianAnalyticsResponse = await res.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getServiceSummary(): Promise<ServiceAnalyticsResponse> {
+
+  try {
+    const res = await fetch(`${backendUrl}/analytics/service`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
+    }
+
+    const result: ServiceAnalyticsResponse = await res.json();
     return result;
   } catch (error) {
     throw error;
