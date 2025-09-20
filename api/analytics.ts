@@ -1,6 +1,7 @@
 import {
   AestheticianAnalyticsResponse,
   AppointmentAnalyticsResponse,
+  AppointmentsAnalyticsResponse,
   AppointmentSummaryResponse,
   BranchAnalyticsResponse,
   GetAnalyticsParams,
@@ -134,6 +135,27 @@ export async function getServiceSummary(): Promise<ServiceAnalyticsResponse> {
     }
 
     const result: ServiceAnalyticsResponse = await res.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getAppointmentsSummary(): Promise<AppointmentsAnalyticsResponse> {
+
+  try {
+    const res = await fetch(`${backendUrl}/analytics/appointment`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
+    }
+
+    const result: AppointmentsAnalyticsResponse = await res.json();
     return result;
   } catch (error) {
     throw error;

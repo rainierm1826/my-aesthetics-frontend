@@ -1,7 +1,7 @@
 export const statusChartConfig = {
   completed: {
     label: "Completed",
-    color: "#E6D6A8", // base soft color
+    color: "#E6D6A8",
   },
   cancelled: {
     label: "Cancelled",
@@ -16,3 +16,5 @@ export const statusChartConfig = {
     color: "#EDE3BA",
   },
 };
+
+

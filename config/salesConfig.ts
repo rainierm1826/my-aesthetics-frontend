@@ -1,7 +1,7 @@
 export const paymentMethodChartConfig = {
   cash: {
     label: "Cash",
-    color: "#E6D6A8", // base color
+    color: "#E6D6A8",
   },
   "e-wallet": {
     label: "E-Wallet",

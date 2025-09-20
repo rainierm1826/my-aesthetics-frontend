@@ -29,7 +29,6 @@ export async function getAllAesthetician({
   params.set("experience", String(experience));
   params.set("sex", String(sex));
 
-  console.log(params)
   try {
     const res = await fetch(`${backendUrl}/aesthetician?${params.toString()}`, {
       method: "GET",

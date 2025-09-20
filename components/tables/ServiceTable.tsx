@@ -38,43 +38,34 @@ export default function ServiceTable() {
 
   return (
     <>
-      {auth?.role == "owner" && isFetchingServiceSummary ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <SkeletonScoreBoard key={index} />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-3 mb-5">
-          <DashboardCard
-            title="Total Services"
-            content={summary.total_services}
-            info="Total number of active services across branches"
-          />
-          <DashboardCard
-            title="Average Rating"
-            content={summary.average_service_rating}
-            info="Overall average rating of all services across branches"
-          />
-
-          <DashboardCard
-            title="On Sale Services"
-            content={summary.sale_service}
-            info="Total number of active aestheticians across branches"
-          />
-
-          {/* {summary.service_per_category.map((value, index) => (
+      {auth?.role === "owner" ? (
+        isFetchingServiceSummary ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <SkeletonScoreBoard key={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-3 mb-5">
             <DashboardCard
-              key={index}
-              title={`${
-                value.category.charAt(0).toUpperCase() + value.category.slice(1)
-              } `}
-              content={value.count}
-              info={`Number of ${value.count} level category across all branches`}
+              title="Total Services"
+              content={summary.total_services}
+              info="Total number of active services across branches"
             />
-          ))} */}
-        </div>
-      )}
+            <DashboardCard
+              title="Average Rating"
+              content={summary.average_service_rating}
+              info="Overall average rating of all services across branches"
+            />
+            <DashboardCard
+              title="On Sale Services"
+              content={summary.sale_service}
+              info="Total number of services currently on sale across branches"
+            />
+          </div>
+        )
+      ) : null}
+
       <div className="">
         <div className="flex justify-between mb-5">
           <div className="flex gap-3 w-full">

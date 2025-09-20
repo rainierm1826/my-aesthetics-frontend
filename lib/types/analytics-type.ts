@@ -110,3 +110,13 @@ export type ServiceAnalyticsResponse = {
   total_services: number;
 };
 
+type AverageServiceRating = {
+  branch: string;
+  daily_average: number;
+};
+
+export type AppointmentsAnalyticsResponse = {
+  average_service_rating: AverageServiceRating[];
+};
+
+

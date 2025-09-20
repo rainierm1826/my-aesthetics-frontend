@@ -8,6 +8,7 @@ import {
   Tooltip,
   CartesianGrid,
   Label,
+  Cell,
 } from "recharts";
 
 import { ChartContainer } from "@/components/ui/chart";
@@ -21,8 +22,8 @@ type ChartConfig = Record<string, { label: string; color: string }>;
 type BarChartProps<T extends Record<string, unknown>> = {
   title: string;
   value: string;
-  dataKey: Extract<keyof T, string | number>; 
-  nameKey: Extract<keyof T, string | number>; 
+  dataKey: Extract<keyof T, string | number>;
+  nameKey: Extract<keyof T, string | number>;
   chartConfig: ChartConfig;
   chartData: ChartData<T>;
 };
@@ -72,13 +73,16 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
           </YAxis>
 
           <Tooltip formatter={(value: number) => formatNumber(value)} />
-          
 
-          <Bar
-            dataKey={dataKey}
-            fill={Object.values(chartConfig)[0]?.color || "#BDA658"}
-            radius={4}
-          />
+          <Bar dataKey={dataKey} radius={4}>
+            {chartData.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                fill={chartConfig[(entry as any).category]?.color || "#BDA658"}
+              />
+            ))}
+          </Bar>
         </BarChart>
       </ChartContainer>
     </Card>

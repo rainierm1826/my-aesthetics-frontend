@@ -14,13 +14,9 @@ import AppointmentForm from "../forms/AppointmentForm";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useUserStore } from "@/provider/store/userStore";
 import DashboardCard from "../cards/DashboardCard";
-import { useAppointmentSummary } from "@/hooks/useAppointmentSummary";
-import {
-  AppointmentAnalyticsResponse,
-  AppointmentSummaryResponse,
-} from "@/lib/types/analytics-type";
-import { useAnalyticsAppointment } from "@/hooks/useAnalyticsAppointment";
+import { AppointmentsAnalyticsResponse } from "@/lib/types/analytics-type";
 import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
+import { useAppointmentAnalytics } from "@/hooks/useAppointmentAnalytics";
 
 export default function AppointmentTable() {
   const { auth, isAuthLoading } = useAuthStore();
@@ -28,21 +24,13 @@ export default function AppointmentTable() {
   const { data, isFetching, isError } = useAppointments(
     user?.branch?.branch_id
   );
-  const {
-    data: summaryData,
-    isFetching: isFetchingSummaryData,
-  } = useAppointmentSummary({});
-  const summary: AppointmentSummaryResponse = summaryData || {
-    avarage_overall_rating: 0,
-    cancellation_rate: 0,
-    completion_rate: 0,
-    total_appointments: 0,
-  };
-
   const appointments: Appointment[] = data?.appointment ?? [];
-  const { data: appointmentData, isFetching: isFetchingAppointmentData } =
-    useAnalyticsAppointment({});
-  const appointment = (appointmentData as AppointmentAnalyticsResponse) || {};
+
+  const { data: appointmentSummary, isFetching: isFetchingSummaryData } =
+    useAppointmentAnalytics();
+  const summary: AppointmentsAnalyticsResponse = appointmentSummary || {
+    average_service_rating: [],
+  };
 
   if (isAuthLoading) {
     return <SkeletonTable />;
@@ -50,36 +38,27 @@ export default function AppointmentTable() {
 
   return (
     <>
-      {auth?.role == "owner" && isFetchingSummaryData ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <SkeletonScoreBoard key={index} />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-3 mb-5">
-          <DashboardCard
-            title="Total Appointments"
-            content={summary.total_appointments.toLocaleString()}
-            info="All scheduled bookings in the period"
-          />
-          <DashboardCard
-            title="Total Appointments"
-            content={summary.total_appointments.toLocaleString()}
-            info="All scheduled bookings in the period"
-          />
-          <DashboardCard
-            title="Total Appointments"
-            content={summary.total_appointments.toLocaleString()}
-            info="All scheduled bookings in the period"
-          />
-          <DashboardCard
-            title="Total Appointments"
-            content={summary.total_appointments.toLocaleString()}
-            info="All scheduled bookings in the period"
-          />
-        </div>
-      )}
+      {auth?.role === "owner" ? (
+        isFetchingSummaryData ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <SkeletonScoreBoard key={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-3 mb-5">
+            {summary.average_service_rating.map((value, index) => (
+              <DashboardCard
+                key={index}
+                title={value.branch}
+                content={value.daily_average}
+                info={`Average daily appointments in ${value.branch}`}
+              />
+            ))}
+          </div>
+        )
+      ) : null}
+
       <div className="mb-5 flex">
         <DatePagination />
       </div>
