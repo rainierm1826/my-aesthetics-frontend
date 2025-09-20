@@ -9,7 +9,6 @@ export function useInfiniteAestheticians(branchId?: string) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? branchId ?? "";
-  const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 8);
   const availability = searchParams.get("availability") ?? "";
   const sex = searchParams.get("sex") ?? "";
@@ -18,12 +17,11 @@ export function useInfiniteAestheticians(branchId?: string) {
   return useInfiniteQuery<AestheticianListResponse, Error>({
     queryKey: [
       "aesthetician",
-      { query, limit, page, branch, sex, experience, availability },
+      { query, limit, branch, sex, experience, availability },
     ],
     queryFn: () =>
       getAllAesthetician({
         query,
-        page,
         limit,
         availability,
         sex,
