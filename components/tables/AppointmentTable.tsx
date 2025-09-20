@@ -31,9 +31,13 @@ export default function AppointmentTable() {
   const {
     data: summaryData,
     isFetching: isFetchingSummaryData,
-    isError: isErrorSummaryData,
   } = useAppointmentSummary({});
-  const summary = (summaryData as AppointmentSummaryResponse) || {};
+  const summary: AppointmentSummaryResponse = summaryData || {
+    avarage_overall_rating: 0,
+    cancellation_rate: 0,
+    completion_rate: 0,
+    total_appointments: 0,
+  };
 
   const appointments: Appointment[] = data?.appointment ?? [];
   const { data: appointmentData, isFetching: isFetchingAppointmentData } =
