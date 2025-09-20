@@ -108,7 +108,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
           {/* Rating */}
           <div className="flex items-center gap-2">
-            <RatingStar rating={serviceData.average_rate} />
+            <RatingStar rating={serviceData.avarage_rate} />
             <span className="text-sm text-gray-600">
               ({completedAppointments} Reviews)
             </span>
