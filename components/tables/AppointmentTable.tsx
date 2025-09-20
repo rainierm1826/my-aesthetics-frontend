@@ -46,7 +46,7 @@ export default function AppointmentTable() {
 
   return (
     <>
-      {isFetchingSummaryData ? (
+      {auth?.role == "owner" && isFetchingSummaryData ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
           {Array.from({ length: 4 }).map((_, index) => (
             <SkeletonScoreBoard key={index} />
