@@ -19,11 +19,12 @@ export function useInfiniteAestheticians(branchId?: string) {
       "aesthetician",
       { query, limit, branch, sex, experience, availability },
     ],
-    queryFn: () =>
+    queryFn: ({pageParam}) =>
       getAllAesthetician({
         query,
         limit,
         availability,
+        page:pageParam as number,
         sex,
         branch,
         experience,

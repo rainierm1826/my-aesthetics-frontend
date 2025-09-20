@@ -22,13 +22,14 @@ export async function getAllAesthetician({
   const params = new URLSearchParams();
   if (query) params.set("query", query);
   if (sort) params.set("sort", String(sort))
-  params.set("page", String(page));
+  if (page) params.set("page", String(page));
   params.set("limit", String(limit));
   params.set("availability", String(availability));
   params.set("branch", String(branch));
   params.set("experience", String(experience));
   params.set("sex", String(sex));
 
+  console.log(params)
   try {
     const res = await fetch(`${backendUrl}/aesthetician?${params.toString()}`, {
       method: "GET",
