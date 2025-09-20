@@ -53,7 +53,7 @@ export default function ServiceTable() {
           />
           <DashboardCard
             title="Average Rating"
-            content={summary.average_service_rating.toFixed(2)}
+            content={summary.average_service_rating}
             info="Overall average rating of all services across branches"
           />
 
