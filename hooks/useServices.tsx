@@ -15,7 +15,7 @@ export function useServices(branchId?:string,) {
 
   return useQuery<ServiceListResponse, Error>({
     queryKey: ["service", { query, limit, page, branch, category }],
-    queryFn: () => getAllService({ query, limit, page, branch, category }),
+    queryFn: () => getAllService({ query, limit, page, branch, category, sort:"service:asc" }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

@@ -29,6 +29,7 @@ export function useAestheticians(branchId?:string) {
         sex,
         branch,
         experience,
+        sort:"name:asc"
       }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
