@@ -60,7 +60,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
   );
 
   const { user } = useUserStore();
-  const { auth } = useAuthStore();
+  const { auth, access_token } = useAuthStore();
 
   const form = useForm<AestheticianFormValues>({
     resolver: zodResolver(aestheticianFormSchema),
@@ -120,15 +120,11 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
       }
     });
 
-    if (values.image instanceof File) {
-      formData.append("image", values.image);
-    }
-
     if (method === "patch" && aestheticianId) {
       formData.append("aesthetician_id", aestheticianId.toString());
     }
 
-    aestheticianMutation.mutate(formData);
+    aestheticianMutation.mutate({data:formData, token:access_token||""});
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

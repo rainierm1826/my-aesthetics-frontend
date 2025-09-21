@@ -4,7 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 interface MutationConfig<TData = unknown, TVariables = unknown> {
-  createFn?: (payload?: TVariables) => Promise<TData>;
+  // Fixed: Make payload required for all functions
+  createFn?: (payload: TVariables) => Promise<TData>;
   updateFn?: (payload: TVariables) => Promise<TData>;
   deleteFn?: (payload: TVariables) => Promise<TData>;
   queryKey: string | string[] | (string | string[])[];
@@ -38,8 +39,8 @@ export const useBaseMutation = <TData = unknown, TVariables = void>(
     },
     onSuccess: (data) => {
       const keys = Array.isArray(config.queryKey[0])
-        ? (config.queryKey as string[][]) 
-        : [config.queryKey]; 
+        ? (config.queryKey as string[][])
+        : [config.queryKey];
 
       keys.forEach((key) => {
         queryClient.invalidateQueries({

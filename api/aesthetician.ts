@@ -26,40 +26,54 @@ export async function getAllAesthetician({
     sex,
     sort,
   });
-  console.log(params)
 
   return apiRequest<AestheticianListResponse>(`/aesthetician?${params}`);
 }
 
 export async function getAesthetician(aesthetician_id?: string) {
-  return apiRequest<AestheticianResponse>(
-    `/aesthetician/${aesthetician_id}`
-  );
+  return apiRequest<AestheticianResponse>(`/aesthetician/${aesthetician_id}`);
 }
 
-export async function getAestheticianName(branch?: string) {
-  const queryString = buildParams({branch})
+export async function getAestheticianName({
+  branch,
+  token,
+}: {
+  branch: string;
+  token: string;
+}) {
+  const queryString = buildParams({ branch });
   return apiRequest<AestheticianNameResponse>(
-    `/aesthetician/aesthetician-name${queryString}`
+    `/aesthetician/aesthetician-name${queryString}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
   );
 }
 
-export async function postAesthetician(
-  data?: FormData
-): Promise<AestheticianResponse> {
+export async function postAesthetician({
+  data,
+  token,
+}: {
+  data: FormData;
+  token: string;
+}): Promise<AestheticianResponse> {
   return apiRequest<AestheticianResponse>("/aesthetician", {
     method: "POST",
     body: data,
-    headers: {},
+    headers: { Authorization: `Bearer ${token}` },
   });
 }
 
-export async function patchAesthetician(
-  data?: FormData
-): Promise<AestheticianResponse> {
+export async function patchAesthetician({
+  data,
+  token,
+}: {
+  data?: FormData;
+  token: string;
+}): Promise<AestheticianResponse> {
   return apiRequest<AestheticianResponse>("/aesthetician", {
     method: "PATCH",
     body: data,
-    headers: {},
+    headers: { Authorization: `Bearer ${token}` },
   });
 }
