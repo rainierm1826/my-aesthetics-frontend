@@ -1,21 +1,23 @@
 import { getAllAdmin } from "@/api/admin";
 import AdminTable from "@/components/tables/AdminTable";
-import DashboardCard from "@/components/cards/DashboardCard";
 import OwnerWrapper from "@/components/ManagementWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { cookies } from "next/headers";
 
 export default async function AdminPage({
   searchParams,
 }: {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const cookieStore = await cookies()
+  const token = cookieStore.get("access_token")?.value || ""
+
   const sp = (await searchParams) ?? {};
 
   const getFirst = (v?: string | string[]) =>
@@ -32,18 +34,13 @@ export default async function AdminPage({
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["admin", "account", { query, page, limit }],
-    queryFn: () => getAllAdmin({ query, page, limit }),
+    queryFn: () => getAllAdmin({ query, page, limit, token:token}),
   });
 
   const dehydratedState = dehydrate(queryClient);
   return (
     <OwnerWrapper title="Manage Admins">
-      <div className="flex flex-wrap gap-3 mb-5">
-        {/* <DashboardCard />
-        <DashboardCard />
-        <DashboardCard />
-        <DashboardCard /> */}
-      </div>
+      <div className="flex flex-wrap gap-3 mb-5"></div>
       <Suspense fallback={<Skeleton />}>
         <HydrationBoundary state={dehydratedState}>
           <AdminTable />

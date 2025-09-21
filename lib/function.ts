@@ -5,19 +5,29 @@ export async function apiRequest<T>(
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const isFormData = options.body instanceof FormData;
-  const defaultHeaders = isFormData
+
+  const defaultHeaders: Record<string, string> = isFormData
     ? {}
     : { "Content-Type": "application/json" };
+
+  const headers: Record<string, string> = {
+    ...defaultHeaders,
+    ...((options.headers as Record<string, string>) || {}),
+  };
 
   try {
     const response = await fetch(`${backendUrl}${endpoint}`, {
       ...options,
-      ...defaultHeaders,
+      headers,
     });
 
     if (!response.ok) {
-      await response.text().catch(() => "");
-      throw new Error(response.statusText);
+      const errorBody = await response.text().catch(() => "");
+      throw new Error(
+        `HTTP ${response.status}: ${response.statusText}${
+          errorBody ? ` - ${errorBody}` : ""
+        }`
+      );
     }
 
     return await response.json();

@@ -31,6 +31,7 @@ import { signUpAdmin } from "@/api/auth";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchAdmin } from "@/api/admin";
 import { AdminFormProps } from "@/lib/types/admin-type";
+import { useAuthStore } from "@/provider/store/authStore";
 
 const AdminForm: React.FC<AdminFormProps> = ({
   renderDialog = true,
@@ -48,6 +49,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
   adminId,
 }) => {
 
+  const {access_token} = useAuthStore()
 
   const form = useForm<SignUpAdminFormValues>({
     resolver: zodResolver(signUpAdminFormSchema),
@@ -107,7 +109,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
     if (method == "post") {
       signUpAdminMutation.mutate(payload);
     } else {
-      patchAdminMutation.mutate(payload);
+      patchAdminMutation.mutate({data:payload, token:access_token||""});
     }
   };
 

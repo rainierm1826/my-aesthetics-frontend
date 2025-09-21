@@ -25,14 +25,9 @@ import { jwtDecode } from "jwt-decode";
 import { getUser } from "@/api/user";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/provider/store/userStore";
+import { TokenPayload } from "@/lib/types/types";
 
-type TokenPayload = {
-  sub: string;
-  email: string;
-  role: "customer" | "admin" | "owner";
-  is_verified: boolean;
-  exp: number;
-};
+
 
 const SignInForm = () => {
   const form = useForm<SignInFormValues>({

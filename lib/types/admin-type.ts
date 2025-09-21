@@ -21,6 +21,7 @@ export type GetAdminParams = {
   page?: number;
   limit?: number;
   branch?: string;
+  token:string
 };
 
 export type AdminResponse = {

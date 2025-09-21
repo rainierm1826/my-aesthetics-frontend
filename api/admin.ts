@@ -1,3 +1,4 @@
+import { apiRequest, buildParams } from "@/lib/function";
 import {
   AdminListResposne,
   AdminResponse,
@@ -7,33 +8,23 @@ import { DeleteResponse } from "@/lib/types/types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export async function patchAdmin(data: unknown): Promise<AdminResponse> {
-
-  try {
-    const response = await fetch(`${backendUrl}/admin`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.status) {
-      throw new Error(`error: ${response.status}`);
-    }
-    const result: AdminResponse = await response.json();
-    console.log(result)
-    return result;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+export async function patchAdmin({
+  data,
+  token,
+}: {
+  data: unknown;
+  token: string;
+}): Promise<AdminResponse> {
+  return apiRequest<AdminResponse>("/admin", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function deleteAdmin(account_id: {
   account_id: string;
 }): Promise<DeleteResponse> {
-
   try {
     const response = await fetch(`${backendUrl}/auth/delete-admin`, {
       method: "PATCH",
@@ -58,28 +49,10 @@ export async function getAllAdmin({
   page,
   limit,
   branch,
+  token,
 }: GetAdminParams): Promise<AdminListResposne> {
-  const params = new URLSearchParams();
-  if (query) params.set("query", query);
-  params.set("page", String(page));
-  params.set("limit", String(limit));
-  params.set("branch", String(branch));
-  try {
-    const res = await fetch(`${backendUrl}/admin/all?${params.toString()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
-    }
-
-    const result: AdminListResposne = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const params = buildParams({ query, page, limit, branch });
+  return apiRequest<AdminListResposne>(`/admin/all?${params}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }

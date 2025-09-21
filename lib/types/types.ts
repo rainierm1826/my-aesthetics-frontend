@@ -15,6 +15,14 @@ export type DeleteResponse = {
   status: boolean;
 };
 
+export type TokenPayload = {
+  sub: string;
+  email: string;
+  role: "customer" | "admin" | "owner";
+  is_verified: boolean;
+  exp: number;
+};
+
 
 export enum Sex {
   Male = "male",

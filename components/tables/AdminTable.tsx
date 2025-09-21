@@ -9,9 +9,14 @@ import { Admin } from "@/lib/types/admin-type";
 import { adminColumn } from "@/components/columns/admin-column";
 import AdminForm from "../forms/AdminForm";
 import DropDownBranch from "../selects/DropDownBranch";
+import { useAuthStore } from "@/provider/store/authStore";
 
 export default function AdminTable() {
-  const { data, isFetching, isError } = useAdmins();
+
+  const {access_token} = useAuthStore()
+
+
+  const { data, isFetching, isError } = useAdmins(access_token||"");
 
   const admins: Admin[] = data?.admin ?? [];
 
