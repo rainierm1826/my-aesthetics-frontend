@@ -43,7 +43,7 @@ export async function getAestheticianName({
 }) {
   const queryString = buildParams({ branch });
   return apiRequest<AestheticianNameResponse>(
-    `/aesthetician/aesthetician-name${queryString}`,
+    `/aesthetician/aesthetician-name?${queryString}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }

@@ -13,6 +13,8 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useAestheticianName } from "@/hooks/useAestheticianName";
 import { AestheticianName } from "@/lib/types/aesthetician-types";
 import { Badge } from "../ui/badge";
+import { useAuthStore } from "@/provider/store/authStore";
+
 
 interface DropDownAestheticianProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
@@ -21,7 +23,7 @@ interface DropDownAestheticianProps
   placeholder?: string;
   includeAllOption?: boolean;
   useUrlParams?: boolean;
-  branchId?: string;
+  branchId: string;
 }
 
 const DropDownAesthetician = ({
@@ -32,7 +34,8 @@ const DropDownAesthetician = ({
   useUrlParams = false,
   branchId,
 }: DropDownAestheticianProps) => {
-  const { data, isLoading, error } = useAestheticianName(branchId);
+  const {access_token} = useAuthStore()
+  const { data, isLoading, error } = useAestheticianName({branchId, token:access_token||""});
 
   const aestheticians: AestheticianName[] = data?.aesthetician ?? [];
   const searchParams = useSearchParams();

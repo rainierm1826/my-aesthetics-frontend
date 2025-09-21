@@ -55,7 +55,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   method,
   voucherCode,
 }) => {
-  const { auth } = useAuthStore();
+  const { auth, access_token } = useAuthStore();
   const { user } = useUserStore();
 
   const form = useForm<WalkInAppointmentFormValues>({
@@ -126,7 +126,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       ...(values.voucher_code ? { voucher_code: values.voucher_code } : {}),
     };
 
-    appointmentMutation.mutate(payload);
+    appointmentMutation.mutate({ data: payload, token: access_token || "" });
   };
 
   const formContent = (

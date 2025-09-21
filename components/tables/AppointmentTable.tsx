@@ -19,14 +19,13 @@ import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
 import { useAppointmentAnalytics } from "@/hooks/useAppointmentAnalytics";
 
 export default function AppointmentTable() {
-  const { auth, isAuthLoading } = useAuthStore();
+  const { auth, isAuthLoading, access_token } = useAuthStore();
   const { user } = useUserStore();
-  const { data, isFetching, isError } = useAppointments(
-    user?.branch?.branch_id
-  );
+  const { data, isFetching, isError } = useAppointments({
+    branchId: user?.branch?.branch_id,
+    token: access_token || "",
+  });
   const appointments: Appointment[] = data?.appointment ?? [];
-
-  const { access_token } = useAuthStore();
 
   const { data: appointmentSummary, isFetching: isFetchingSummaryData } =
     useAppointmentAnalytics(access_token || "");

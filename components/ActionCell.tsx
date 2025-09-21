@@ -28,6 +28,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DeleteResponse } from "@/lib/types/types";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchAppointment } from "@/api/appointment";
+import { useAuthStore } from "@/provider/store/authStore";
 
 type AppointmentStatus = "completed" | "cancelled" | "on-process" | "waiting";
 
@@ -96,6 +97,8 @@ function ActionCell({
   editDialog,
   editAppointmentStatus,
 }: ActionCellProps) {
+  const { access_token } = useAuthStore();
+
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
@@ -162,8 +165,11 @@ function ActionCell({
 
   const handleStatusUpdate = (id: string, status: AppointmentStatus) => {
     statusUpdateMutation.mutate({
-      appointment_id: id,
-      status: status,
+      data: {
+        appointment_id: id,
+        status: status,
+      },
+      token: access_token || "",
     });
   };
 

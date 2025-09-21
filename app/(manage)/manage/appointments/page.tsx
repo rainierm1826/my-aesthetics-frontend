@@ -4,12 +4,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import AppointmentTable from "@/components/tables/AppointmentTable";
 import { getAllAppointments } from "@/api/appointment";
+import { cookies } from "next/headers";
 
 export default async function AppointmentsPage({
   searchParams,
 }: {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+
+  const cookieStore = await cookies()
+  const token = cookieStore.get("access_token")?.value || ""
+
   const sp = (await searchParams) ?? {};
 
   const getFirst = (v?: string | string[]) =>
@@ -24,7 +29,7 @@ export default async function AppointmentsPage({
 
   await queryClient.prefetchQuery({
     queryKey: ["appointment"],
-    queryFn: () => getAllAppointments({ page, limit }),
+    queryFn: () => getAllAppointments({ page, limit, token }),
   });
 
   const dehydratedState = dehydrate(queryClient);

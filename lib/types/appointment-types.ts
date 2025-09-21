@@ -58,6 +58,7 @@ export type GetAppointmentParams = {
   branch?: string;
   date?: string;
   status?:string
+  token:string
 };
 
 export interface AppointmentFormProps {

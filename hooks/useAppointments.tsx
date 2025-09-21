@@ -5,7 +5,7 @@ import { AppointmentListResponse } from "@/lib/types/appointment-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-export function useAppointments(branchId?: string) {
+export function useAppointments({branchId, token}:{branchId?:string, token:string}) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? branchId ?? "";
@@ -26,6 +26,7 @@ export function useAppointments(branchId?: string) {
         branch,
         date,
         status,
+        token
       }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
