@@ -24,14 +24,17 @@ import { useSalesSummary } from "@/hooks/useSalesSummary";
 import { SkeletonPieChart } from "../skeletons/SkeletonPieChart";
 import SkeletonLineChart from "../skeletons/SkeletonLineChart";
 import { SkeletonBarChart } from "../skeletons/SkeletonBarChart";
+import { useAuthStore } from "@/provider/store/authStore";
 
 const SalesDashboard = () => {
+  const { access_token, isAuthLoading } = useAuthStore();
+
   const { data: summaryData, isFetching: isFetchingSummaryData } =
-    useSalesSummary({});
+    useSalesSummary({ token: access_token || "" });
   const summary = (summaryData as SalesSummaryResponse) || {};
 
   const { data: salesData, isFetching: isFetchingSalesData } =
-    useAnalyticsSales({});
+    useAnalyticsSales({ token: access_token || "" });
   const sales = (salesData as SalesAnalyticsResponse) || {};
 
   return (
@@ -43,7 +46,7 @@ const SalesDashboard = () => {
       </div>
 
       {/* Summary Cards */}
-      {isFetchingSummaryData ? (
+      {isFetchingSummaryData || isAuthLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {Array.from({ length: 4 }).map((_, index) => (
             <SkeletonScoreBoard key={index} />
@@ -84,7 +87,7 @@ const SalesDashboard = () => {
 
           {/* Pie Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {isFetchingSalesData ? (
+            {isFetchingSalesData || isAuthLoading ? (
               <SkeletonPieChart />
             ) : (
               <PieChartComponent
@@ -95,7 +98,7 @@ const SalesDashboard = () => {
                 chartData={sales.payment_popularity}
               />
             )}
-            {isFetchingSalesData ? (
+            {isFetchingSalesData || isAuthLoading ? (
               <SkeletonPieChart />
             ) : (
               <PieChartComponent
@@ -110,7 +113,7 @@ const SalesDashboard = () => {
 
           {/* Time Series Chart */}
           <div className="w-full">
-            {isFetchingSalesData ? (
+            {isFetchingSalesData || isAuthLoading ? (
               <SkeletonLineChart />
             ) : (
               <LineChartComponent
@@ -132,7 +135,7 @@ const SalesDashboard = () => {
           </h2>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            {isFetchingSalesData ? (
+            {isFetchingSalesData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent
@@ -145,7 +148,7 @@ const SalesDashboard = () => {
               />
             )}
 
-            {isFetchingSalesData ? (
+            {isFetchingSalesData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent
@@ -160,7 +163,7 @@ const SalesDashboard = () => {
           </div>
 
           <div className="w-full">
-            {isFetchingSalesData ? (
+            {isFetchingSalesData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent

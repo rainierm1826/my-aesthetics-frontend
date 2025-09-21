@@ -26,8 +26,10 @@ export default function AppointmentTable() {
   );
   const appointments: Appointment[] = data?.appointment ?? [];
 
+  const { access_token } = useAuthStore();
+
   const { data: appointmentSummary, isFetching: isFetchingSummaryData } =
-    useAppointmentAnalytics();
+    useAppointmentAnalytics(access_token || "");
   const summary: AppointmentsAnalyticsResponse = appointmentSummary || {
     average_service_rating: [],
   };

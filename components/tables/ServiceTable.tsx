@@ -23,8 +23,9 @@ export default function ServiceTable() {
   const { data, isFetching, isError } = useServices(user?.branch?.branch_id);
   const services: Service[] = data?.service ?? [];
 
+  const { access_token } = useAuthStore();
   const { data: serviceSummary, isFetching: isFetchingServiceSummary } =
-    useServiceSummary();
+    useServiceSummary(access_token || "");
 
   const summary: ServiceAnalyticsResponse = serviceSummary || {
     average_service_rating: 0,

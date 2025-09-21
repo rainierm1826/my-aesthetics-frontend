@@ -86,6 +86,7 @@ export type GetAnalyticsParams = {
   group_by?: string;
   month?: string;
   year?: string;
+  token:string
 };
 
 export type BranchAnalyticsResponse = {

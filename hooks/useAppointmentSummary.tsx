@@ -12,10 +12,11 @@ export function useAppointmentSummary({
   group_by,
   month,
   year,
+  token
 }: GetAnalyticsParams) {
   return useQuery<AppointmentSummaryResponse, Error>({
     queryKey: ["appointment-summary", branch, group_by, month, year],
-    queryFn: () => getAppointmentSummary({ branch, group_by, month, year }),
+    queryFn: () => getAppointmentSummary({ branch, group_by, month, year, token }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

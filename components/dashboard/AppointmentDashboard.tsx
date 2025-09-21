@@ -22,14 +22,17 @@ import { useAppointmentSummary } from "@/hooks/useAppointmentSummary";
 import SkeletonLineChart from "../skeletons/SkeletonLineChart";
 import { SkeletonBarChart } from "../skeletons/SkeletonBarChart";
 import { SkeletonPieChart } from "../skeletons/SkeletonPieChart";
+import { useAuthStore } from "@/provider/store/authStore";
 
 const AppointmentDashboard = () => {
+  const {access_token, isAuthLoading} = useAuthStore()
+
   const { data: summaryData, isFetching: isFetchingSummaryData } =
-    useAppointmentSummary({});
+    useAppointmentSummary({token:access_token || ""});
   const summary = (summaryData as AppointmentSummaryResponse) || {};
 
   const { data: appointmentData, isFetching: isFetchingAppointmentData } =
-    useAnalyticsAppointment({});
+    useAnalyticsAppointment({token:access_token || ""});
   const appointment = (appointmentData as AppointmentAnalyticsResponse) || {};
 
   return (
@@ -41,7 +44,7 @@ const AppointmentDashboard = () => {
       </div>
 
       {/* Summary Cards */}
-      {isFetchingSummaryData ? (
+      {isFetchingSummaryData || isAuthLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {Array.from({ length: 4 }).map((_, index) => (
             <SkeletonScoreBoard key={index} />
@@ -80,7 +83,7 @@ const AppointmentDashboard = () => {
 
           {/* Pie Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonPieChart />
             ) : (
               <PieChartComponent
@@ -91,7 +94,7 @@ const AppointmentDashboard = () => {
                 chartData={appointment.appointments_status}
               />
             )}
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonPieChart />
             ) : (
               <PieChartComponent
@@ -106,7 +109,7 @@ const AppointmentDashboard = () => {
 
           {/* Time Series Chart */}
           <div className="w-full">
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonLineChart />
             ) : (
               <LineChartComponent
@@ -126,7 +129,7 @@ const AppointmentDashboard = () => {
           <h2 className="text-xl font-semibold text-gray-800">Distribution</h2>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent
@@ -139,7 +142,7 @@ const AppointmentDashboard = () => {
               />
             )}
 
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent
@@ -154,7 +157,7 @@ const AppointmentDashboard = () => {
           </div>
 
           <div className="w-full">
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent
@@ -176,7 +179,7 @@ const AppointmentDashboard = () => {
           </h2>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent
@@ -189,7 +192,7 @@ const AppointmentDashboard = () => {
               />
             )}
 
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent
@@ -204,7 +207,7 @@ const AppointmentDashboard = () => {
           </div>
 
           <div className="w-full">
-            {isFetchingAppointmentData ? (
+            {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
               <BarChartComponent

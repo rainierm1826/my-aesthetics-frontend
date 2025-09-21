@@ -12,10 +12,11 @@ export function useSalesSummary({
   group_by,
   month,
   year,
+  token
 }: GetAnalyticsParams) {
   return useQuery<SalesSummaryResponse, Error>({
     queryKey: ["sales-summary", branch, group_by, month, year],
-    queryFn: () => getSalesSummary({ branch, group_by, month, year }),
+    queryFn: () => getSalesSummary({ branch, group_by, month, year, token }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

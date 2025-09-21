@@ -1,10 +1,40 @@
-export function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file); // gives "data:image/png;base64,..."
+export async function apiRequest<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+  const isFormData = options.body instanceof FormData;
+  const defaultHeaders = isFormData
+    ? {}
+    : { "Content-Type": "application/json" };
+
+  try {
+    const response = await fetch(`${backendUrl}${endpoint}`, {
+      ...options,
+      ...defaultHeaders,
+    });
+
+    if (!response.ok) {
+      await response.text().catch(() => "");
+      throw new Error(response.statusText);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
+export function buildParams(params: Record<string, unknown>): string {
+  const urlParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      urlParams.set(key, String(value));
+    }
   });
+  return urlParams.toString();
 }
 
 export function toLongDate(strDate: string) {
@@ -31,7 +61,7 @@ export const formatCurrency = (amount: number) => {
   })}`;
 };
 
-export function formatNumber(number:number) {
+export function formatNumber(number: number) {
   if (number >= 1_000_000_000) {
     return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B";
   }

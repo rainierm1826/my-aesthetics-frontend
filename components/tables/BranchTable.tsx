@@ -12,11 +12,14 @@ import { useBranchSummary } from "@/hooks/useBranchAnalytics";
 import { BranchAnalyticsResponse } from "@/lib/types/analytics-type";
 import DashboardCard from "../cards/DashboardCard";
 import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
+import { useAuthStore } from "@/provider/store/authStore";
 
 export default function BranchTable() {
+  const {access_token} = useAuthStore()
+
   const { data, isFetching, isError } = useBranches();
   const { data: branchSummary, isFetching: isFetchingBranchSummary } =
-    useBranchSummary();
+    useBranchSummary(access_token||"");
 
   const summary: BranchAnalyticsResponse = branchSummary || {
     average_branch_rating: 0,
