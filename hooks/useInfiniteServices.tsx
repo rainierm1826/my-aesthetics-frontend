@@ -9,7 +9,7 @@ export function useInfiniteServices() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? "all";
-  const category = searchParams.get("category") ?? "all";
+  const category = searchParams.get("category") ?? undefined;
   const limit = Number(searchParams.get("limit") ?? 6);
 
   return useInfiniteQuery<ServiceListResponse, Error>({

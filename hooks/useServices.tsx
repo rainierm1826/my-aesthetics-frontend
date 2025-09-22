@@ -9,7 +9,7 @@ export function useServices(branchId?:string,) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? branchId ?? "all" ;
-  const category = searchParams.get("category") ?? "all";
+  const category = searchParams.get("category") ?? undefined;
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
 

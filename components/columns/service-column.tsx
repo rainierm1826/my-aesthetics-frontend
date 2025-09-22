@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import ActionCell from "@/components/ActionCell";
 import ServicesCard from "@/components/cards/ServicesCard";
 import ServiceForm from "@/components/forms/ServiceForm";
-import { deleteData } from "@/api/branch";
+import { deleteData } from "@/lib/function";
 
 export const serviceColumn: ColumnDef<Service>[] = [
   {

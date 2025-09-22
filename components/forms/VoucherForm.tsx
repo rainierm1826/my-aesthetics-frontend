@@ -26,6 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { useAuthStore } from "@/provider/store/authStore";
 
 interface FormVoucher {
   method: "post" | "patch";
@@ -58,6 +59,8 @@ const VoucherForm: React.FC<FormVoucher> = ({
   validUntil,
   minimumSpend,
 }) => {
+  const { access_token } = useAuthStore();
+
   const form = useForm<VoucherFormValues>({
     resolver: zodResolver(voucherFormSchema),
     defaultValues: {
@@ -103,7 +106,7 @@ const VoucherForm: React.FC<FormVoucher> = ({
       ...values,
       ...(method === "patch" && { voucher_code: voucherCode }),
     };
-    voucherMutation.mutate(payload);
+    voucherMutation.mutate({ data: payload, token: access_token || "" });
   };
 
   const formContent = (

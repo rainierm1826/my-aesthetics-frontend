@@ -59,7 +59,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     image ?? null
   );
   const { user } = useUserStore();
-  const { auth } = useAuthStore();
+  const { auth, access_token } = useAuthStore();
 
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceFormSchema),
@@ -151,12 +151,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       formData.append("service_id", serviceId.toString());
     }
 
-    console.log("FormData entries:");
-    for (const [key, val] of formData.entries()) {
-      console.log(key, val);
-    }
 
-    serviceMutation.mutate(formData);
+    serviceMutation.mutate({data:formData, token:access_token||""});
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

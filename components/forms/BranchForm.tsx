@@ -27,6 +27,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { useAuthStore } from "@/provider/store/authStore";
 
 const BranchForm: React.FC<BranchFormProps> = ({
   renderDialog = true,
@@ -48,6 +49,8 @@ const BranchForm: React.FC<BranchFormProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ?? null
   );
+
+  const {access_token} = useAuthStore()
 
   const form = useForm<BranchFormValues>({
     resolver: zodResolver(branchFormSchema),
@@ -118,7 +121,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
 
  
 
-    branchMutation.mutate(formData);
+    branchMutation.mutate({data:formData, token:access_token||""});
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Admin } from "../../lib/types/admin-type";
 import ActionCell from "@/components/ActionCell";
 import AdminForm from "@/components/forms/AdminForm";
-import { deleteData } from "@/api/branch";
+import { deleteData } from "@/lib/function";
 
 export const adminColumn: ColumnDef<Admin>[] = [
   {
@@ -26,7 +26,6 @@ export const adminColumn: ColumnDef<Admin>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      console.log(row.original)
       return (
         <ActionCell
           id={row.original.auth?.account_id}

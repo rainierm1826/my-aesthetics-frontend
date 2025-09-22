@@ -1,3 +1,5 @@
+import { DeleteResponse } from "./types/types";
+
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -82,4 +84,28 @@ export function formatNumber(number: number) {
     return (number / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
   }
   return number.toString();
+}
+
+export async function deleteData({
+  id,
+  url,
+}: {
+  id: string;
+  url: string;
+}): Promise<DeleteResponse> {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+  try {
+    const response = await fetch(`${backendUrl}/${url}/${id}`, {
+      method: "PATCH",
+    });
+
+    if (!response.status) {
+      throw new Error(`error: ${response.status}`);
+    }
+    const result: DeleteResponse = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
 }

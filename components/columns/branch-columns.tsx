@@ -6,7 +6,7 @@ import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import BranchCard from "@/components/cards/BranchCard";
 import BranchForm from "@/components/forms/BranchForm";
-import { deleteData } from "@/api/branch";
+import { deleteData } from "@/lib/function";
 
 export const branchColumns: ColumnDef<Branch>[] = [
   { accessorKey: "branch_name", header: "Branch Name" },

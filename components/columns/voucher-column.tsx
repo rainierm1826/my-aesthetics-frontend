@@ -4,8 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Voucher } from "../../lib/types/voucher-type";
 import ActionCell from "@/components/ActionCell";
 import VoucherForm from "@/components/forms/VoucherForm";
-import { toLongDate } from "../../lib/function";
-import { deleteData } from "@/api/branch";
+import { deleteData, toLongDate } from "../../lib/function";
 
 export const voucherColumn: ColumnDef<Voucher>[] = [
   {

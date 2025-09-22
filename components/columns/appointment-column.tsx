@@ -2,10 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { ordinal } from "@/lib/function";
+import { deleteData, ordinal } from "@/lib/function";
 import ActionCell from "@/components/ActionCell";
 import ReceiptCard from "../cards/ReceiptCard";
-import { deleteData } from "@/api/branch";
 import { Appointment } from "@/lib/types/appointment-types";
 
 export const appointmentColumn: ColumnDef<Appointment>[] = [

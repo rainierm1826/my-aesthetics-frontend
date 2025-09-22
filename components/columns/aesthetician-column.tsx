@@ -7,7 +7,7 @@ import { RatingStar } from "@/components/RatingStar";
 import ActionCell from "@/components/ActionCell";
 import AestheticianCard from "@/components/cards/AestheticianCard";
 import AestheticianForm from "@/components/forms/AestheticianForm";
-import { deleteData } from "@/api/branch";
+import { deleteData } from "@/lib/function";
 
 export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
   {

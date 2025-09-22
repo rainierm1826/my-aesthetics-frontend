@@ -14,6 +14,7 @@ export async function postService({
   data: FormData;
   token: string;
 }): Promise<ServiceResponse> {
+  console.log(data)
   return apiRequest<ServiceResponse>("/service", {
     method: "POST",
     body: data,
@@ -61,7 +62,7 @@ export async function getServiceName({
 }
 
 export async function getService(service_id?: string) {
-  return apiRequest<ServiceNameResponse>(`/service/${service_id}`);
+  return apiRequest<ServiceResponse>(`/service/${service_id}`);
 }
 
 export async function deleteService({
