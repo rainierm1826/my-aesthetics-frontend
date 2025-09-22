@@ -22,7 +22,7 @@ export default async function BranchPage({ params }: BranchPageProps) {
   try {
     branch = await getBranch(id);
   } catch (error) {
-    console.error(error);
+    throw error
   }
 
   const getStatusColor = (status: string) => {

@@ -22,7 +22,7 @@ export default async function AestheticianPage({ params }: AestheticianPageProps
   try {
     aesthetician = await getAesthetician(id);
   } catch (error) {
-    console.error(error);
+    throw error
   }
 
   const getStatusColor = (status: string) => {

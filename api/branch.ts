@@ -48,7 +48,7 @@ export async function getBranchName() {
 }
 
 export async function getBranch(branch_id: string) {
-  return apiRequest<BranchListResponse>(`/branch/${branch_id}`);
+  return apiRequest<BranchResponse>(`/branch/${branch_id}`);
 }
 
 export async function deleteBranch({
