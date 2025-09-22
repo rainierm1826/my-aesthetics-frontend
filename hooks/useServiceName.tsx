@@ -4,10 +4,10 @@ import { getServiceName } from "@/api/service";
 import { ServiceNameResponse } from "@/lib/types/service-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-export function useServiceName(branchId?: string) {
+export function useServiceName({branchId, token}:{branchId?:string, token:string}) {
   return useQuery<ServiceNameResponse, Error>({
     queryKey: ["service", "service-name", branchId],
-    queryFn: () => getServiceName(branchId),
+    queryFn: () => getServiceName({branch_id:branchId, token}),
     placeholderData: keepPreviousData,
     enabled: !!branchId,
   });

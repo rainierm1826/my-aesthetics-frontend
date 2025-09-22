@@ -12,6 +12,7 @@ import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useServiceName } from "@/hooks/useServiceName";
 import { ServiceName } from "@/lib/types/service-types";
+import { useAuthStore } from "@/provider/store/authStore";
 
 interface DropDownServiceProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
@@ -32,7 +33,8 @@ const DropDownService = ({
   useUrlParams = false,
   branchId
 }: DropDownServiceProps) => {
-  const { data, isLoading, error } = useServiceName(branchId);
+  const {access_token} = useAuthStore()
+  const { data, isLoading, error } = useServiceName({branchId, token:access_token||""});
   
 
   const services: ServiceName[] = data?.service ?? [];
