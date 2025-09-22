@@ -5,6 +5,7 @@ import {
   AestheticianResponse,
   GetAestheticianParams,
 } from "@/lib/types/aesthetician-types";
+import { DeleteResponse } from "@/lib/types/types";
 
 export async function getAllAesthetician({
   availability,
@@ -74,6 +75,20 @@ export async function patchAesthetician({
   return apiRequest<AestheticianResponse>("/aesthetician", {
     method: "PATCH",
     body: data,
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function deleteAesthetician({
+  aesthetician_id,
+  token,
+}: {
+  aesthetician_id: string;
+  token: string;
+}): Promise<DeleteResponse> {
+  return apiRequest<DeleteResponse>("/aesthetician", {
+    method: "PATCH",
+    body: JSON.stringify(aesthetician_id),
     headers: { Authorization: `Bearer ${token}` },
   });
 }

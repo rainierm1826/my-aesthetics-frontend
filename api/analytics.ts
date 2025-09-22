@@ -1,3 +1,4 @@
+import { apiRequest, buildParams } from "@/lib/function";
 import {
   AestheticianAnalyticsResponse,
   AppointmentAnalyticsResponse,
@@ -10,8 +11,6 @@ import {
   ServiceAnalyticsResponse,
 } from "@/lib/types/analytics-type";
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-
 export async function getAppointmentSummary({
   branch,
   group_by,
@@ -19,34 +18,13 @@ export async function getAppointmentSummary({
   year,
   token,
 }: GetAnalyticsParams): Promise<AppointmentSummaryResponse> {
-  const params = new URLSearchParams();
-
-  if (branch) params.set("branch", branch);
-  if (group_by) params.set("group-by", group_by);
-  if (month) params.set("month", month);
-  if (year) params.set("year", year);
-
-  try {
-    const res = await fetch(
-      `${backendUrl}/analytics/appointment/summary${params.toString()}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
+  const params = buildParams({ branch, group_by, month, year, token });
+  return apiRequest<AppointmentSummaryResponse>(
+    `/analytics/appointment/summary?${params}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
     }
-
-    const result: AppointmentSummaryResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  );
 }
 
 export async function getSalesSummary({
@@ -56,126 +34,45 @@ export async function getSalesSummary({
   year,
   token,
 }: GetAnalyticsParams): Promise<SalesSummaryResponse> {
-  const params = new URLSearchParams();
-
-  if (branch) params.set("branch", branch);
-  if (group_by) params.set("group-by", group_by);
-  if (month) params.set("month", month);
-  if (year) params.set("year", year);
-
-  try {
-    const res = await fetch(
-      `${backendUrl}/analytics/sales/summary${params.toString()}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
+  const params = buildParams({ branch, group_by, month, year, token });
+  return apiRequest<SalesSummaryResponse>(
+    `/analytics/sales/summary?${params}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
     }
-
-    const result: SalesSummaryResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  );
 }
 
 export async function getBranchSummary(
   token: string
 ): Promise<BranchAnalyticsResponse> {
-  try {
-    const res = await fetch(`${backendUrl}/analytics/branch`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
-    }
-
-    const result: BranchAnalyticsResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<BranchAnalyticsResponse>(`/analytics/branch`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getAestheticianSummary(
   token: string
 ): Promise<AestheticianAnalyticsResponse> {
-  try {
-    const res = await fetch(`${backendUrl}/analytics/aesthetician`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
-    }
-
-    const result: AestheticianAnalyticsResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<AestheticianAnalyticsResponse>(`/analytics/aesthetician`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getServiceSummary(
   token: string
 ): Promise<ServiceAnalyticsResponse> {
-  try {
-    const res = await fetch(`${backendUrl}/analytics/service`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
-    }
-
-    const result: ServiceAnalyticsResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<ServiceAnalyticsResponse>(`/analytics/service`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getAppointmentsSummary(
   token: string
 ): Promise<AppointmentsAnalyticsResponse> {
-  try {
-    const res = await fetch(`${backendUrl}/analytics/appointment`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
-    }
-
-    const result: AppointmentsAnalyticsResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<AppointmentsAnalyticsResponse>(`/analytics/appointment`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getAppointmentAnalytics({
@@ -185,34 +82,13 @@ export async function getAppointmentAnalytics({
   year,
   token,
 }: GetAnalyticsParams): Promise<AppointmentAnalyticsResponse> {
-  const params = new URLSearchParams();
-
-  if (branch) params.set("branch", branch);
-  if (group_by) params.set("group-by", group_by);
-  if (month) params.set("month", month);
-  if (year) params.set("year", year);
-
-  try {
-    const res = await fetch(
-      `${backendUrl}/analytics/appointments${params.toString()}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
+  const params = buildParams({ branch, group_by, month, year });
+  return apiRequest<AppointmentAnalyticsResponse>(
+    `/analytics/appointments?${params}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
     }
-
-    const result: AppointmentAnalyticsResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  );
 }
 
 export async function getSalesAnalytics({
@@ -222,32 +98,8 @@ export async function getSalesAnalytics({
   year,
   token,
 }: GetAnalyticsParams): Promise<SalesAnalyticsResponse> {
-  const params = new URLSearchParams();
-
-  if (branch) params.set("branch", branch);
-  if (group_by) params.set("group-by", group_by);
-  if (month) params.set("month", month);
-  if (year) params.set("year", year);
-
-  try {
-    const res = await fetch(
-      `${backendUrl}/analytics/sales${params.toString()}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
-    }
-
-    const result: SalesAnalyticsResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const params = buildParams({ branch, group_by, month, year });
+  return apiRequest<SalesAnalyticsResponse>(`/analytics/sales?${params}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }

@@ -1,59 +1,37 @@
+import { apiRequest, buildParams } from "@/lib/function";
 import {
   BranchListResponse,
-  BranchNameResponse,
   BranchResponse,
   GetBranchesParams,
 } from "@/lib/types/branch-types";
 import { DeleteResponse } from "@/lib/types/types";
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-export async function postBranch(data?: FormData): Promise<BranchResponse> {
-  try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-    if (data) {
-      console.log("FormData entries:");
-      for (const [key, value] of data.entries()) {
-        console.log(key, value);
-      }
-    }
-
-    if (!backendUrl) {
-      throw new Error(
-        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
-      );
-    }
-    const response = await fetch(`${backendUrl}/branch`, {
-      method: "POST",
-      body: data,
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const result: BranchResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+export async function postBranch({
+  data,
+  token,
+}: {
+  data?: FormData;
+  token: string;
+}): Promise<BranchResponse> {
+  return apiRequest<BranchResponse>("/branch", {
+    method: "POST",
+    body: data,
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
-export async function patchBranch(data?: FormData): Promise<BranchResponse> {
-  try {
-    const response = await fetch(`${backendUrl}/branch`, {
-      method: "PATCH",
-      body: data,
-    });
-
-    if (!response.status) {
-      throw new Error(`error: ${response.status}`);
-    }
-    const result: BranchResponse = await response.json();
-    return result;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+export async function patchBranch({
+  data,
+  token,
+}: {
+  data?: FormData;
+  token: string;
+}): Promise<BranchResponse> {
+  return apiRequest<BranchResponse>("/branch", {
+    method: "PATCH",
+    body: data,
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getAllBranches({
@@ -61,87 +39,28 @@ export async function getAllBranches({
   page,
   limit,
 }: GetBranchesParams): Promise<BranchListResponse> {
-  const params = new URLSearchParams();
-  if (query) params.set("query", query);
-  params.set("page", String(page));
-  params.set("limit", String(limit));
-
-  try {
-    const res = await fetch(`${backendUrl}/branch?${params.toString()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
-    }
-
-    const result: BranchListResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const params = buildParams({ query, page, limit });
+  return apiRequest<BranchListResponse>(`/branch?${params}`);
 }
 
 export async function getBranchName() {
-  try {
-    const response = await fetch(`${backendUrl}/branch/branch-name`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw Error("Internal error");
-    }
-    const result: BranchNameResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<BranchListResponse>(`/branch/branch-name`);
 }
 
 export async function getBranch(branch_id: string) {
-  try {
-    const response = await fetch(`${backendUrl}/branch/${branch_id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw Error("Internal error");
-    }
-    const result: BranchResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<BranchListResponse>(`/branch/${branch_id}`);
 }
 
-export async function deleteData({
-  id,
-  url,
+export async function deleteBranch({
+  branch_id,
+  token,
 }: {
-  id: string;
-  url: string;
+  branch_id: string;
+  token: string;
 }): Promise<DeleteResponse> {
-  try {
-    const response = await fetch(`${backendUrl}/${url}/${id}`, {
-      method: "PATCH",
-    });
-
-    if (!response.status) {
-      throw new Error(`error: ${response.status}`);
-    }
-    const result: DeleteResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<DeleteResponse>("/branch", {
+    method: "PATCH",
+    body: JSON.stringify(branch_id),
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }

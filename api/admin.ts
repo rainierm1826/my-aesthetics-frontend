@@ -6,7 +6,6 @@ import {
 } from "@/lib/types/admin-type";
 import { DeleteResponse } from "@/lib/types/types";
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function patchAdmin({
   data,
@@ -22,26 +21,18 @@ export async function patchAdmin({
   });
 }
 
-export async function deleteAdmin(account_id: {
-  account_id: string;
+export async function deleteAdmin({
+  admin_id,
+  token,
+}: {
+  admin_id: string;
+  token: string;
 }): Promise<DeleteResponse> {
-  try {
-    const response = await fetch(`${backendUrl}/auth/delete-admin`, {
-      method: "PATCH",
-      body: JSON.stringify(account_id),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.status) {
-      throw new Error(`error: ${response.status}`);
-    }
-    const result: DeleteResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<DeleteResponse>("/auth/delete-admin", {
+    method: "PATCH",
+    body: JSON.stringify(admin_id),
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getAllAdmin({

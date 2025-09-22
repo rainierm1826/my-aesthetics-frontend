@@ -1,3 +1,4 @@
+import { apiRequest, buildParams } from "@/lib/function";
 import { DeleteResponse } from "@/lib/types/types";
 import {
   GetVoucherParams,
@@ -5,56 +6,32 @@ import {
   VoucherResponse,
 } from "@/lib/types/voucher-type";
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-export async function postVoucher(data: unknown): Promise<VoucherResponse> {
-  try {
-    if (!backendUrl) {
-      throw new Error(
-        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
-      );
-    }
-    const response = await fetch(`${backendUrl}/voucher`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const result: VoucherResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+export async function postVoucher({
+  data,
+  token,
+}: {
+  data: unknown;
+  token: string;
+}): Promise<VoucherResponse> {
+  return apiRequest<VoucherResponse>("/voucher", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
-export async function patchVoucher(data: unknown): Promise<VoucherResponse> {
-  try {
-    if (!backendUrl) {
-      throw new Error(
-        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
-      );
-    }
-    const response = await fetch(`${backendUrl}/voucher`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const result: VoucherResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+export async function patchVoucher({
+  data,
+  token,
+}: {
+  data: unknown;
+  token: string;
+}): Promise<VoucherResponse> {
+  return apiRequest<VoucherResponse>("/voucher", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getAllVoucher({
@@ -63,50 +40,20 @@ export async function getAllVoucher({
   limit,
   discountType,
 }: GetVoucherParams): Promise<VoucherListResponse> {
-  const params = new URLSearchParams();
-  if (query) params.set("query", query);
-  params.set("discount-type", discountType);
-  params.set("page", String(page));
-  params.set("limit", String(limit));
-
-  try {
-    const res = await fetch(`${backendUrl}/voucher?${params.toString()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText} ${body}`);
-    }
-
-    const result: VoucherListResponse = await res.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const params = buildParams({ query, page, limit, discountType });
+  return apiRequest<VoucherListResponse>(`/voucher?${params}`);
 }
 
-export async function deleteVoucher(voucher_code: {
+export async function deleteVoucher({
+  voucher_code,
+  token,
+}: {
   voucher_code: string;
+  token: string;
 }): Promise<DeleteResponse> {
-  try {
-    const response = await fetch(`${backendUrl}/voucher`, {
-      method: "PATCH",
-      body: JSON.stringify(voucher_code),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.status) {
-      throw new Error(`error: ${response.status}`);
-    }
-    const result: DeleteResponse = await response.json();
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return apiRequest<DeleteResponse>("/voucher", {
+    method: "PATCH",
+    body: JSON.stringify(voucher_code),
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
