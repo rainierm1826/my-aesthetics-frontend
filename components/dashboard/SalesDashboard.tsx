@@ -7,6 +7,7 @@ import DashboardCard from "@/components/cards/DashboardCard";
 import DropDownBranch from "@/components/selects/DropDownBranch";
 import LineChartComponent from "@/components/charts/LineChartComponent";
 import {
+  RevenueOvertimeResponse,
   SalesAnalyticsResponse,
   SalesSummaryResponse,
 } from "@/lib/types/analytics-type";
@@ -25,6 +26,7 @@ import { SkeletonPieChart } from "../skeletons/SkeletonPieChart";
 import SkeletonLineChart from "../skeletons/SkeletonLineChart";
 import { SkeletonBarChart } from "../skeletons/SkeletonBarChart";
 import { useAuthStore } from "@/provider/store/authStore";
+import { useRevenueOvertime } from "@/hooks/useRevenueOvertime";
 
 const SalesDashboard = () => {
   const { access_token, isAuthLoading } = useAuthStore();
@@ -36,6 +38,10 @@ const SalesDashboard = () => {
   const { data: salesData, isFetching: isFetchingSalesData } =
     useAnalyticsSales({ token: access_token || "" });
   const sales = (salesData as SalesAnalyticsResponse) || {};
+
+  const { data: revenueOvertime, isFetching: isFetchingRevenueOvertime } =
+    useRevenueOvertime({ token: access_token || "" });
+  const revenue = (revenueOvertime as RevenueOvertimeResponse) || {};
 
   return (
     <div className="space-y-8">
@@ -113,7 +119,7 @@ const SalesDashboard = () => {
 
           {/* Time Series Chart */}
           <div className="w-full">
-            {isFetchingSalesData || isAuthLoading ? (
+            {isFetchingRevenueOvertime || isAuthLoading ? (
               <SkeletonLineChart />
             ) : (
               <LineChartComponent
@@ -122,7 +128,7 @@ const SalesDashboard = () => {
                 dataKey="revenue"
                 nameKey="year"
                 chartConfig={aestheticianRevenueChartConfig}
-                chartData={sales.revenue_overtime}
+                chartData={revenue.revenue_overtime}
               />
             )}
           </div>

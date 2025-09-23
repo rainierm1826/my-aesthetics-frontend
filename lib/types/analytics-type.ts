@@ -9,7 +9,7 @@ export interface SalesSummaryResponse {
   total_revenue: number;
 }
 
-export interface AppointmentAnalyticsResponse {
+export interface AppointmentsOvertimeResponse {
   appointments_overtime: {
     year?: number;
     month?: string;
@@ -17,6 +17,19 @@ export interface AppointmentAnalyticsResponse {
     date?: string;
     count: number;
   }[];
+}
+
+export interface RevenueOvertimeResponse {
+  revenue_overtime: {
+    year?: number;
+    month?: string;
+    weekday?: string;
+    date?: string;
+    revenue: number;
+  }[];
+}
+
+export interface AppointmentAnalyticsResponse {
   appointments_by_service_category: {
     category: string;
     count: number;
@@ -52,13 +65,6 @@ export interface AppointmentAnalyticsResponse {
 }
 
 export interface SalesAnalyticsResponse {
-  revenue_overtime: {
-    year?: number;
-    month?: string;
-    weekday?: string;
-    date?: string;
-    revenue: number;
-  }[];
   revenue_by_aesthetician: {
     aesthetician: string;
     revenue: number;
@@ -86,7 +92,7 @@ export type GetAnalyticsParams = {
   group_by?: string;
   month?: string;
   year?: string;
-  token:string
+  token: string;
 };
 
 export type BranchAnalyticsResponse = {
@@ -119,5 +125,3 @@ type AverageServiceRating = {
 export type AppointmentsAnalyticsResponse = {
   average_service_rating: AverageServiceRating[];
 };
-
-

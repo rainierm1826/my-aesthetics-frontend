@@ -9,14 +9,13 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export function useAnalyticsAppointment({
   branch,
-  group_by,
   month,
   year,
   token
 }: GetAnalyticsParams) {
   return useQuery<AppointmentAnalyticsResponse, Error>({
-    queryKey: ["analytics-appointment", branch, group_by, month, year],
-    queryFn: () => getAppointmentAnalytics({ branch, group_by, month, year, token }),
+    queryKey: ["analytics-appointment", branch, month, year],
+    queryFn: () => getAppointmentAnalytics({ branch, month, year, token }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

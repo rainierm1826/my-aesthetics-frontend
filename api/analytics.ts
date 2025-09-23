@@ -3,22 +3,55 @@ import {
   AestheticianAnalyticsResponse,
   AppointmentAnalyticsResponse,
   AppointmentsAnalyticsResponse,
+  AppointmentsOvertimeResponse,
   AppointmentSummaryResponse,
   BranchAnalyticsResponse,
   GetAnalyticsParams,
+  RevenueOvertimeResponse,
   SalesAnalyticsResponse,
   SalesSummaryResponse,
   ServiceAnalyticsResponse,
 } from "@/lib/types/analytics-type";
 
-export async function getAppointmentSummary({
+export async function getAppointmentsOvertime({
   branch,
   group_by,
   month,
   year,
   token,
-}: GetAnalyticsParams): Promise<AppointmentSummaryResponse> {
+}: GetAnalyticsParams): Promise<AppointmentsOvertimeResponse> {
   const params = buildParams({ branch, group_by, month, year, token });
+  return apiRequest<AppointmentsOvertimeResponse>(
+    `/analytics/appointments-overtime?${params}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+}
+
+export async function getRevenueOvertime({
+  branch,
+  group_by,
+  month,
+  year,
+  token,
+}: GetAnalyticsParams): Promise<RevenueOvertimeResponse> {
+  const params = buildParams({ branch, group_by, month, year, token });
+  return apiRequest<RevenueOvertimeResponse>(
+    `/analytics/revenue-overtime?${params}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+}
+
+export async function getAppointmentSummary({
+  branch,
+  month,
+  year,
+  token,
+}: GetAnalyticsParams): Promise<AppointmentSummaryResponse> {
+  const params = buildParams({ branch, month, year, token });
   return apiRequest<AppointmentSummaryResponse>(
     `/analytics/appointment/summary?${params}`,
     {
@@ -29,12 +62,11 @@ export async function getAppointmentSummary({
 
 export async function getSalesSummary({
   branch,
-  group_by,
   month,
   year,
   token,
 }: GetAnalyticsParams): Promise<SalesSummaryResponse> {
-  const params = buildParams({ branch, group_by, month, year, token });
+  const params = buildParams({ branch, month, year, token });
   return apiRequest<SalesSummaryResponse>(
     `/analytics/sales/summary?${params}`,
     {

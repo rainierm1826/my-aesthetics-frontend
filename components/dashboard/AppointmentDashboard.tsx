@@ -9,6 +9,7 @@ import DropDownBranch from "@/components/selects/DropDownBranch";
 import LineChartComponent from "@/components/charts/LineChartComponent";
 import {
   AppointmentAnalyticsResponse,
+  AppointmentsOvertimeResponse,
   AppointmentSummaryResponse,
 } from "@/lib/types/analytics-type";
 import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
@@ -23,17 +24,25 @@ import SkeletonLineChart from "../skeletons/SkeletonLineChart";
 import { SkeletonBarChart } from "../skeletons/SkeletonBarChart";
 import { SkeletonPieChart } from "../skeletons/SkeletonPieChart";
 import { useAuthStore } from "@/provider/store/authStore";
+import { useAppointmentsOvertime } from "@/hooks/useAppointmentsOvertime";
 
 const AppointmentDashboard = () => {
-  const {access_token, isAuthLoading} = useAuthStore()
+  const { access_token, isAuthLoading } = useAuthStore();
 
   const { data: summaryData, isFetching: isFetchingSummaryData } =
-    useAppointmentSummary({token:access_token || ""});
+    useAppointmentSummary({ token: access_token || "" });
   const summary = (summaryData as AppointmentSummaryResponse) || {};
 
   const { data: appointmentData, isFetching: isFetchingAppointmentData } =
-    useAnalyticsAppointment({token:access_token || ""});
+    useAnalyticsAppointment({ token: access_token || "" });
   const appointment = (appointmentData as AppointmentAnalyticsResponse) || {};
+
+  const {
+    data: appointmentsOvertime,
+    isFetching: isFetchingAppointmentsOvertime,
+  } = useAppointmentsOvertime({ token: access_token || "" });
+  const appointments =
+    (appointmentsOvertime as AppointmentsOvertimeResponse) || {};
 
   return (
     <div className="space-y-8">
@@ -109,7 +118,7 @@ const AppointmentDashboard = () => {
 
           {/* Time Series Chart */}
           <div className="w-full">
-            {isFetchingAppointmentData || isAuthLoading ? (
+            {isFetchingAppointmentsOvertime || isAuthLoading ? (
               <SkeletonLineChart />
             ) : (
               <LineChartComponent
@@ -118,7 +127,7 @@ const AppointmentDashboard = () => {
                 dataKey="count"
                 nameKey="year"
                 chartConfig={aestheticianRevenueChartConfig}
-                chartData={appointment.appointments_overtime}
+                chartData={appointments.appointments_overtime}
               />
             )}
           </div>
