@@ -9,24 +9,32 @@ export interface SalesSummaryResponse {
   total_revenue: number;
 }
 
+export interface AppointmentOvertimeItem {
+  count: number;
+  type: "actual" | "predicted";
+  year?: string | number;
+  month?: string;
+  month_num?: string | number;
+  weekday?: string;
+  date?: string;
+}
+
 export interface AppointmentsOvertimeResponse {
-  appointments_overtime: {
-    year?: number;
-    month?: string;
-    weekday?: string;
-    date?: string;
-    count: number;
-  }[];
+  appointments_overtime: AppointmentOvertimeItem[];
+}
+
+export interface RevenueOvertimeItem {
+  revenue: number;
+  type: "actual" | "predicted";
+  year?: string | number;
+  month?: string;
+  month_num?: string | number;
+  weekday?: string;
+  date?: string;
 }
 
 export interface RevenueOvertimeResponse {
-  revenue_overtime: {
-    year?: number;
-    month?: string;
-    weekday?: string;
-    date?: string;
-    revenue: number;
-  }[];
+  revenue_overtime: RevenueOvertimeItem[];
 }
 
 export interface AppointmentAnalyticsResponse {
@@ -92,6 +100,7 @@ export type GetAnalyticsParams = {
   group_by?: string;
   month?: string;
   year?: string;
+  predict?: string;
   token: string;
 };
 

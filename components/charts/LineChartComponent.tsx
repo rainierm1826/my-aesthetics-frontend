@@ -8,7 +8,6 @@ import {
   CartesianGrid,
   Label,
 } from "recharts";
-
 import { ChartContainer } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle } from "../ui/card";
 import { formatNumber } from "@/lib/function";
@@ -17,7 +16,7 @@ type ChartData<T> = T[];
 
 type ChartConfig = Record<string, { label: string; color: string }>;
 
-type LineChartProps<T extends Record<string, unknown>> = {
+type LineChartProps<T extends object> = {
   title: string;
   value: string;
   dataKey: Extract<keyof T, string | number>;
@@ -26,7 +25,7 @@ type LineChartProps<T extends Record<string, unknown>> = {
   chartData: ChartData<T>;
 };
 
-export const LineChartComponent = <T extends Record<string, unknown>>({
+export const LineChartComponent = <T extends object>({
   title,
   value,
   dataKey,
@@ -34,6 +33,8 @@ export const LineChartComponent = <T extends Record<string, unknown>>({
   chartConfig,
   chartData,
 }: LineChartProps<T>) => {
+  const color = Object.values(chartConfig)[0]?.color || "#BDA658";
+
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
       <CardHeader>
@@ -47,10 +48,7 @@ export const LineChartComponent = <T extends Record<string, unknown>>({
           data={chartData}
           margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
         >
-          {/* Grid lines */}
           <CartesianGrid strokeDasharray="3 3" />
-
-          {/* X axis */}
           <XAxis dataKey={nameKey}>
             <Label
               value={String(nameKey)
@@ -60,8 +58,6 @@ export const LineChartComponent = <T extends Record<string, unknown>>({
               position="insideBottom"
             />
           </XAxis>
-
-          {/* Y axis */}
           <YAxis tickFormatter={(value: number) => formatNumber(value)}>
             <Label
               value={value}
@@ -70,27 +66,14 @@ export const LineChartComponent = <T extends Record<string, unknown>>({
               style={{ textAnchor: "middle" }}
             />
           </YAxis>
-
-          {/* Tooltip on hover */}
           <Tooltip formatter={(value: number) => formatNumber(value)} />
-          
-
-          {/* Bars */}
           <Line
             type="monotone"
             dataKey={dataKey}
-            stroke={Object.values(chartConfig)[0]?.color || "#BDA658"}
+            stroke={color}
             strokeWidth={2}
-            dot={{
-              fill: Object.values(chartConfig)[0]?.color || "#BDA658",
-              strokeWidth: 2,
-              r: 4,
-            }}
-            activeDot={{
-              r: 6,
-              stroke: Object.values(chartConfig)[0]?.color || "#BDA658",
-              strokeWidth: 2,
-            }}
+            dot={{ fill: color, strokeWidth: 2, r: 4 }}
+            activeDot={{ r: 6, stroke: color, strokeWidth: 2 }}
           />
         </LineChart>
       </ChartContainer>

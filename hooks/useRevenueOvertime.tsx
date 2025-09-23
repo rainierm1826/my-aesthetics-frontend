@@ -9,14 +9,19 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 export function useRevenueOvertime({ token }: GetAnalyticsParams) {
+  const predictCookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("predictiveAnalytics="))
+    ?.split("=")[1];
+
   const searchParams = useSearchParams();
   const branch = searchParams.get("branch") ?? "";
   const month = searchParams.get("month") ?? "";
   const year = searchParams.get("year") ?? "";
   const group_by = searchParams.get("group-by") ?? "";
   return useQuery<RevenueOvertimeResponse, Error>({
-    queryKey: ["revenue-overtime",  branch, month, year, group_by],
-    queryFn: () => getRevenueOvertime({ branch, month, year, token, group_by }),
+    queryKey: ["revenue-overtime", branch, month, year, group_by, predictCookie],
+    queryFn: () => getRevenueOvertime({ branch, month, year, token, group_by, predict:predictCookie }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
