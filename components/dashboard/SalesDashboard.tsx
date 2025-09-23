@@ -27,8 +27,27 @@ import SkeletonLineChart from "../skeletons/SkeletonLineChart";
 import { SkeletonBarChart } from "../skeletons/SkeletonBarChart";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useRevenueOvertime } from "@/hooks/useRevenueOvertime";
+import { useSearchParams } from "next/navigation";
+import DropDownYear from "../selects/DropDownYear";
+import DropDownMonth from "../selects/DropDownMonth";
 
 const SalesDashboard = () => {
+  const searchParams = useSearchParams();
+  const groupBy = searchParams.get("group-by") || "year";
+
+  const getNameKey = (groupBy: string) => {
+    switch (groupBy) {
+      case "weekday":
+        return "weekday";
+      case "month":
+        return "month";
+      case "year":
+        return "year";
+      default:
+        return "year";
+    }
+  };
+
   const { access_token, isAuthLoading } = useAuthStore();
 
   const { data: summaryData, isFetching: isFetchingSummaryData } =
@@ -40,14 +59,18 @@ const SalesDashboard = () => {
   const sales = (salesData as SalesAnalyticsResponse) || {};
 
   const { data: revenueOvertime, isFetching: isFetchingRevenueOvertime } =
-    useRevenueOvertime({token:access_token||""});
+    useRevenueOvertime({ token: access_token || "" });
   const revenue = (revenueOvertime as RevenueOvertimeResponse) || {};
 
   return (
     <div className="space-y-8">
       {/* Header Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <ToggleDates />
+        <div className="flex gap-3">
+          <ToggleDates />
+          <DropDownYear />
+          <DropDownMonth />
+        </div>
         <DropDownBranch useUrlParams={true} includeAllOption={true} />
       </div>
 
@@ -126,7 +149,7 @@ const SalesDashboard = () => {
                 value="Total Revenue"
                 title="Revenue Overtime"
                 dataKey="revenue"
-                nameKey="year"
+                nameKey={getNameKey(groupBy)}
                 chartConfig={aestheticianRevenueChartConfig}
                 chartData={revenue.revenue_overtime}
               />

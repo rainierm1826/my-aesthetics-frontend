@@ -25,8 +25,27 @@ import { SkeletonBarChart } from "../skeletons/SkeletonBarChart";
 import { SkeletonPieChart } from "../skeletons/SkeletonPieChart";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useAppointmentsOvertime } from "@/hooks/useAppointmentsOvertime";
+import DropDownYear from "../selects/DropDownYear";
+import DropDownMonth from "../selects/DropDownMonth";
+import { useSearchParams } from "next/navigation";
 
 const AppointmentDashboard = () => {
+  const searchParams = useSearchParams();
+  const groupBy = searchParams.get("group-by") || "year";
+
+  const getNameKey = (groupBy: string) => {
+    switch (groupBy) {
+      case "weekday":
+        return "weekday";
+      case "month":
+        return "month";
+      case "year":
+        return "year";
+      default:
+        return "year";
+    }
+  };
+
   const { access_token, isAuthLoading } = useAuthStore();
 
   const { data: summaryData, isFetching: isFetchingSummaryData } =
@@ -48,7 +67,12 @@ const AppointmentDashboard = () => {
     <div className="space-y-8">
       {/* Header Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <ToggleDates />
+        <div className="flex gap-3">
+          <ToggleDates />
+          <DropDownYear />
+          <DropDownMonth />
+        </div>
+
         <DropDownBranch useUrlParams={true} includeAllOption={true} />
       </div>
 
@@ -125,7 +149,7 @@ const AppointmentDashboard = () => {
                 value="Number of Appointments"
                 title="Appointments Overtime"
                 dataKey="count"
-                nameKey="year"
+                nameKey={getNameKey(groupBy)}
                 chartConfig={aestheticianRevenueChartConfig}
                 chartData={appointments.appointments_overtime}
               />

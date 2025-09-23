@@ -16,7 +16,7 @@ export function useAppointmentsOvertime({ token }: GetAnalyticsParams) {
   const group_by = searchParams.get("group-by") ?? "";
   
   return useQuery<AppointmentsOvertimeResponse, Error>({
-    queryKey: ["appointments-overtime", branch, month, year],
+    queryKey: ["appointments-overtime", branch, month, year, group_by],
     queryFn: () =>
       getAppointmentsOvertime({ branch, month, year, group_by, token }),
     placeholderData: keepPreviousData,

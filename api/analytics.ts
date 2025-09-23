@@ -20,7 +20,8 @@ export async function getAppointmentsOvertime({
   year,
   token,
 }: GetAnalyticsParams): Promise<AppointmentsOvertimeResponse> {
-  const params = buildParams({ branch, group_by, month, year });
+  const params = buildParams({ branch, "group-by":group_by, month, year });
+  
   return apiRequest<AppointmentsOvertimeResponse>(
     `/analytics/appointments-overtime?${params}`,
     {
@@ -36,7 +37,7 @@ export async function getRevenueOvertime({
   year,
   token,
 }: GetAnalyticsParams): Promise<RevenueOvertimeResponse> {
-  const params = buildParams({ branch, group_by, month, year });
+  const params = buildParams({ branch, "group-by":group_by, month, year });
   return apiRequest<RevenueOvertimeResponse>(
     `/analytics/revenue-overtime?${params}`,
     {
