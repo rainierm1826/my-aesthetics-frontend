@@ -40,7 +40,7 @@ const SalesDashboard = () => {
   const sales = (salesData as SalesAnalyticsResponse) || {};
 
   const { data: revenueOvertime, isFetching: isFetchingRevenueOvertime } =
-    useRevenueOvertime({ token: access_token || "" });
+    useRevenueOvertime({token:access_token||""});
   const revenue = (revenueOvertime as RevenueOvertimeResponse) || {};
 
   return (
@@ -48,7 +48,7 @@ const SalesDashboard = () => {
       {/* Header Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <ToggleDates />
-        <DropDownBranch />
+        <DropDownBranch useUrlParams={true} includeAllOption={true} />
       </div>
 
       {/* Summary Cards */}

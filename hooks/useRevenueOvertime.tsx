@@ -1,19 +1,22 @@
 "use client";
 
-import {   getRevenueOvertime } from "@/api/analytics";
-import {   GetAnalyticsParams, RevenueOvertimeResponse } from "@/lib/types/analytics-type";
+import { getRevenueOvertime } from "@/api/analytics";
+import {
+  GetAnalyticsParams,
+  RevenueOvertimeResponse,
+} from "@/lib/types/analytics-type";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
-export function useRevenueOvertime({
-  branch,
-  month,
-  year,
-  group_by,
-  token
-}: GetAnalyticsParams) {
+export function useRevenueOvertime({ token }: GetAnalyticsParams) {
+  const searchParams = useSearchParams();
+  const branch = searchParams.get("branch") ?? "";
+  const month = searchParams.get("month") ?? "";
+  const year = searchParams.get("year") ?? "";
+  const group_by = searchParams.get("group-by") ?? "";
   return useQuery<RevenueOvertimeResponse, Error>({
-    queryKey: ["revenue-overtime"],
-    queryFn: () => getRevenueOvertime({branch, month, year, token, group_by}),
+    queryKey: ["revenue-overtime",  branch, month, year, group_by],
+    queryFn: () => getRevenueOvertime({ branch, month, year, token, group_by }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

@@ -6,13 +6,13 @@ import {
   SalesAnalyticsResponse,
 } from "@/lib/types/analytics-type";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
-export function useAnalyticsSales({
-  branch,
-  month,
-  year,
-  token
-}: GetAnalyticsParams) {
+export function useAnalyticsSales({ token }: GetAnalyticsParams) {
+  const searchParams = useSearchParams();
+  const branch = searchParams.get("branch") ?? "";
+  const month = searchParams.get("month") ?? "";
+  const year = searchParams.get("year") ?? "";
   return useQuery<SalesAnalyticsResponse, Error>({
     queryKey: ["analytics-sales", branch, month, year],
     queryFn: () => getSalesAnalytics({ branch, month, year, token }),
