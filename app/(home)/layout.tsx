@@ -5,6 +5,7 @@ import Footer from "@/components/sections/Footer";
 import QueryProvider from "@/provider/QueryProvider";
 import { Toaster } from "sonner";
 import { inter } from "@/components/fonts/fonts";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio",
@@ -18,6 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://files.bpcontent.cloud/2025/09/26/04/20250926043030-53EYRCB8.js"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`${inter.className} `}>
         <QueryProvider>
           <Navbar />
