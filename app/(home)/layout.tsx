@@ -20,14 +20,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script
-          src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"
-          strategy="afterInteractive"
-        />
-        <Script
-          src="https://files.bpcontent.cloud/2025/09/26/04/20250926043030-53EYRCB8.js"
-          strategy="afterInteractive"
-        />
+        <Script id="flowise-chatbot" strategy="afterInteractive">
+          {`
+            import('https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js').then((module) => {
+              const Chatbot = module.default;
+              Chatbot.init({
+                chatflowid: "c51586a9-ad8a-4377-a25c-8a9c0151a6ea",
+                apiHost: "https://cloud.flowiseai.com",
+              });
+            });
+          `}
+        </Script>
       </head>
       <body className={`${inter.className} `}>
         <QueryProvider>
