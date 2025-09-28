@@ -29,8 +29,8 @@ export default function RootLayout({
                 .then(module => {
                   const Chatbot = module.default;
                   Chatbot.init({
-                    chatflowid: "7e7656c8-06f5-4d72-9375-07ea4051d031",
-                    apiHost: "https://cloud.flowiseai.com",
+                    chatflowid: "6c578950-0eba-43d6-ac51-51922b07ee8d",
+                    apiHost: "https://my-aesthetics-chatbot.onrender.com",
                     chatflowConfig: {},
                     observersConfig: {},
                     theme: {

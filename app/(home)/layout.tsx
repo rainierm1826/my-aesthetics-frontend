@@ -4,8 +4,8 @@ import "./globals.css";
 import Footer from "@/components/sections/Footer";
 import QueryProvider from "@/provider/QueryProvider";
 import { Toaster } from "sonner";
-import { inter } from "@/components/fonts/fonts";
 import Script from "next/script";
+import { inter } from "@/components/fonts/fonts";
 
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio",
@@ -29,9 +29,12 @@ export default function RootLayout({
                 .then(module => {
                   const Chatbot = module.default;
                   Chatbot.init({
-                    chatflowid: "7e7656c8-06f5-4d72-9375-07ea4051d031",
-                    apiHost: "https://cloud.flowiseai.com",
-                    chatflowConfig: {},
+                    chatflowid: "6c578950-0eba-43d6-ac51-51922b07ee8d",
+                    apiHost: "https://my-aesthetics-chatbot.onrender.com",
+                    chatflowConfig: {
+                      hideProcessFlow: true,
+                      hideDebugMessages: true
+                    },
                     observersConfig: {},
                     theme: {
                       button: {
@@ -49,7 +52,7 @@ export default function RootLayout({
                         }
                       },
                      
-                      customCSS: \`
+                                              customCSS: \`
                         .flowise-chatbot {
                           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                         }
@@ -61,6 +64,19 @@ export default function RootLayout({
                           transform: translateY(-2px);
                           box-shadow: 0 6px 20px rgba(212, 195, 115, 0.4);
                           background-color: #c2b05e !important;
+                        }
+                        /* Hide process flow debug information */
+                        .flowise-chatbot *:contains("Process Flow"),
+                        .flowise-chatbot *:contains("Start"),
+                        .flowise-chatbot *:contains("Agent "),
+                        [data-testid*="process"],
+                        [class*="process-flow"],
+                        [class*="debug-info"] {
+                          display: none !important;
+                        }
+                        /* Hide messages that start with ** */
+                        .flowise-chatbot [class*="message"]:has(*:contains("**Process Flow**")) {
+                          display: none !important;
                         }
                         /* Hide Flowise branding footer */
                         .lite-badge,
