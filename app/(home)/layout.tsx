@@ -32,8 +32,7 @@ export default function RootLayout({
                     chatflowid: "b690697d-c2be-428b-8ea8-be2e3d72a2ec",
                     apiHost: "https://my-aesthetics-chatbot.onrender.com",
                     chatflowConfig: {
-                      hideProcessFlow: true,
-                      hideDebugMessages: true
+                      
                     },
                     observersConfig: {},
                     theme: {
@@ -113,7 +112,7 @@ export default function RootLayout({
                       \`,
                       chatWindow: {
                         showTitle: true,
-                        showAgentMessages: true,
+                        showAgentMessages: false,
                         title: 'MY Assistant',
                         titleAvatarSrc: 'https://freesvg.org/img/1538298822.png',
                         welcomeMessage: 'Hello! I\\'m MY Assistant, your personal AI helper. How can I assist you today?',
