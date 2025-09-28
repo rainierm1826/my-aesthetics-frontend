@@ -29,7 +29,7 @@ export default function RootLayout({
                 .then(module => {
                   const Chatbot = module.default;
                   Chatbot.init({
-                    chatflowid: "6c578950-0eba-43d6-ac51-51922b07ee8d",
+                    chatflowid: "b690697d-c2be-428b-8ea8-be2e3d72a2ec",
                     apiHost: "https://my-aesthetics-chatbot.onrender.com",
                     chatflowConfig: {
                       hideProcessFlow: true,
