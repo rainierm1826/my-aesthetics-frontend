@@ -45,7 +45,7 @@ export default function RootLayout({
                         iconColor: 'white',
                         customIconSrc: 'https://freesvg.org/img/1538298822.png',
                         autoWindowOpen: {
-                          autoOpen: true,
+                          autoOpen: false,
                           openDelay: 2,
                           autoOpenOnMobile: false
                         }
