@@ -43,7 +43,7 @@ export default function RootLayout({
                         iconColor: 'white',
                         customIconSrc: 'https://freesvg.org/img/1538298822.png',
                         autoWindowOpen: {
-                          autoOpen: true,
+                          autoOpen: false,
                           openDelay: 2,
                           autoOpenOnMobile: false
                         }
@@ -97,7 +97,7 @@ export default function RootLayout({
                       \`,
                       chatWindow: {
                         showTitle: true,
-                        showAgentMessages: true,
+                        showAgentMessages: false,
                         title: 'MY Assistant',
                         titleAvatarSrc: 'https://freesvg.org/img/1538298822.png',
                         welcomeMessage: 'Hello! I\\'m MY Assistant, your personal AI helper. How can I assist you today?',
