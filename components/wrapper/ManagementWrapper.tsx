@@ -1,5 +1,5 @@
 import React from "react";
-import ManagementNavbar from "./navigations/ManagementNavbar";
+import ManagementNavbar from "../navigations/ManagementNavbar";
 
 interface OwnerWrapperProps {
   title: string;
