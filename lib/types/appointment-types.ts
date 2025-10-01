@@ -49,6 +49,7 @@ export type AppointmentResponse = {
   appointment: Appointment[];
   message: string;
   status: boolean;
+  invoice_url?: string;
 };
 
 export type GetAppointmentParams = {

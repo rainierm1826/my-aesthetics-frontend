@@ -21,6 +21,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
   const subtotal = serviceCost + professionalFee;
 
   let voucherDiscount = 0;
+  const downPayment = appointment.down_payment ? appointment.down_payment : 0
 
   if (appointment.voucher_discount_type_snapshot === "fixed") {
     voucherDiscount = appointment.discount_snapshot ?? 0;
@@ -28,15 +29,8 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
     voucherDiscount = ((appointment.discount_snapshot ?? 0) / 100) * subtotal;
   }
 
-  const totalServiceCost = subtotal - voucherDiscount;
+  const totalServiceCost = subtotal - voucherDiscount - downPayment;
 
-  console.log(
-    professionalFee,
-    voucherDiscount,
-    serviceCost,
-    subtotal,
-    totalServiceCost
-  );
 
   return (
     <Card
@@ -185,7 +179,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
             </div>
           </div>
 
-          {/* {appointment.down_payment && appointment.down_payment > 0 && (
+          {appointment.down_payment && appointment.down_payment > 0 && (
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
                 <p>Down Payment ({appointment.down_payment_method})</p>
@@ -200,13 +194,13 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
                     <p>Balance Due</p>
                     <p className="tabular-nums">
                       {formatCurrency(
-                        appointment.to_pay - appointment.down_payment
+                        appointment.to_pay
                       )}
                     </p>
                   </div>
                 )}
             </div>
-          )} */}
+          )}
 
           <div className="space-y-2 text-sm">
             {appointment.final_payment_method && (

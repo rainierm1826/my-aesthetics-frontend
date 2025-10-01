@@ -14,7 +14,6 @@ export function useAppointmentsOvertime({ token }: GetAnalyticsParams) {
     .find((row) => row.startsWith("predictiveAnalytics="))
     ?.split("=")[1];
 
-
   const searchParams = useSearchParams();
   const branch = searchParams.get("branch") ?? "";
   const month = searchParams.get("month") ?? "";
@@ -22,9 +21,23 @@ export function useAppointmentsOvertime({ token }: GetAnalyticsParams) {
   const group_by = searchParams.get("group-by") ?? "";
 
   return useQuery<AppointmentsOvertimeResponse, Error>({
-    queryKey: ["appointments-overtime", branch, month, year, group_by, predictCookie],
+    queryKey: [
+      "appointments-overtime",
+      branch,
+      month,
+      year,
+      group_by,
+      predictCookie,
+    ],
     queryFn: () =>
-      getAppointmentsOvertime({ branch, month, year, group_by, token, predict:predictCookie }),
+      getAppointmentsOvertime({
+        branch,
+        month,
+        year,
+        group_by,
+        token,
+        predict: predictCookie,
+      }),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
