@@ -1,4 +1,4 @@
-import OwnerWrapper from "@/components/ManagementWrapper";
+import OwnerWrapper from "@/components/wrapper/ManagementWrapper";
 import SalesDashboard from "@/components/dashboard/SalesDashboard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";

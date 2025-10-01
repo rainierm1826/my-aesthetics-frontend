@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import OwnerWrapper from "@/components/ManagementWrapper";
+import OwnerWrapper from "@/components/wrapper/ManagementWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import AppointmentTable from "@/components/tables/AppointmentTable";

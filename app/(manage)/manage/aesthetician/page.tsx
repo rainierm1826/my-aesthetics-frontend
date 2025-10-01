@@ -1,6 +1,6 @@
 import { getAllAesthetician } from "@/api/aesthetician";
 import AestheticianTable from "@/components/tables/AestheticianTable";
-import OwnerWrapper from "@/components/ManagementWrapper";
+import OwnerWrapper from "@/components/wrapper/ManagementWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   dehydrate,

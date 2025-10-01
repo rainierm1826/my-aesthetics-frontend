@@ -1,6 +1,5 @@
 import { getAllAdmin } from "@/api/admin";
 import AdminTable from "@/components/tables/AdminTable";
-import OwnerWrapper from "@/components/ManagementWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   dehydrate,
@@ -9,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
+import OwnerWrapper from "@/components/wrapper/ManagementWrapper";
 
 export default async function AdminPage({
   searchParams,

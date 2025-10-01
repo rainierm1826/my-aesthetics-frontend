@@ -1,5 +1,5 @@
 import AppointmentDashboard from "@/components/dashboard/AppointmentDashboard";
-import OwnerWrapper from "@/components/ManagementWrapper";
+import OwnerWrapper from "@/components/wrapper/ManagementWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 

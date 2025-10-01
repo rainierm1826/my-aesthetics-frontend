@@ -3,8 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import OwnerWrapper from "@/components/ManagementWrapper";
-import DashboardCard from "@/components/cards/DashboardCard";
+import OwnerWrapper from "@/components/wrapper/ManagementWrapper";
 import { getAllBranches } from "@/api/branch";
 import BranchTable from "@/components/tables/BranchTable";
 import { Suspense } from "react";
@@ -38,13 +37,6 @@ export default async function BranchPage({
 
   return (
     <OwnerWrapper title="Manage Branches">
-      <div className="flex flex-wrap gap-3 mb-5">
-        {/* <DashboardCard />
-        <DashboardCard />
-        <DashboardCard />
-        <DashboardCard /> */}
-      </div>
-
       <div>
         <Suspense fallback={<Skeleton />}>
           <HydrationBoundary state={dehydratedState}>
