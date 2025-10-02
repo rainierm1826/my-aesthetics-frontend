@@ -3,7 +3,7 @@ import CustomerWrapper from "@/components/wrapper/CustomerWrapper";
 
 export default function ProfilePage() {
   return (
-    <CustomerWrapper title="Profile">
+    <CustomerWrapper>
       <UserForm />
     </CustomerWrapper>
   );

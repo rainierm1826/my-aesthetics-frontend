@@ -27,7 +27,6 @@ export type Service = {
   branch: BranchName
   service_name: string;
   price: number;
-  final_price: number;
   description: string;
   is_sale: boolean;
   discount_type: "fixed" | "percentage" | string;

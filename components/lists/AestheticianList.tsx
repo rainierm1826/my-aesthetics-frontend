@@ -21,7 +21,6 @@ const AestheticianList = ({ action }: { action: boolean }) => {
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-        console.log("Fetching next page...");
         fetchNextPage();
       }
     },

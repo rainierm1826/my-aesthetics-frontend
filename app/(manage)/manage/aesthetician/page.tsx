@@ -36,12 +36,6 @@ export default async function AestheticianPage({
   return (
     <OwnerWrapper title="Manage Aestheticians">
       <div className="">
-        <div className="flex flex-wrap gap-3 mb-5">
-          {/* <DashboardCard />
-          <DashboardCard />
-          <DashboardCard />
-          <DashboardCard /> */}
-        </div>
         <Suspense fallback={<Skeleton />}>
           <HydrationBoundary state={dehydratedState}>
             <AestheticianTable />

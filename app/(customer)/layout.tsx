@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/navigations/Navbar";
 import "./globals.css";
 import Footer from "@/components/sections/Footer";
 import QueryProvider from "@/provider/QueryProvider";
@@ -10,6 +9,9 @@ import { inter } from "@/components/fonts/fonts";
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio",
   description: "",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -162,7 +164,6 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} `}>
         <QueryProvider>
-          <Navbar />
           <main>{children}</main>
           <Toaster />
           <Footer />

@@ -10,6 +10,9 @@ import { inter } from "@/components/fonts/fonts";
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio",
   description: "",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({

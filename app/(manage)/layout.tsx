@@ -14,6 +14,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio - Management",
   description: "",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({
