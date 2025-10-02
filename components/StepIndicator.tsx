@@ -1,55 +1,57 @@
 "use client";
 
 import { Check, ChevronRight } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 
-const StepIndicator = () => {
-  const [step, setStep] = useState<number>(1);
+interface StepIndicatorProps {
+  currentStep: number;
+}
 
+const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
   return (
-    <div className="flex items-center gap-2 mb-6">
+    <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
       <div
-        className={`flex items-center gap-2 ${step >= 1 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-2 ${currentStep >= 1 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 1 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {step > 1 ? <Check className="w-5 h-5" /> : "1"}
+          {currentStep > 1 ? <Check className="w-5 h-5" /> : "1"}
         </div>
-        <span className="font-semibold">Branch</span>
+        <span className="font-semibold whitespace-nowrap">Branch</span>
       </div>
-      <ChevronRight className="w-5 h-5 text-gray-400" />
+      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
       <div
-        className={`flex items-center gap-2 ${step >= 2 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-2 ${currentStep >= 2 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 2 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {step > 2 ? <Check className="w-5 h-5" /> : "2"}
+          {currentStep > 2 ? <Check className="w-5 h-5" /> : "2"}
         </div>
-        <span className="font-semibold">Service</span>
+        <span className="font-semibold whitespace-nowrap">Service</span>
       </div>
-      <ChevronRight className="w-5 h-5 text-gray-400" />
+      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
       <div
-        className={`flex items-center gap-2 ${step >= 3 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-2 ${currentStep >= 3 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 3 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {step > 3 ? <Check className="w-5 h-5" /> : "3"}
+          {currentStep > 3 ? <Check className="w-5 h-5" /> : "3"}
         </div>
-        <span className="font-semibold">Aesthetician</span>
+        <span className="font-semibold whitespace-nowrap">Aesthetician</span>
       </div>
-      <ChevronRight className="w-5 h-5 text-gray-400" />
+      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
       <div
-        className={`flex items-center gap-2 ${step >= 4 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-2 ${currentStep >= 4 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 4 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 4 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {step === 4 ? <Check className="w-5 h-5" /> : "4"}
+          {currentStep === 4 ? <Check className="w-5 h-5" /> : "4"}
         </div>
-        <span className="font-semibold">Confirm</span>
+        <span className="font-semibold whitespace-nowrap">Confirm</span>
       </div>
     </div>
   );

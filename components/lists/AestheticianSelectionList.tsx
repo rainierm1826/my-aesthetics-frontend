@@ -1,12 +1,21 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Aesthetician } from "@/lib/types/aesthetician-types";
 import AestheticianSelectionCard from "@/components/cards/AestheticianSelectionCard";
 import SkeletonCard from "@/components/skeletons/SkeletonCard";
 import { useInfiniteAestheticians } from "@/hooks/useInfiniteAestheticians";
 
-const AestheticianSelectionList: React.FC = () => {
+interface AestheticianSelectionListProps {
+  branchId: string;
+  selectedAesthetician: Aesthetician | null;
+  onAestheticianSelect: (aesthetician: Aesthetician) => void;
+}
+const AestheticianSelectionList = ({
+  branchId,
+  selectedAesthetician,
+  onAestheticianSelect,
+}: AestheticianSelectionListProps) => {
   const {
     data,
     error,
@@ -14,12 +23,11 @@ const AestheticianSelectionList: React.FC = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteAestheticians();
+  } = useInfiniteAestheticians(branchId);
   const aestheticians: Aesthetician[] =
     data?.pages.flatMap((page) => page.aesthetician) ?? [];
   const loader = useRef<HTMLDivElement | null>(null);
-  const [selectedAesthetician, setSelectedAesthetician] =
-    useState<Aesthetician | null>(null);
+
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
@@ -47,10 +55,6 @@ const AestheticianSelectionList: React.FC = () => {
       }
     };
   }, [handleIntersection]);
-
-  const handleAestheticianSelect = (aesthetician: Aesthetician) => {
-    setSelectedAesthetician(aesthetician);
-  };
 
   if (error) {
     return (
@@ -87,7 +91,7 @@ const AestheticianSelectionList: React.FC = () => {
                 selectedAesthetician?.aesthetician_id ===
                 aesthetician.aesthetician_id
               }
-              onClick={handleAestheticianSelect}
+              onClick={onAestheticianSelect}
             />
           ))
         ) : (

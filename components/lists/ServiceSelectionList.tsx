@@ -1,18 +1,23 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Service } from "@/lib/types/service-types";
 import ServiceSelectionCard from "@/components/cards/ServiceSelectionCard";
 import SkeletonCard from "@/components/skeletons/SkeletonCard";
 import { useInfiniteServices } from "@/hooks/useInfiniteServices";
 
-const ServiceSelectionList: React.FC = () => {
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
+interface ServiceSelectionListProps {
+  branchId: string;
+  selectedService: Service | null;
+  onServiceSelect: (service: Service) => void;
+}
+const ServiceSelectionList = ({
+  branchId,
+  selectedService,
+  onServiceSelect,
+}: ServiceSelectionListProps) => {
 
-  const handleServiceSelect = (service: Service) => {
-    setSelectedService(service);
-  };
-
+  
   const {
     data,
     error,
@@ -20,7 +25,7 @@ const ServiceSelectionList: React.FC = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteServices();
+  } = useInfiniteServices(branchId);
   const services: Service[] = data?.pages.flatMap((page) => page.service) ?? [];
   const loader = useRef<HTMLDivElement | null>(null);
 
@@ -83,7 +88,7 @@ const ServiceSelectionList: React.FC = () => {
               key={service.service_id}
               service={service}
               isSelected={selectedService?.service_id === service.service_id}
-              onClick={handleServiceSelect}
+              onClick={onServiceSelect}
             />
           ))
         ) : (

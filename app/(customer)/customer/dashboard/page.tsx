@@ -1,25 +1,8 @@
-import AestheticianSelectionClient from "@/components/lists/AestheticianSelectionList";
-import BranchSelectionList from "@/components/lists/BranchSelectionList";
-import ServiceSelectionList from "@/components/lists/ServiceSelectionList";
-import StepIndicator from "@/components/StepIndicator";
+import BookingFlow from "@/components/BookingFlow";
 import WaitingList from "@/components/WaitingList";
 import CustomerWrapper from "@/components/wrapper/CustomerWrapper";
-import { apiRequest } from "@/lib/function";
-import { Branch, BranchListResponse } from "@/lib/types/branch-types";
-
-export async function getBranchesForServer(): Promise<Branch[]> {
-  try {
-    const response = await apiRequest<BranchListResponse>("/branch");
-    return response.branch || [];
-  } catch (error) {
-    console.error("Failed to fetch branches:", error);
-    return [];
-  }
-}
 
 export default async function CustomerDashboard() {
-  const branches: Branch[] = await getBranchesForServer();
-
   return (
     <CustomerWrapper>
       <div className="flex flex-col md:flex-row min-h-screen gap-2">
@@ -37,11 +20,8 @@ export default async function CustomerDashboard() {
             <p className="text-gray-600 mb-6">
               Follow the steps to complete your booking
             </p>
-            <StepIndicator />
-
-            <BranchSelectionList initialBranches={branches} />
-            <ServiceSelectionList />
-            <AestheticianSelectionClient />
+            
+            <BookingFlow />
           </div>
         </div>
       </div>

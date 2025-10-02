@@ -5,10 +5,10 @@ import { ServiceListResponse } from "@/lib/types/service-types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-export function useInfiniteServices() {
+export function useInfiniteServices(branchId?:string) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
-  const branch = searchParams.get("branch") ?? "all";
+  const branch = searchParams.get("branch") ?? branchId ?? "all";
   const category = searchParams.get("category") ?? undefined;
   const limit = Number(searchParams.get("limit") ?? 6);
 

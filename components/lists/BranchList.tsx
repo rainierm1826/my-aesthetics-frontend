@@ -25,7 +25,7 @@ const BranchList = ({ action }: { action: boolean }) => {
       )}
       <div className="grid grid-cols-1 mx-10 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl sm:mx-auto">
         {isFetching
-          ? Array.from({ length: 6 }).map((_, index) => (
+          ? Array.from({ length: 4 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))
           : branches.map((branch) => (

@@ -18,7 +18,6 @@ const ServiceSelectionCard: React.FC<ServiceSelectionCardProps> = ({
   onClick,
 }) => {
   const hasDiscount = service.is_sale && service.discount > 0;
-    console.log(service)
   return (
     <Card
       className={`pt-0 cursor-pointer overflow-hidden transition-all duration-200 hover:shadow-md ${
