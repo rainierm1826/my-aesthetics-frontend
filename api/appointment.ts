@@ -31,6 +31,14 @@ export async function getAllAppointments({
   });
 }
 
+export async function getHistory({
+  token,
+}: GetAppointmentParams): Promise<AppointmentListResponse> {
+  return apiRequest<AppointmentListResponse>(`/appointment/history`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
 export async function postAppointment({
   data,
   token,
