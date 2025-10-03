@@ -7,10 +7,12 @@ import { Aesthetician } from "@/lib/types/aesthetician-types";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Award, User } from "lucide-react";
 import { formatCurrency } from "@/lib/function";
+import { Button } from "./ui/button";
 
 interface BookingConfirmationProps {
   branch: Branch;
   service: Service;
+  isConfirming: boolean;
   aesthetician: Aesthetician;
   onConfirm: () => void;
   onCancel: () => void;
@@ -22,6 +24,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   aesthetician,
   onConfirm,
   onCancel,
+  isConfirming,
 }) => {
   const fullName = `${aesthetician.first_name} ${aesthetician.last_name}`;
 
@@ -94,7 +97,6 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                     {aesthetician.experience}
                   </p>
                 </div>
-                
               </div>
             </div>
           </CardContent>
@@ -218,18 +220,19 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
 
       {/* Action Buttons */}
       <div className="flex gap-4 mt-8">
-        <button
+        <Button
           onClick={onCancel}
-          className="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="cursor-pointer flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
+          disabled={isConfirming}
           onClick={onConfirm}
-          className="flex-1 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          className="cursor-pointer flex-1 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
         >
-          Confirm Booking
-        </button>
+          {isConfirming ? "Loading..." : "Confirm Booking"}
+        </Button>
       </div>
     </div>
   );

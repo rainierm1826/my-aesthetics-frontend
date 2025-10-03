@@ -78,7 +78,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                 className="w-full h-full object-cover"
               />
               <AvatarFallback className="w-full h-full text-6xl rounded-lg">
-                {serviceData.service_name[0]}
+                {serviceData.service_name.slice(0, 2)}
               </AvatarFallback>
             </Avatar>
           </div>

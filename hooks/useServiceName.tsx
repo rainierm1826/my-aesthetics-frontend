@@ -7,7 +7,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 export function useServiceName({branchId, token}:{branchId?:string, token:string}) {
   return useQuery<ServiceNameResponse, Error>({
     queryKey: ["service", "service-name", branchId],
-    queryFn: () => getServiceName({branch_id:branchId, token}),
+    queryFn: () => getServiceName({branch:branchId, token}),
     placeholderData: keepPreviousData,
     enabled: !!branchId,
   });

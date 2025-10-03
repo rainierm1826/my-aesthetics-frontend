@@ -91,11 +91,12 @@ const BookingFlow = () => {
       !user?.phone_number
     ) {
       router.push("/customer/profile");
+      return;
     }
 
     appointmentMutation.mutate({
       data: {
-        is_walk_in:false,
+        is_walk_in: false,
         branch_id: branch_id,
         service_id: service_id,
         aesthetician_id: aesthetician_id,
@@ -104,6 +105,7 @@ const BookingFlow = () => {
       token: access_token || "",
     });
   };
+
 
   return (
     <div>
@@ -152,6 +154,7 @@ const BookingFlow = () => {
         selectedService &&
         selectedAesthetician && (
           <BookingConfirmation
+            isConfirming={appointmentMutation.isPending}
             branch={selectedBranch}
             service={selectedService}
             aesthetician={selectedAesthetician}

@@ -63,15 +63,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const {
-        appointment_id,
-        // aesthetician_name_snapshot,
-        // service_name_snapshot,
-        // to_pay,
-        // branch_name_snapshot,
-        // final_payment_method,
-        // voucher_code_snapshot,
-      } = row.original;
+      const { appointment_id } = row.original;
       return (
         <ActionCell
           deleteFn={(id: string) => deleteData({ id: id, url: "appointment" })}

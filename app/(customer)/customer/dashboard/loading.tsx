@@ -1,5 +1,5 @@
-import SkeletonDashboard from "@/components/skeletons/SkeletonDashboard";
+import SkeletonCustomerDashboard from "@/components/skeletons/SkeletonCustomerDashboard";
 
 export default function loading() {
-  return <SkeletonDashboard />;
+  return <SkeletonCustomerDashboard />;
 }

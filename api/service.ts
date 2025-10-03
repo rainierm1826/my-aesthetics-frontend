@@ -49,14 +49,14 @@ export async function getAllService({
 }
 
 export async function getServiceName({
-  branch_id,
+  branch,
   token,
 }: {
-  branch_id?: string;
+  branch?: string;
   token: string;
 }) {
-  const params = buildParams({ branch_id });
-  return apiRequest<ServiceNameResponse>(`/service/${params}`, {
+  const params = buildParams({ branch });
+  return apiRequest<ServiceNameResponse>(`/service/service-name?${params}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 }

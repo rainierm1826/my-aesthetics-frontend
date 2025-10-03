@@ -28,7 +28,7 @@ export default function page() {
           the issue persists.
         </p>
 
-        <Link href={"/customer/dashbaord"}>
+        <Link href={"/customer/dashboard"}>
           <Button className="w-full ">
             <Home className="w-5 h-5" />
             Return to Home
