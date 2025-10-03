@@ -23,6 +23,9 @@ import {
 import { Textarea } from "../ui/textarea";
 import { Badge } from "../ui/badge";
 import SelectRatingStar from "../SelectRatingStar";
+import { useBaseMutation } from "@/hooks/useBaseMutation";
+import { patchAppointmentReview } from "@/api/appointment";
+import { useAuthStore } from "@/provider/store/authStore";
 
 export const HistoryCard = ({
   appointment,
@@ -31,6 +34,8 @@ export const HistoryCard = ({
   appointment: Appointment;
   showRatingForm?: boolean;
 }) => {
+  const { access_token } = useAuthStore();
+
   const [showForm, setShowForm] = useState(false);
 
   const form = useForm<RatingFormValues>({
@@ -47,10 +52,20 @@ export const HistoryCard = ({
 
   const { handleSubmit, control } = form;
 
+  const updateReviews = useBaseMutation("patch", {
+    updateFn: patchAppointmentReview,
+    queryKey: ["appointment"],
+    successMessages: {
+      update: "Your review was submitted",
+    },
+  });
+
   const onSubmit = (values: RatingFormValues) => {
-    console.log("Rating submitted:", values);
-    // Handle rating submission here
-    // You can call your API to submit the rating
+    updateReviews.mutate({
+      data: { ...values, appointment_id: appointment.appointment_id },
+      token: access_token || "",
+    });
+    console.log(values)
     setShowForm(false);
   };
 
@@ -70,8 +85,7 @@ export const HistoryCard = ({
             </CardTitle>
             <CardDescription className="flex items-center gap-1 mt-1">
               <Calendar className="h-3 w-3" />
-              {new Date(appointment.created_at).toLocaleDateString()} - Slot{" "}
-              {appointment.slot_number}
+              {new Date(appointment.created_at).toLocaleDateString()}
             </CardDescription>
           </div>
           <Badge
@@ -155,7 +169,7 @@ export const HistoryCard = ({
         )}
 
         {showRatingForm && !hasRatings && !showForm && (
-          <Button onClick={() => setShowForm(true)} className="w-full">
+          <Button onClick={() => setShowForm(true)} className="w-full cursor-pointer">
             Add Rating & Comments
           </Button>
         )}
@@ -355,7 +369,7 @@ export const HistoryCard = ({
                 </Button>
                 <Button
                   type="button"
-                  className="flex-1"
+                  className="flex-1 cursor-pointer"
                   onClick={handleSubmit(onSubmit)}
                 >
                   Submit Rating

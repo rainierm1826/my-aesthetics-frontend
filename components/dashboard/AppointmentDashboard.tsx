@@ -92,17 +92,17 @@ const AppointmentDashboard = () => {
           />
           <DashboardCard
             title="Completion Rate"
-            content={`${summary.completion_rate}%`}
+            content={`${summary.completion_rate ?? 0}%`}
             info="Percentage of finished appointments"
           />
           <DashboardCard
             title="Cancellation Rate"
-            content={`${summary.cancellation_rate}%`}
+            content={`${summary.cancellation_rate ?? 0}%`}
             info="Share of canceled bookings"
           />
           <DashboardCard
             title="Overall Rating"
-            content={summary.avarage_overall_rating}
+            content={summary.avarage_overall_rating ?? 0}
             info="Combined average of aestheticians, branches, and services"
           />
         </div>
