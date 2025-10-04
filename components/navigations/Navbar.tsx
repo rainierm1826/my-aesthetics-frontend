@@ -7,6 +7,8 @@ import NavbarSheet from "./NavbarSheet";
 import DropDownMenuCustomerProfile from "../dropdowns/DropDownMenuCustomerProfile";
 import { useAuthStore } from "@/provider/store/authStore";
 import DropDownMenuOwnerProfile from "../dropdowns/DropDownMenuManagementProfile";
+import { usePathname } from "next/navigation";
+
 
 const Navbar = () => {
   const { isAuth, auth, isAuthLoading } = useAuthStore();
@@ -41,24 +43,37 @@ const Navbar = () => {
   );
 };
 
+
 const NavLinks = () => {
+  const pathname = usePathname();
+
+  const links = [
+    { href: "/services", label: "Services" },
+    { href: "/aesthetician", label: "Aesthetician" },
+    { href: "/branches", label: "Branches" },
+    { href: "/about-us", label: "About Us" },
+  ];
+
   return (
-    <ul className="md:flex gap-10 text-[#7C7C7C] text-sm hidden">
-      <li>
-        <Link href={"/services"}>Services</Link>
-      </li>
-      <li>
-        <Link href={"/aesthetician"}>Aesthetician</Link>
-      </li>
-      <li>
-        <Link href={"/branches"}>Branches</Link>
-      </li>
-      <li>
-        <Link href={"/about-us"}>About Us</Link>
-      </li>
-      <li>
-        <Link href={"/contact-us"}>Contact Us</Link>
-      </li>
+    <ul className="md:flex gap-10 text-sm hidden">
+      {links.map((link) => {
+        const isActive = pathname === link.href;
+
+        return (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className={`transition-colors ${
+                isActive
+                  ? "text-[#BDA658] font-semibold border-b-2 border-[#BDA658]"
+                  : "text-[#7C7C7C] hover:text-[#BDA658]"
+              }`}
+            >
+              {link.label}
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 };
