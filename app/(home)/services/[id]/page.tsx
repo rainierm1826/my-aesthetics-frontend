@@ -35,7 +35,6 @@ export default async function ServicePage({ params }: ServicePageProps) {
     console.error(error);
   }
 
-  console.log("length", reviews.length);
   if (!service) {
     return (
       <div className="flex items-center justify-center min-h-screen">

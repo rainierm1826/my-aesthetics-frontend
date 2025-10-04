@@ -19,7 +19,7 @@ const BranchCard = ({
   city,
   lot,
   rating,
-  branch_id
+  branch_id,
 }: BranchCardProps) => {
   return (
     <Link href={`/branches/${branch_id}`} passHref>
@@ -61,7 +61,7 @@ const BranchCard = ({
                 <div className="flex items-center gap-1 w-full">
                   <RatingStar rating={rating} />
                   <span className="font-semibold text-gray-900 text-sm">
-                    {rating}
+                    {rating && rating.toFixed(2)}
                   </span>
                 </div>
                 <span className="text-xs bg-yellow-50 text-yellow-700 px-1.5 py-0.5 rounded-full whitespace-nowrap">
