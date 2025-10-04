@@ -24,12 +24,15 @@ export async function apiRequest<T>(
     });
 
     if (!response.ok) {
-      const errorBody = await response.text().catch(() => "");
-      throw new Error(
-        `HTTP ${response.status}: ${response.statusText}${
-          errorBody ? ` - ${errorBody}` : ""
-        }`
-      );
+      let errorMessage = "Something went wrong";
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+      } catch {
+        const errorText = await response.text().catch(() => "");
+        if (errorText) errorMessage = errorText;
+      }
+      throw new Error(errorMessage);
     }
 
     return await response.json();
@@ -75,10 +78,9 @@ export const formatCurrency = (amount: number) => {
 
 export function formatNumber(number: number) {
   if (number)
-
-  if (number >= 1_000_000_000) {
-    return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B";
-  }
+    if (number >= 1_000_000_000) {
+      return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B";
+    }
   if (number >= 1_000_000) {
     return (number / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
   }
