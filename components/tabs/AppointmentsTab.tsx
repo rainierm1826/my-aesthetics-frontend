@@ -7,16 +7,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { Clock, CheckCircle, XCircle } from "lucide-react";
+import { useHistory } from "@/hooks/useHistory";
+import { useAuthStore } from "@/provider/store/authStore";
+import { AppointmentListSkeleton } from "../skeletons/SkeletonHistory";
 
-const AppointmentsTab = ({
-  activeAppointments,
-  completedAppointments,
-  cancelledAppointments,
-}: {
-  activeAppointments: Appointment[];
-  completedAppointments: Appointment[];
-  cancelledAppointments: Appointment[];
-}) => {
+const AppointmentsTab = () => {
+  const { access_token } = useAuthStore();
+  const { data, isFetching } = useHistory(access_token || "");
+  const appointments: Appointment[] = data?.appointment ?? [];
+
+  const activeAppointments: Appointment[] = appointments.filter((a) =>
+    ["pending", "waiting", "on-process"].includes(a.status)
+  );
+  const completedAppointments: Appointment[] = appointments.filter(
+    (a) => a.status === "completed"
+  );
+  const cancelledAppointments: Appointment[] = appointments.filter(
+    (a) => a.status === "cancelled"
+  );
+
   return (
     <Tabs defaultValue="active" className="w-full">
       <TabsList className="grid w-full grid-cols-3">
@@ -31,7 +40,9 @@ const AppointmentsTab = ({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="active" className="mt-6">
-        {activeAppointments.length > 0 ? (
+        {isFetching ? (
+          <AppointmentListSkeleton />
+        ) : activeAppointments.length > 0 ? (
           activeAppointments.map((appointment) => (
             <HistoryCard
               key={appointment.appointment_id}
@@ -49,7 +60,9 @@ const AppointmentsTab = ({
       </TabsContent>
 
       <TabsContent value="completed" className="mt-6">
-        {completedAppointments.length > 0 ? (
+        {isFetching ? (
+          <AppointmentListSkeleton />
+        ) : completedAppointments.length > 0 ? (
           completedAppointments.map((appointment) => (
             <HistoryCard
               key={appointment.appointment_id}
@@ -68,7 +81,9 @@ const AppointmentsTab = ({
       </TabsContent>
 
       <TabsContent value="cancelled" className="mt-6">
-        {cancelledAppointments.length > 0 ? (
+        {isFetching ? (
+          <AppointmentListSkeleton />
+        ) : cancelledAppointments.length > 0 ? (
           cancelledAppointments.map((appointment) => (
             <HistoryCard
               key={appointment.appointment_id}

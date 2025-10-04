@@ -54,7 +54,7 @@ export const HistoryCard = ({
 
   const updateReviews = useBaseMutation("patch", {
     updateFn: patchAppointmentReview,
-    queryKey: ["appointment"],
+    queryKey: ["history"],
     successMessages: {
       update: "Your review was submitted",
     },
@@ -65,7 +65,7 @@ export const HistoryCard = ({
       data: { ...values, appointment_id: appointment.appointment_id },
       token: access_token || "",
     });
-    console.log(values)
+    console.log(values);
     setShowForm(false);
   };
 
@@ -169,7 +169,10 @@ export const HistoryCard = ({
         )}
 
         {showRatingForm && !hasRatings && !showForm && (
-          <Button onClick={() => setShowForm(true)} className="w-full cursor-pointer">
+          <Button
+            onClick={() => setShowForm(true)}
+            className="w-full cursor-pointer"
+          >
             Add Rating & Comments
           </Button>
         )}
