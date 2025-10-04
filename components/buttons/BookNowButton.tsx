@@ -11,9 +11,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import SignInForm from "../forms/SignInForm";
+import Image from "next/image";
 
 const BookNowButton = ({ size }: { size: string }) => {
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -25,17 +25,31 @@ const BookNowButton = ({ size }: { size: string }) => {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="grid grid-cols-1 md:grid-cols-2"
+        className="grid grid-cols-1 md:grid-cols-2 gap-0 p-0 overflow-hidden"
         style={{ maxWidth: "800px" }}
       >
-        <div className="hidden md:flex"></div>
-        <DialogHeader>
-          <DialogTitle>Sign In</DialogTitle>
-          <DialogDescription className="mb-5">
-            Enter your credentials
-          </DialogDescription>
+        {/* image */}
+        <div className="hidden md:block relative w-full h-full min-h-[500px] bg-gradient-to-br from-[#BDA658]/10 to-[#BDA658]/5">
+          <Image
+            src="/signInImage.png"
+            alt="Professional brow styling service"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        </div>
+        
+        {/* form section */}
+        <div className="p-6 md:p-8 flex flex-col justify-center">
+          <DialogHeader className="mb-6">
+            <DialogTitle className="text-2xl">Sign In</DialogTitle>
+            <DialogDescription>
+              Enter your credentials to continue
+            </DialogDescription>
+          </DialogHeader>
           <SignInForm />
-        </DialogHeader>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -3,9 +3,6 @@
 import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Separator } from "@radix-ui/react-separator";
-import FacebookLogo from "@/public/facebook-svgrepo-com.svg";
-import GoogleLogo from "@/public/google-color-svgrepo-com.svg";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -26,8 +23,6 @@ import { getUser } from "@/api/user";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/provider/store/userStore";
 import { TokenPayload } from "@/lib/types/types";
-
-
 
 const SignInForm = () => {
   const form = useForm<SignInFormValues>({
@@ -134,17 +129,6 @@ const SignInForm = () => {
           {isLoading ? "Loading..." : "Sign In"}
         </Button>
       </form>
-
-      <div className="flex items-center gap-3 my-3">
-        <Separator className="flex-1" />
-        <p className="text-xs text-[#7C7C7C]">or</p>
-        <Separator className="flex-1" />
-      </div>
-      <p className="text-sm text-center mb-1">Sign In With</p>
-      <div className="flex gap-3 justify-center">
-        <FacebookLogo className="w-6 h-6" />
-        <GoogleLogo className="w-6 h-6" />
-      </div>
     </Form>
   );
 };
