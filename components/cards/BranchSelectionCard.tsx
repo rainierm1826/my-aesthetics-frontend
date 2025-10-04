@@ -32,12 +32,16 @@ const BranchSelectionCard: React.FC<BranchSelectionCardProps> = ({
 
   return (
     <Card
-      className={`pt-0 cursor-pointer overflow-hidden transition-all duration-200 hover:shadow-md ${
-        isSelected
-          ? "ring-2 ring-primary shadow-md"
-          : "hover:ring-1 hover:ring-primary/50"
+      className={`pt-0 overflow-hidden transition-all duration-200 ${
+        isOpen
+          ? `cursor-pointer hover:shadow-md ${
+              isSelected
+                ? "ring-2 ring-primary shadow-md"
+                : "hover:ring-1 hover:ring-primary/50"
+            }`
+          : "opacity-60 cursor-not-allowed"
       }`}
-      onClick={() => onClick?.(branch)}
+      onClick={() => isOpen && onClick?.(branch)}
     >
       {/* Branch Image */}
       <div className="relative h-32 w-full overflow-hidden">
