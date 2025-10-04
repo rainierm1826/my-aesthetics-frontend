@@ -62,6 +62,30 @@ export type GetAppointmentParams = {
   token:string
 };
 
+export type GetReviewsParams = {
+  service_id?:string
+  branch_id?:string
+  aesthetician_id?:string
+};
+
+export interface Review {
+  customer_name:string,
+  customer_image:string
+  service_rating: number | null;
+  branch_rating: number | null;
+  aesthetician_rating: number | null;
+  service_comment: string | null;
+  branch_comment: string | null;
+  aesthetician_comment: string | null;
+}
+
+export interface ReviewResponse {
+  status: boolean;
+  message: string;
+  review: Review[];
+}
+
+
 export interface AppointmentFormProps {
   renderDialog?: boolean;
   method: "post" | "patch";

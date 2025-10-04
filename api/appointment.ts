@@ -67,19 +67,7 @@ export async function patchAppointment({
   });
 }
 
-export async function patchAppointmentReview({
-  data,
-  token,
-}: {
-  data: unknown;
-  token: string;
-}): Promise<AppointmentResponse> {
-  return apiRequest<AppointmentResponse>("/appointment/reviews", {
-    method: "PATCH",
-    body: JSON.stringify(data),
-    headers: { Authorization: `Bearer ${token}` },
-  });
-}
+
 
 export async function deleteAppointment(appointment_id: {
   appointment_id: string;

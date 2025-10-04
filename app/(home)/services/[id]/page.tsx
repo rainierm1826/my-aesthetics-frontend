@@ -6,8 +6,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, MapPin, Calendar, Tag, Tags } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { RatingStar } from "@/components/RatingStar";
-import { appointments } from "@/lib/data";
 import BookNowButton from "@/components/buttons/BookNowButton";
+import { Review } from "@/lib/types/appointment-types";
+import { getReviews } from "@/api/review";
 
 interface ServicePageProps {
   params: Promise<{ id: string }>;
@@ -17,6 +18,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const { id } = await params;
 
   let service: ServiceResponse | null = null;
+  let reviews: Review[] = [];
 
   try {
     service = await getService(id);
@@ -24,6 +26,16 @@ export default async function ServicePage({ params }: ServicePageProps) {
     console.error(error);
   }
 
+  try {
+    const res = await getReviews({ service_id: id });
+    if (res.status) {
+      reviews = res.review;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+
+  console.log("length", reviews.length);
   if (!service) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -43,18 +55,6 @@ export default async function ServicePage({ params }: ServicePageProps) {
   }
 
   const { service: serviceData } = service;
-
-  const completedAppointments = appointments.filter(
-    (app) => app.status === "completed"
-  ).length;
-
-  const recentReviews = appointments
-    .filter((app) => app.service_comment && app.service_rating)
-    .sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    )
-    .slice(0, 5);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -110,7 +110,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
           <div className="flex items-center gap-2">
             <RatingStar rating={serviceData.avarage_rate} />
             <span className="text-sm text-gray-600">
-              ({completedAppointments} Reviews)
+              ({reviews.length} Reviews)
             </span>
           </div>
 
@@ -180,42 +180,27 @@ export default async function ServicePage({ params }: ServicePageProps) {
           Customer Reviews
         </h2>
 
-        {recentReviews.length > 0 ? (
+        {reviews.length > 0 ? (
           <div className="space-y-6">
-            {recentReviews.map((appointment) => (
+            {reviews.map((review, index) => (
               <div
-                key={appointment.appointment_id}
+                key={index}
                 className="border-b border-gray-200 pb-6 last:border-b-0"
               >
                 <div className="flex items-start gap-4">
                   <Avatar className="h-12 w-12 flex-shrink-0">
-                    <AvatarFallback>
-                      {appointment.user
-                        ? `${appointment.user.first_name[0]}${appointment.user.last_name[0]}`
-                        : appointment.walk_in
-                        ? `${appointment.walk_in.first_name[0]}${appointment.walk_in.last_name[0]}`
-                        : "?"}
-                    </AvatarFallback>
+                    <AvatarFallback>{review.customer_name[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-4 mb-2">
-                      <div className="font-medium text-gray-900">
-                        {appointment.user
-                          ? `${appointment.user.first_name} ${appointment.user.last_name}`
-                          : appointment.walk_in
-                          ? `${appointment.walk_in.first_name} ${appointment.walk_in.last_name}`
-                          : "Anonymous"}
+                      <div className="font-medium text-gray-900 capitalize">
+                        {review.customer_name}
                       </div>
-                      <RatingStar rating={appointment.service_rating || 0} />
+                      <RatingStar rating={review.service_rating || 0} />
                     </div>
-                    <div className="text-sm text-gray-500 mb-2">
-                      with {appointment.aesthetician.first_name}{" "}
-                      {appointment.aesthetician.last_name} •{" "}
-                      {formatDistanceToNow(new Date(appointment.created_at))}{" "}
-                      ago
-                    </div>
+
                     <p className="text-gray-700 text-sm leading-relaxed">
-                      {appointment.service_comment}
+                      {review.service_comment}
                     </p>
                   </div>
                 </div>

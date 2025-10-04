@@ -24,8 +24,8 @@ import { Textarea } from "../ui/textarea";
 import { Badge } from "../ui/badge";
 import SelectRatingStar from "../SelectRatingStar";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
-import { patchAppointmentReview } from "@/api/appointment";
 import { useAuthStore } from "@/provider/store/authStore";
+import { patchAppointmentReview } from "@/api/review";
 
 export const HistoryCard = ({
   appointment,
