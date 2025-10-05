@@ -25,7 +25,7 @@ const WaitingList = () => {
   const appointments: Appointment[] = data?.appointment ?? [];
 
   return (
-    <div className="bg-white shadow-sm p-6 border-t md:border-l border-gray-200 md:min-h-screen md:[direction:rtl]">
+    <div className="bg-white shadow-sm p-6 border-t md:border-l border-gray-200 md:min-h-screen md:[direction:rtl] overflow-auto">
       <div className="md:[direction:ltr]">
         <div className="flex flex-col gap-2 mb-5">
           <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
