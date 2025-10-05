@@ -44,7 +44,9 @@ export async function getAllService({
   category,
   sort,
 }: GetServiceParams): Promise<ServiceListResponse> {
+
   const params = buildParams({ query, page, limit, branch, category, sort });
+  console.log(`/service?${params}`)
   return apiRequest<ServiceListResponse>(`/service?${params}`);
 }
 

@@ -43,7 +43,6 @@ const DataTableEntries = () => {
         <SelectValue placeholder="Show entries" />
       </SelectTrigger>
       <SelectContent align="end">
-        <SelectItem value="1">1 Entries</SelectItem>
         <SelectItem value="10">10 Entries</SelectItem>
         <SelectItem value="15">15 Entries</SelectItem>
         <SelectItem value="20">20 Entries</SelectItem>

@@ -131,7 +131,7 @@ export default async function AestheticianPage({
           <div className="flex items-center gap-2">
             <RatingStar rating={aestheticianData.average_rate} />
             <span className="text-sm text-gray-600">
-              ({reviews.length} Appointments)
+              ({reviews.length} Reviews)
             </span>
           </div>
 
@@ -185,6 +185,7 @@ export default async function AestheticianPage({
               >
                 <div className="flex items-start gap-4">
                   <Avatar className="h-12 w-12 flex-shrink-0">
+                    <AvatarImage src={review.customer_image} />
                     <AvatarFallback>{review.customer_name[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">

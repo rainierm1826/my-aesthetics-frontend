@@ -188,6 +188,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
               >
                 <div className="flex items-start gap-4">
                   <Avatar className="h-12 w-12 flex-shrink-0">
+                    <AvatarImage src={review.customer_image} />
                     <AvatarFallback>{review.customer_name[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
