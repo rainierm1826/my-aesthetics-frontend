@@ -12,7 +12,7 @@ const BranchList = ({ action }: { action: boolean }) => {
   const branches: Branch[] = data?.branch ?? [];
 
   return (
-    <main className="bg-[#fffcf9]">
+    <main className="">
       {/* Actions Section */}
       {action && (
         <div className="max-w-4xl mx-auto mb-8 ">
@@ -23,26 +23,27 @@ const BranchList = ({ action }: { action: boolean }) => {
           </div>
         </div>
       )}
-      <div className="grid grid-cols-1 mx-10 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl sm:mx-auto">
-        {isFetching
-          ? Array.from({ length: 4 }).map((_, index) => (
-              <SkeletonCard key={index} />
-            ))
-          : branches.map((branch) => (
-              <BranchCard
-                branch_id={branch.branch_id}
-                key={branch.branch_id}
-                action
-                branchName={branch.branch_name}
-                image={branch.image}
-                status={branch.status}
-                barangay={branch.address.barangay}
-                lot={branch.address.lot}
-                city={branch.address.city}
-                province={branch.address.province}
-                rating={branch.avarage_rate}
-              />
-            ))}
+      <div className="flex justify-center flex-col w-full mx-auto sm:w-3/4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mt-10 justify-items-center max-w-7xl px-2 sm:px-4">
+          {isFetching
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))
+            : branches.map((branch) => (
+                <BranchCard
+                  branch_id={branch.branch_id}
+                  key={branch.branch_id}
+                  branchName={branch.branch_name}
+                  image={branch.image}
+                  status={branch.status}
+                  barangay={branch.address.barangay}
+                  lot={branch.address.lot}
+                  city={branch.address.city}
+                  province={branch.address.province}
+                  rating={branch.avarage_rate}
+                />
+              ))}
+        </div>
       </div>
     </main>
   );

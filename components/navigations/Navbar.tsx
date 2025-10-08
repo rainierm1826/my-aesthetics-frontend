@@ -9,7 +9,6 @@ import { useAuthStore } from "@/provider/store/authStore";
 import DropDownMenuOwnerProfile from "../dropdowns/DropDownMenuManagementProfile";
 import { usePathname } from "next/navigation";
 
-
 const Navbar = () => {
   const { isAuth, auth, isAuthLoading } = useAuthStore();
 
@@ -27,7 +26,10 @@ const Navbar = () => {
 
         <div className="hidden md:flex">
           {isAuthLoading ? (
-            <p>Loading...</p>
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm text-primary">Loading...</span>
+            </div>
           ) : isAuth && auth?.role !== "customer" ? (
             <DropDownMenuOwnerProfile />
           ) : (
@@ -42,7 +44,6 @@ const Navbar = () => {
     </header>
   );
 };
-
 
 const NavLinks = () => {
   const pathname = usePathname();

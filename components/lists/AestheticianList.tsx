@@ -50,14 +50,11 @@ const AestheticianList = ({ action }: { action: boolean }) => {
     <div className="flex justify-center flex-col w-full mx-auto bg-[#fffcf9]">
       {action && (
         <div className="max-w-4xl mx-auto mb-16">
-          <div className="flex flex-col lg:flex-row items-center justify-center">
-            <div className="flex-1 max-w-md w-full mr-4 mb-5 sm:mb-0">
-              <SearchInput
-                placeholder="Search by name..."
-                size="w-3/4 md:w-full"
-              />
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-3 sm:gap-4 px-2 sm:px-0">
+            <div className="w-full lg:flex-1 lg:max-w-md">
+              <SearchInput placeholder="Search by name..." size="w-full" />
             </div>
-            <div className="flex gap-4 flex-shrink-0">
+            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center lg:flex-nowrap lg:flex-shrink-0">
               <DropDownBranch useUrlParams={true} includeAllOption={true} />
               <DropDownAvailability
                 useUrlParams={true}
@@ -69,24 +66,26 @@ const AestheticianList = ({ action }: { action: boolean }) => {
           </div>
         </div>
       )}
-      <div className="grid grid-cols-1 mx-10 md:grid-cols-4 justify-center px-4 gap-3">
-        {isLoading
-          ? Array.from({ length: 8 }).map((_, index) => (
-              <SkeletonCard key={index} />
-            ))
-          : aestheticians.map((aesthetician, index) => (
-              <AestheticianCard
-                aesthetician_id={aesthetician.aesthetician_id}
-                availability={aesthetician.availability}
-                firstName={aesthetician.first_name}
-                lastName={aesthetician.last_name}
-                middleInitial={aesthetician.middle_initial}
-                experience={aesthetician.experience}
-                image={aesthetician.image}
-                rating={aesthetician.average_rate}
-                key={index}
-              />
-            ))}
+      <div className="flex justify-center w-full mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 justify-items-center max-w-7xl px-2">
+          {isLoading
+            ? Array.from({ length: 10 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))
+            : aestheticians.map((aesthetician, index) => (
+                <AestheticianCard
+                  aesthetician_id={aesthetician.aesthetician_id}
+                  availability={aesthetician.availability}
+                  firstName={aesthetician.first_name}
+                  lastName={aesthetician.last_name}
+                  middleInitial={aesthetician.middle_initial}
+                  experience={aesthetician.experience}
+                  image={aesthetician.image}
+                  rating={aesthetician.average_rate}
+                  key={index}
+                />
+              ))}
+        </div>
       </div>
       {isFetchingNextPage && (
         <div className="flex justify-center items-center py-4">
