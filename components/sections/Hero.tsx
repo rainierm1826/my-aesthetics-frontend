@@ -74,11 +74,11 @@ const Hero = () => {
   };
 
   return (
-    <section className="h-[calc(100vh-60px-50px)] bg-[#fffcf9]">
+    <section className="relative h-[calc(100vh-60px)] bg-[#fffcf9]">
       <div className="relative grid grid-cols-1 md:grid-cols-2 place-content-center h-full px-4">
         {/* Main text */}
         <motion.div
-          className="flex flex-col justify-center w-full"
+          className="flex flex-col justify-center w-full z-10"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -113,40 +113,28 @@ const Hero = () => {
           )}
         </motion.div>
 
-        {/* Image */}
+        {/* Image - Full height, overlays banner */}
         <motion.div
-          className="hidden md:block absolute bottom-0 right-0 w-1/2 h-[calc(100vh-60px-50px)]"
+          className="hidden md:block absolute bottom-0 right-0 w-3/4 h-full z-20 pointer-events-none"
           variants={imageVariants}
           initial="hidden"
           animate="visible"
-        >
-          {/* Decorative background circle */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-[#BDA658]/10 to-[#BDA658]/5 rounded-full blur-3xl"
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 4,
-              ease: "easeInOut",
-            }}
-          />
+        >          
 
-          {/* Main image full size */}
+          {/* Main image full height */}
           <Image
             src="/heroImage.png"
             alt="Professional brow styling service"
             fill
-            className="object-bottom object-contain h-full"
+            className="object-bottom-right object-contain"
             priority
           />
         </motion.div>
       </div>
 
-      {/* Bottom banner */}
+      {/* Bottom banner - behind the image */}
       <motion.div
-        className="bg-[#BDA658] h-[50px] flex items-center"
+        className="absolute bottom-0 left-0 right-0 bg-[#BDA658] h-[50px] flex items-center z-0"
         variants={bannerVariants}
         initial="hidden"
         animate="visible"

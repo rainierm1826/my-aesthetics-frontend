@@ -14,10 +14,12 @@ export default function Loading() {
           Simply browse through our extensive list of trusted aestheticians.
         </p>
       </div>
-      <div className="grid grid-cols-1 mx-10 mt-10 md:grid-cols-4 justify-center px-4 gap-3">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <SkeletonCard key={index} />
-        ))}
+      <div className="flex justify-center w-full mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 justify-items-center max-w-7xl px-2">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>
       </div>
     </div>
   );

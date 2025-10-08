@@ -17,10 +17,12 @@ export default function Loading() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 mx-10 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl sm:mx-auto">
+      <div className="flex justify-center flex-col w-full mx-auto sm:w-3/4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mt-10 justify-items-center max-w-7xl px-2 sm:px-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <SkeletonCard key={index} />
         ))}
+      </div>
       </div>
     </div>
   );
