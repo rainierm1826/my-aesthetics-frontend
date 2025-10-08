@@ -79,7 +79,7 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
               <Cell
                 key={`cell-${index}`}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                fill={chartConfig[(entry as any).category]?.color || "#BDA658"}
+                fill={chartConfig[(entry as any).category]?.color || "#E6D6A8"}
               />
             ))}
           </Bar>
