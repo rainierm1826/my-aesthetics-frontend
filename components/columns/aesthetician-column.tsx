@@ -90,7 +90,7 @@ export const aestheticianColumn: ColumnDef<Aesthetician>[] = [
     },
   },
   {
-    accessorKey: "phoneNumber",
+    accessorKey: "phone_number",
     header: "Phone Number",
   },
   {
