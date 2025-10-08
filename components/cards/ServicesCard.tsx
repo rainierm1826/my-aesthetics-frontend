@@ -34,8 +34,8 @@ const ServicesCard = ({
 }) => {
   return (
     <Link href={`/services/${service_id}`} passHref>
-      <Card className="cursor-pointer pt-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-        <CardContent className="p-0 min-w-[300px]">
+      <Card className="cursor-pointer pt-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 w-[200px]">
+        <CardContent className="p-0 w-full">
           {/* Image Container */}
           <div className="relative w-full aspect-[4/3] overflow-hidden">
             <Image
@@ -46,25 +46,25 @@ const ServicesCard = ({
             />
             {/* Discount Badge */}
             {isSale && (
-              <Badge className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+              <Badge className="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-semibold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                <Tags className="w-2.5 h-2.5" />
                 <span>
-                  <Tags className="w-4 h-4" />
+                  {discountType === "percentage"
+                    ? `${discount}% OFF`
+                    : `₱${discount} OFF`}
                 </span>
-                {discountType === "percentage"
-                  ? `${discount}% OFF`
-                  : `₱${discount} OFF`}
               </Badge>
             )}
           </div>
 
           {/* Content Section */}
-          <div className="p-4 space-y-3">
+          <div className="p-2 space-y-1.5">
             {/* Service Name */}
-            <div className="space-y-1">
-              <h3 className="font-semibold text-gray-900 text-base leading-tight">
+            <div className="space-y-0.5">
+              <h3 className="font-semibold text-gray-900 text-xs leading-tight line-clamp-2">
                 {serviceName.charAt(0).toUpperCase() + serviceName.slice(1)}
               </h3>
-              <p className="text-sm text-primary">{category}</p>
+              <p className="text-[10px] text-primary">{category}</p>
             </div>
 
             {/* Rating */}
@@ -73,15 +73,15 @@ const ServicesCard = ({
             </div>
 
             {/* Price Section */}
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-gray-900">{`₱${discountedPrice.toLocaleString()}`}</span>
+            <div className="flex flex-wrap items-center gap-1">
+              <span className="text-sm font-bold text-gray-900">{`₱${discountedPrice.toLocaleString()}`}</span>
               {isSale && (
-                <span className="text-sm text-gray-400 line-through">{`₱${price.toLocaleString()}`}</span>
-              )}
-              {isSale && (
-                <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded">
-                  Save ₱{(price - discountedPrice).toLocaleString()}
-                </span>
+                <>
+                  <span className="text-[10px] text-gray-400 line-through">{`₱${price.toLocaleString()}`}</span>
+                  <span className="text-[9px] text-green-600 font-medium bg-green-50 px-1 py-0.5 rounded whitespace-nowrap">
+                    Save ₱{(price - discountedPrice).toLocaleString()}
+                  </span>
+                </>
               )}
             </div>
           </div>
@@ -89,7 +89,7 @@ const ServicesCard = ({
 
         {/* Action Section */}
         {action && (
-          <div className="px-4">
+          <div className="px-2 pb-2">
             <BookNowButton size="w-full" />
           </div>
         )}

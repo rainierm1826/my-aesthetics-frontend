@@ -2,7 +2,7 @@ import { Card, CardAction, CardHeader } from "@/components/ui/card";
 
 export default function SkeletonCard() {
   return (
-    <Card className="w-full max-w-sm overflow-hidden p-0 border-0">
+    <Card className="w-[200px] max-w-sm overflow-hidden p-0 border-0">
       <div className="aspect-video bg-gray-200 animate-pulse" />
 
       <CardHeader className="space-y-3 mb-3 pl-1">

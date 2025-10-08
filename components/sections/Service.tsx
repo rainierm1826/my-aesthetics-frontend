@@ -28,23 +28,22 @@ const Service = () => {
       <Suspense
         fallback={
           <div className="grid grid-cols-1 place-items-center sm:grid-cols-3 gap-4 justify-center mt-10 w-full sm:mx-auto">
-            {Array.from({ length: 6 }).map((_, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))}
           </div>
         }
       >
-        <div className="flex justify-center flex-col w-full mx-auto sm:w-3/4">
-          <div className="grid grid-cols-1 place-items-center sm:grid-cols-3 gap-4 justify-center mt-10 w-full sm:mx-auto">
+        <div className="flex justify-center w-full mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mt-10 justify-items-center max-w-7xl px-2 sm:px-4">
             {isFetching && !data
-              ? Array.from({ length: 6 }).map((_, i) => (
+              ? Array.from({ length: 8 }).map((_, i) => (
                   <SkeletonCard key={i} />
                 ))
               : services.map((service) => (
                   <ServicesCard
                     key={service.service_id}
                     service_id={service.service_id}
-                    action
                     category={service.category}
                     isSale={service.is_sale}
                     serviceName={service.service_name}
