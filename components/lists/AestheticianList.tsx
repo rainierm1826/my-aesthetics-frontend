@@ -76,9 +76,7 @@ const AestheticianList = ({ action }: { action: boolean }) => {
             ))
           : aestheticians.map((aesthetician, index) => (
               <AestheticianCard
-            
                 aesthetician_id={aesthetician.aesthetician_id}
-                action
                 availability={aesthetician.availability}
                 firstName={aesthetician.first_name}
                 lastName={aesthetician.last_name}

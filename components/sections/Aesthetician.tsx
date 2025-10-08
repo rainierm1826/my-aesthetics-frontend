@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { Suspense } from "react";
 import SkeletonCard from "../skeletons/SkeletonCard";
@@ -25,31 +25,32 @@ const Aesthetician = () => {
       <Suspense
         fallback={
           <div className="grid grid-cols-1 mx-10 md:grid-cols-4 justify-center px-4 gap-3">
-            {Array.from({ length: 8 }).map((_, index) => (
+            {Array.from({ length: 10 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))}
           </div>
         }
       >
-        <div className="grid grid-cols-1 mx-10 md:grid-cols-4 justify-center px-4 gap-3">
-          {isFetching
-            ? Array.from({ length: 8 }).map((_, index) => (
-                <SkeletonCard key={index} />
-              ))
-            : aestheticians.map((aesthetician, index) => (
-                <AestheticianCard
-                  aesthetician_id={aesthetician.aesthetician_id}
-                  action
-                  availability={aesthetician.availability}
-                  firstName={aesthetician.first_name}
-                  lastName={aesthetician.last_name}
-                  middleInitial={aesthetician.middle_initial}
-                  experience={aesthetician.experience}
-                  image={aesthetician.image}
-                  rating={aesthetician.average_rate}
-                  key={index}
-                />
-              ))}
+        <div className="flex justify-center w-full mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 justify-items-center max-w-7xl px-2">
+            {isFetching
+              ? Array.from({ length: 10 }).map((_, index) => (
+                  <SkeletonCard key={index} />
+                ))
+              : aestheticians.map((aesthetician, index) => (
+                  <AestheticianCard
+                    aesthetician_id={aesthetician.aesthetician_id}
+                    availability={aesthetician.availability}
+                    firstName={aesthetician.first_name}
+                    lastName={aesthetician.last_name}
+                    middleInitial={aesthetician.middle_initial}
+                    experience={aesthetician.experience}
+                    image={aesthetician.image}
+                    rating={aesthetician.average_rate}
+                    key={index}
+                  />
+                ))}
+          </div>
         </div>
       </Suspense>
     </section>

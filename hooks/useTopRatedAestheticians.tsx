@@ -10,7 +10,7 @@ export function useTopRatedAestheticians() {
     queryFn: () =>
       getAllAesthetician({
         sort: "rate:desc",
-        limit: 8,
+        limit: 10,
         page: 1,
       }),
     placeholderData: keepPreviousData,
