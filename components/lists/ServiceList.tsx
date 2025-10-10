@@ -68,6 +68,7 @@ const ServiceList = ({ action }: { action: boolean }) => {
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
             : services.map((service) => (
                 <ServicesCard
+                  duration={service.duration}
                   key={service.service_id}
                   service_id={service.service_id}
                   category={service.category}

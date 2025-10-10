@@ -42,6 +42,7 @@ const Service = () => {
                 ))
               : services.map((service) => (
                   <ServicesCard
+                    duration={service.duration}
                     key={service.service_id}
                     service_id={service.service_id}
                     category={service.category}
