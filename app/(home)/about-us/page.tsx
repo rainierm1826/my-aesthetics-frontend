@@ -59,28 +59,39 @@ export default function AboutUsPage() {
       <section className="py-20 px-4 max-w-6xl mx-auto">
         <AnimatedAboutUs>
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <div className="space-y-6">
               <h2
                 className={`${tinos.className} text-4xl md:text-5xl font-bold text-[#BDA658] mb-6`}
               >
                 Our Mission
               </h2>
-              <p className="text-[#7C7C7C] text-lg leading-relaxed mb-4">
-                At MY Aesthetics Brow Studio, we believe that brows frame the face
-                and boost confidence. Our mission is to bring out your natural
-                beauty with precision and care, creating brows that enhance your
-                unique features.
+              <p className="text-[#7C7C7C] text-lg leading-relaxed">
+                At MY Aesthetics Brow Studio, we believe that brows frame the
+                face and boost confidence. Our mission is to bring out your
+                natural beauty with precision and care, creating brows that
+                enhance your unique features.
               </p>
               <p className="text-[#7C7C7C] text-lg leading-relaxed">
                 Founded by a certified brow artist with over 6 years of
                 experience, our studio is dedicated to providing personalized
                 beauty experiences that leave you feeling confident and radiant.
               </p>
-            </div>
-            <div className="relative h-[400px] bg-gradient-to-br from-[#BDA658]/10 to-[#BDA658]/5 rounded-2xl overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center text-[#BDA658]/30 text-xl font-semibold">
-                [Founder Photo Placeholder]
+              <div className="pt-4">
+                <div className="flex items-center gap-3 text-[#BDA658]">
+                  <div className="w-12 h-[2px] bg-[#BDA658]"></div>
+                  <span className="text-sm font-medium tracking-wider">
+                    CERTIFIED & EXPERIENCED
+                  </span>
+                </div>
               </div>
+            </div>
+            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-sm">
+              <Image
+                src={"/founder.png"}
+                alt="Founder of MY Aesthetics Brow Studio"
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
         </AnimatedAboutUs>
