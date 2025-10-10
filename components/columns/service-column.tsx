@@ -127,6 +127,7 @@ export const serviceColumn: ColumnDef<Service>[] = [
           editDialog={
             <ServiceForm
               serviceId={service_id}
+              duration={duration}
               method="patch"
               description={description}
               image={image}
