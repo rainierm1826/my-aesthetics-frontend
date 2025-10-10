@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ServiceResponse } from "@/lib/types/service-types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Star, MapPin, Calendar, Tag, Tags } from "lucide-react";
+import { Star, MapPin, Calendar, Tag, Tags, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { RatingStar } from "@/components/RatingStar";
 import BookNowButton from "@/components/buttons/BookNowButton";
@@ -148,6 +148,14 @@ export default async function ServicePage({ params }: ServicePageProps) {
                 {serviceData.branch.branch_name || "Available at all branches"}
               </span>
             </div>
+            {serviceData.duration && (
+              <div className="flex items-center gap-3">
+                <Clock className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                <span className="text-gray-700">
+                  {serviceData.duration} minutes
+                </span>
+              </div>
+            )}
             {serviceData.is_sale && (
               <div className="flex items-center gap-3">
                 <Tags className="h-4 w-4 text-gray-500 flex-shrink-0" />

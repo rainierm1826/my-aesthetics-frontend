@@ -4,7 +4,7 @@ import Image from "next/image";
 import BookNowButton from "../buttons/BookNowButton";
 import { RatingStar } from "../RatingStar";
 import { Badge } from "../ui/badge";
-import { Tags } from "lucide-react";
+import { Tags, Clock } from "lucide-react";
 import Link from "next/link";
 
 const ServicesCard = ({
@@ -18,6 +18,7 @@ const ServicesCard = ({
   rating,
   isSale,
   category,
+  duration,
   service_id,
 }: {
   action?: boolean;
@@ -29,6 +30,7 @@ const ServicesCard = ({
   discountedPrice: number;
   rating: number;
   isSale: boolean;
+  duration: number;
   category: string;
   service_id: string;
 }) => {
@@ -67,9 +69,13 @@ const ServicesCard = ({
               <p className="text-[10px] text-primary">{category}</p>
             </div>
 
-            {/* Rating */}
-            <div className="flex items-center gap-2">
+            {/* Rating and Duration */}
+            <div className="flex items-center justify-between gap-2">
               <RatingStar rating={rating} />
+              <div className="flex items-center gap-0.5 text-gray-600">
+                <Clock className="w-3 h-3" />
+                <span className="text-[10px]">{duration} min</span>
+              </div>
             </div>
 
             {/* Price Section */}

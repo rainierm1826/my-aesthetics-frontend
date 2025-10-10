@@ -21,6 +21,7 @@ export const serviceFormSchema = z
     price: z.number().min(1, "Price is required"),
     discount: z.number().optional(),
     discount_type: z.string().optional(),
+    duration: z.number().min(1, "Duration is required"),
     branch_id: z.string().min(1, "Branch is required"),
     category: z.string().min(1, "Service category is required"),
     description: z.string().min(1, "Service description is required"),

@@ -66,7 +66,7 @@ export default function AboutUsPage() {
                 Our Mission
               </h2>
               <p className="text-[#7C7C7C] text-lg leading-relaxed mb-4">
-                At Aesthetics Brow Studio, we believe that brows frame the face
+                At MY Aesthetics Brow Studio, we believe that brows frame the face
                 and boost confidence. Our mission is to bring out your natural
                 beauty with precision and care, creating brows that enhance your
                 unique features.

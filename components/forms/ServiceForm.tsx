@@ -52,6 +52,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   category,
   discountType,
   priceDiscounted,
+  duration,
   isOnSale = false,
   image,
 }) => {
@@ -71,6 +72,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       is_sale: isOnSale ?? false,
       image: image ?? null,
       description: description ?? "",
+      duration: duration ?? 30,
       branch_id:
         (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
       discount_type: discountType ?? "percentage",
@@ -151,8 +153,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       formData.append("service_id", serviceId.toString());
     }
 
-
-    serviceMutation.mutate({data:formData, token:access_token||""});
+    serviceMutation.mutate({ data: formData, token: access_token || "" });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -280,6 +281,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           />
 
           {/* category  and price*/}
+          {/* category  and price*/}
           <div className="grid grid-cols-2 gap-4">
             <FormField
               control={control}
@@ -325,6 +327,34 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
             />
           </div>
 
+          {/* duration */}
+          <FormField
+            control={control}
+            name="duration"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <FormLabel htmlFor="duration">Duration (minutes)</FormLabel>
+                <FormControl>
+                  <Input
+                    id="duration"
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="30"
+                    value={field.value ?? 30}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value === ""
+                          ? ""
+                          : e.target.valueAsNumber || 30
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {/* discount type and discount */}
           <div className="grid grid-cols-2 gap-4">
             <FormField
@@ -354,8 +384,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
                     {discountTypeValue === "percentage"
                       ? "(%)"
                       : discountTypeValue === "fixed"
-                      ? "(₱)"
-                      : ""}
+                        ? "(₱)"
+                        : ""}
                   </FormLabel>
                   <FormControl>
                     <Input

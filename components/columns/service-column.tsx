@@ -100,14 +100,16 @@ export const serviceColumn: ColumnDef<Service>[] = [
         discount_type,
         discounted_price,
         avarage_rate,
+        duration,
       } = row.original;
 
       return (
         <ActionCell
           id={service_id}
-          deleteFn={(id: string) => deleteData({ id: id, url:"service" })}
+          deleteFn={(id: string) => deleteData({ id: id, url: "service" })}
           previewDialog={
             <ServicesCard
+              duration={duration}
               service_id={service_id}
               category={category}
               isSale={is_sale}

@@ -12,6 +12,7 @@ export interface ServiceFormProps {
   description?: string;
   branchId?: string | null;
   serviceId?: string;
+  duration?:number;
   price?: number;
   discount?: number;
   discountType?: string;
@@ -35,6 +36,7 @@ export type Service = {
   category: string;
   image: string;
   avarage_rate: number;
+  duration:number;
   created_at: string;
   updated_at: string;
 };
