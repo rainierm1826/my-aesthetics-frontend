@@ -3,6 +3,7 @@ import {
   AestheticianListResponse,
   AestheticianNameResponse,
   AestheticianResponse,
+  AvailableSlotsResponse,
   GetAestheticianParams,
 } from "@/lib/types/aesthetician-types";
 import { DeleteResponse } from "@/lib/types/types";
@@ -28,7 +29,6 @@ export async function getAllAesthetician({
     sort,
   });
 
-
   return apiRequest<AestheticianListResponse>(`/aesthetician?${params}`);
 }
 
@@ -46,6 +46,26 @@ export async function getAestheticianName({
   const queryString = buildParams({ branch });
   return apiRequest<AestheticianNameResponse>(
     `/aesthetician/aesthetician-name?${queryString}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+}
+
+export async function getAestheticianSlot({
+  aesthetician_id,
+  service_id,
+  date,
+  token,
+}: {
+  aesthetician_id: string;
+  service_id: string;
+  token: string;
+  date: string;
+}) {
+  const queryString = buildParams({ aesthetician_id, service_id, date });
+  return apiRequest<AvailableSlotsResponse>(
+    `/aesthetician/slot?${queryString}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }

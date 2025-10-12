@@ -32,6 +32,7 @@ import DropDownPaymentMethod from "../selects/DropDownPaymentMethod";
 import DropDownAesthetician from "../selects/DropDownAesthetician";
 import DropDownBranch from "../selects/DropDownBranch";
 import DropDownService from "../selects/DropDownService";
+import DropDownSlot from "../selects/DropDownSlot";
 import { patchAppointment, postAppointment } from "@/api/appointment";
 import { Switch } from "../ui/switch";
 import { useAuthStore } from "@/provider/store/authStore";
@@ -49,6 +50,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   middleInitial,
   phoneNumber,
   branchId,
+  start_time,
   serviceId,
   aestheticianId,
   finalPaymentMethod,
@@ -71,6 +73,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       aesthetician_id: aestheticianId || "",
       final_payment_method: finalPaymentMethod || "",
       voucher_code: voucherCode || undefined,
+      start_time: start_time || "",
+      date: new Date().toISOString().split("T")[0],
     },
   });
 
@@ -79,6 +83,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
 
   const branch = watch("branch_id");
   const service = watch("service_id");
+  const aesthetician = watch("aesthetician_id");
+  const date = watch("date");
 
   const appointmentMutation = useBaseMutation(method, {
     createFn: postAppointment,
@@ -106,6 +112,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           last_name: "",
           middle_initial: "",
           phone_number: "",
+          start_time: "",
+          date: new Date().toISOString().split("T")[0],
           branch_id:
             (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
           voucher_code: undefined,
@@ -115,12 +123,26 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   });
 
   const isLoading = appointmentMutation.isPending;
+
+  const convertTo24Hour = (time12h: string): string => {
+    const [time, period] = time12h.split(" ");
+    const [h, m] = time.split(":").map(Number);
+    const hours =
+      period === "PM" && h !== 12
+        ? h + 12
+        : period === "AM" && h === 12
+          ? 0
+          : h;
+    return `${String(hours).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+  };
+
   const onSubmit = async (values: WalkInAppointmentFormValues) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { voucher_code, ...rest } = values;
+    const { voucher_code, date, ...rest } = values;
 
     const payload = {
       ...rest,
+      start_time: convertTo24Hour(rest.start_time), // Convert to 24-hour format
       is_walk_in: true,
       ...(method === "patch" && { appointment_id: appointmentId }),
       ...(values.voucher_code ? { voucher_code: values.voucher_code } : {}),
@@ -293,6 +315,31 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               />
             )}
           </div>
+
+          {/* Time Slot Selection */}
+          {(method === "patch" ||
+            (method === "post" && aesthetician && service)) && (
+            <FormField
+              control={control}
+              name="start_time"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Choose Time Slot</FormLabel>
+                  <FormControl>
+                    <DropDownSlot
+                      value={field.value}
+                      onValueChange={(v) => field.onChange(v)}
+                      aestheticianId={aesthetician}
+                      serviceId={service}
+                      date={date}
+                      placeholder="Select time slot"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField

@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { deleteData, ordinal } from "@/lib/function";
+import { deleteData, formatTo12HourTime } from "@/lib/function";
 import ActionCell from "@/components/ActionCell";
 import ReceiptCard from "../cards/ReceiptCard";
 import { Appointment } from "@/lib/types/appointment-types";
@@ -13,10 +13,12 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
     header: "Appointment ID",
   },
   {
-    accessorKey: "slot_number",
-    header: "On Queue",
+    accessorKey: "start_time",
+    header: "Start Time",
     cell: ({ row }) => {
-      return ordinal(row.original.slot_number);
+      const time = row.original.start_time;
+
+      return formatTo12HourTime(time);
     },
   },
   {

@@ -76,6 +76,25 @@ export const formatCurrency = (amount: number) => {
   })}`;
 };
 
+
+export const formatTo12HourTime = (time: string | null): string => {
+  if (!time) return "N/A";
+
+  try {
+    const date = new Date(time);
+
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "UTC", // avoid timezone shift
+    });
+  } catch (error) {
+    console.error("Error formatting time:", time, error);
+    return "N/A";
+  }
+};
+
 export function formatNumber(number: number) {
   if (number)
     if (number >= 1_000_000_000) {

@@ -100,3 +100,12 @@ export interface AestheticianNameResponse {
   message: string;
   aesthetician: AestheticianName[];
 }
+
+export interface AvailableSlotsResponse {
+  status: boolean;
+  aesthetician_id: string;
+  service_id: string;
+  date: string;
+  available_slots: string[]; 
+}
+

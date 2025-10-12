@@ -12,6 +12,8 @@ export const walkInAppointmentSchema = z.object({
   branch_id: z.string().min(1, "Branch ID is required"),
   service_id: z.string().min(1, "Service ID is required"),
   aesthetician_id: z.string().min(1, "Aesthetician ID is required"),
+  start_time:z.string().min(1, "Slot is required"),
+  date:z.string()
 });
 
 export type WalkInAppointmentFormValues = z.infer<

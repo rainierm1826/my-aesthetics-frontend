@@ -14,11 +14,12 @@ export type Appointment = {
   discount_snapshot: number
   discounted_price_snapshot: number
   branch_name_snapshot: string;
+  appduration:string,
+  start_time:string
   voucher_code_snapshot: string | null;
   voucher_discount_type_snapshot: string | null;
   voucher_discount_amount_snapshot: number | null;
   status: string;
-  slot_number: number
   branch_rating: number | null;
   service_rating: number | null;
   aesthetician_rating: number | null;
@@ -97,6 +98,8 @@ export interface AppointmentFormProps {
   branchId?: string;
   serviceId?: string;
   aestheticianId?: string;
+  duration:string,
+  start_time:string
   firstName?: string;
   lastName?: string;
   middleInitial?: string;
