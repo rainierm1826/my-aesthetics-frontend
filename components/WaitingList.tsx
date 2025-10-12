@@ -8,7 +8,6 @@ import { useAppointments } from "@/hooks/useAppointments";
 import { useUserStore } from "@/provider/store/userStore";
 import { useAuthStore } from "@/provider/store/authStore";
 import { Appointment } from "@/lib/types/appointment-types";
-import { ordinal } from "@/lib/function";
 import SkeletonWaitingList from "./skeletons/SkeletonWaitingList";
 
 const WaitingList = () => {
@@ -60,9 +59,6 @@ const WaitingList = () => {
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-500 min-w-fit">
-                      {ordinal(item.slot_number)}
-                    </span>
                     <p className="font-semibold text-gray-900">
                       {item.customer_name_snapshot}
                     </p>

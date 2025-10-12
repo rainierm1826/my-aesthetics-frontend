@@ -46,15 +46,16 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={printReceipt} variant="outline" size="icon">
+      <div className="flex justify-start">
+        <Button onClick={printReceipt} variant="outline" size="default">
           <Printer/>
+          Print receipt
         </Button>
       </div>
 
       <Card
         ref={receiptRef}
-        className={`w-full mx-auto max-w-md shadow-lg h-[450px] overflow-y-scroll ${className}`}
+        className={`p-0 w-full mx-auto max-w-md shadow-lg h-[450px] overflow-y-scroll ${className}`}
       >
         <CardHeader className="text-center">
           <div className="space-y-3">

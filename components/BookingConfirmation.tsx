@@ -5,7 +5,7 @@ import { Branch } from "@/lib/types/branch-types";
 import { Service } from "@/lib/types/service-types";
 import { Aesthetician } from "@/lib/types/aesthetician-types";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Award, User } from "lucide-react";
+import { MapPin, Award, User, Calendar, Clock } from "lucide-react";
 import { formatCurrency } from "@/lib/function";
 import { Button } from "./ui/button";
 
@@ -14,6 +14,8 @@ interface BookingConfirmationProps {
   service: Service;
   isConfirming: boolean;
   aesthetician: Aesthetician;
+  appointmentDate: string;
+  appointmentTime: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -22,11 +24,24 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   branch,
   service,
   aesthetician,
+  appointmentDate,
+  appointmentTime,
   onConfirm,
   onCancel,
   isConfirming,
 }) => {
   const fullName = `${aesthetician.first_name} ${aesthetician.last_name}`;
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   // Pricing calculations (matching ReceiptCard logic)
   const serviceCost = service.discounted_price || service.price || 0;
@@ -99,6 +114,27 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                 </div>
               </div>
             </div>
+
+            <hr />
+
+            {/* Date & Time */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Calendar className="w-5 h-5 text-primary" />
+                  <h3 className="font-semibold">Date</h3>
+                </div>
+                <p className="font-medium">{formatDate(appointmentDate)}</p>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Clock className="w-5 h-5 text-primary" />
+                  <h3 className="font-semibold">Time</h3>
+                </div>
+                <p className="font-medium text-lg">{appointmentTime}</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -145,8 +181,6 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
             </div>
           </CardContent>
         </Card>
-
-        {/* Payment Breakdown */}
 
         {/* Payment Breakdown */}
         <Card>

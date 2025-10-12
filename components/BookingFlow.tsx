@@ -8,6 +8,7 @@ import StepIndicator from "./StepIndicator";
 import BranchSelectionList from "./lists/BranchSelectionList";
 import ServiceSelectionList from "./lists/ServiceSelectionList";
 import AestheticianSelectionList from "./lists/AestheticianSelectionList";
+import SlotSelectionList from "./lists/SlotSelectionList";
 import BookingConfirmation from "./BookingConfirmation";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useUserStore } from "@/provider/store/userStore";
@@ -21,6 +22,10 @@ const BookingFlow = () => {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedAesthetician, setSelectedAesthetician] =
     useState<Aesthetician | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const { access_token } = useAuthStore();
   const { user } = useUserStore();
   const router = useRouter();
@@ -29,18 +34,49 @@ const BookingFlow = () => {
     setSelectedBranch(branch);
     setSelectedService(null);
     setSelectedAesthetician(null);
+    setSelectedDate(new Date().toISOString().split("T")[0]);
+    setSelectedSlot(null);
     setStep(2);
   };
 
   const handleServiceSelect = (service: Service) => {
     setSelectedService(service);
     setSelectedAesthetician(null);
+    setSelectedSlot(null);
     setStep(3);
+  };
+
+  const convertTo24Hour = (time12h: string): string => {
+    const [time, period] = time12h.split(" ");
+    const [h, m] = time.split(":").map(Number);
+    const hours =
+      period === "PM" && h !== 12
+        ? h + 12
+        : period === "AM" && h === 12
+          ? 0
+          : h;
+    return `${String(hours).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
   };
 
   const handleAestheticianSelect = (aesthetician: Aesthetician) => {
     setSelectedAesthetician(aesthetician);
+    setSelectedSlot(null);
     setStep(4);
+  };
+
+  const handleSlotSelect = (slot: string) => {
+    setSelectedSlot(slot);
+  };
+
+  const handleDateChange = (date: string) => {
+    setSelectedDate(date);
+    setSelectedSlot(null);
+  };
+
+  const handleContinueToConfirmation = () => {
+    if (selectedSlot) {
+      setStep(5);
+    }
   };
 
   const handleBack = () => {
@@ -54,6 +90,8 @@ const BookingFlow = () => {
     setSelectedBranch(null);
     setSelectedService(null);
     setSelectedAesthetician(null);
+    setSelectedDate(new Date().toISOString().split("T")[0]);
+    setSelectedSlot(null);
   };
 
   const appointmentMutation = useBaseMutation("post", {
@@ -79,10 +117,12 @@ const BookingFlow = () => {
     branch_id,
     aesthetician_id,
     service_id,
+    start_time,
   }: {
     branch_id: string;
     aesthetician_id: string;
     service_id: string;
+    start_time: string;
   }) => {
     if (
       !user?.first_name ||
@@ -100,12 +140,12 @@ const BookingFlow = () => {
         branch_id: branch_id,
         service_id: service_id,
         aesthetician_id: aesthetician_id,
+        start_time: convertTo24Hour(start_time),
         final_payment_method: "cash",
       },
       token: access_token || "",
     });
   };
-
 
   return (
     <div>
@@ -148,21 +188,76 @@ const BookingFlow = () => {
         />
       )}
 
-      {/* Step 4: Confirmation */}
+      {/* Step 4: Date and Time Slot Selection */}
       {step === 4 &&
         selectedBranch &&
         selectedService &&
         selectedAesthetician && (
+          <div className="space-y-6">
+            {/* Date Picker */}
+            <div>
+              <label
+                htmlFor="appointment-date"
+                className="block text-lg font-semibold mb-2"
+              >
+                Select Date
+              </label>
+              <input
+                type="date"
+                id="appointment-date"
+                value={selectedDate}
+                onChange={(e) => handleDateChange(e.target.value)}
+                min={new Date().toISOString().split("T")[0]}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            {/* Time Slot Selection */}
+            <SlotSelectionList
+              selectedService={selectedService.service_id}
+              selectedAesthetician={selectedAesthetician.aesthetician_id}
+              selectedDate={selectedDate}
+              selectedSlot={selectedSlot}
+              onSelectSlot={handleSlotSelect}
+            />
+
+            {/* Continue Button */}
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleContinueToConfirmation}
+                disabled={!selectedSlot}
+                className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
+                  selectedSlot
+                    ? "bg-primary text-white hover:bg-primary/90"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                Continue to Confirmation
+              </button>
+            </div>
+          </div>
+        )}
+
+      {/* Step 5: Confirmation */}
+      {step === 5 &&
+        selectedBranch &&
+        selectedService &&
+        selectedAesthetician &&
+        selectedSlot && (
           <BookingConfirmation
             isConfirming={appointmentMutation.isPending}
             branch={selectedBranch}
             service={selectedService}
             aesthetician={selectedAesthetician}
+            appointmentDate={selectedDate}
+            appointmentTime={selectedSlot}
             onConfirm={() =>
               handleSubmit({
                 service_id: selectedService.service_id,
                 branch_id: selectedBranch.branch_id,
                 aesthetician_id: selectedAesthetician.aesthetician_id,
+                start_time: selectedSlot,
               })
             }
             onCancel={handleReset}
