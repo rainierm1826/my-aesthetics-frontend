@@ -68,11 +68,6 @@ const BookingFlow = () => {
     setSelectedSlot(slot);
   };
 
-  const handleDateChange = (date: string) => {
-    setSelectedDate(date);
-    setSelectedSlot(null);
-  };
-
   const handleContinueToConfirmation = () => {
     if (selectedSlot) {
       setStep(5);
@@ -188,35 +183,17 @@ const BookingFlow = () => {
         />
       )}
 
-      {/* Step 4: Date and Time Slot Selection */}
+      {/* Step 4: Time Slot Selection (Date = Today by default) */}
       {step === 4 &&
         selectedBranch &&
         selectedService &&
         selectedAesthetician && (
           <div className="space-y-6">
-            {/* Date Picker */}
-            <div>
-              <label
-                htmlFor="appointment-date"
-                className="block text-lg font-semibold mb-2"
-              >
-                Select Date
-              </label>
-              <input
-                type="date"
-                id="appointment-date"
-                value={selectedDate}
-                onChange={(e) => handleDateChange(e.target.value)}
-                min={new Date().toISOString().split("T")[0]}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
             {/* Time Slot Selection */}
             <SlotSelectionList
               selectedService={selectedService.service_id}
               selectedAesthetician={selectedAesthetician.aesthetician_id}
-              selectedDate={selectedDate}
+              selectedDate={selectedDate} // always today's date
               selectedSlot={selectedSlot}
               onSelectSlot={handleSlotSelect}
             />
@@ -250,7 +227,7 @@ const BookingFlow = () => {
             branch={selectedBranch}
             service={selectedService}
             aesthetician={selectedAesthetician}
-            appointmentDate={selectedDate}
+            appointmentDate={selectedDate} // still passes today's date
             appointmentTime={selectedSlot}
             onConfirm={() =>
               handleSubmit({
