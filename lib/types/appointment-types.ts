@@ -98,8 +98,8 @@ export interface AppointmentFormProps {
   branchId?: string;
   serviceId?: string;
   aestheticianId?: string;
-  duration:string,
-  start_time:string
+  duration?:string,
+  start_time?:string
   firstName?: string;
   lastName?: string;
   middleInitial?: string;
