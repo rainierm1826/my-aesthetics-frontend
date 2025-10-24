@@ -24,7 +24,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/provider/store/userStore";
 import { TokenPayload } from "@/lib/types/types";
 
-const SignInForm = () => {
+type SignInFormProps = {
+  onForgotPassword?: () => void;
+};
+
+const SignInForm = ({ onForgotPassword }: SignInFormProps) => {
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -124,6 +128,18 @@ const SignInForm = () => {
             </FormItem>
           )}
         />
+
+        {onForgotPassword && (
+          <div className="flex justify-end mt-1">
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="text-sm text-primary-600 hover:underline"
+            >
+              Forgot password?
+            </button>
+          </div>
+        )}
 
         <Button className="w-full mt-3" type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : "Sign In"}

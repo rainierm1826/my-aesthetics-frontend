@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -11,9 +11,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import SignInForm from "../forms/SignInForm";
+import ForgotPasswordForm from "../forms/ForgotPasswordForm";
 import Image from "next/image";
 
 const BookNowButton = ({ size }: { size: string }) => {
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -43,12 +46,20 @@ const BookNowButton = ({ size }: { size: string }) => {
         {/* form section */}
         <div className="p-6 md:p-8 flex flex-col justify-center">
           <DialogHeader className="mb-6">
-            <DialogTitle className="text-2xl">Sign In</DialogTitle>
+            <DialogTitle className="text-2xl">
+              {showForgotPassword ? "Forgot Password?" : "Sign In"}
+            </DialogTitle>
             <DialogDescription>
-              Enter your credentials to continue
+              {showForgotPassword
+                ? "Reset your password"
+                : "Enter your credentials to continue"}
             </DialogDescription>
           </DialogHeader>
-          <SignInForm />
+          {showForgotPassword ? (
+            <ForgotPasswordForm onBack={() => setShowForgotPassword(false)} />
+          ) : (
+            <SignInForm onForgotPassword={() => setShowForgotPassword(true)} />
+          )}
         </div>
       </DialogContent>
     </Dialog>

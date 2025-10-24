@@ -168,4 +168,85 @@ export async function signOut(): Promise<SignOutResponse> {
   }
 }
 
+export async function forgotPassword(data: unknown): Promise<SignUpResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(body.message || "Failed to request password reset");
+    }
+    return body as SignUpResponse;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function verifyOTPForgotPassword(data: unknown): Promise<SignUpResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/verify-otp-forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(body.message || "Failed to verify OTP");
+    }
+    return body as SignUpResponse;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function resetPassword(data: unknown): Promise<SignUpResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(body.message || "Failed to reset password");
+    }
+    return body as SignUpResponse;
+  } catch (error) {
+    throw error;
+  }
+}
+
 
