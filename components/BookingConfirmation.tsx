@@ -1,13 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Branch } from "@/lib/types/branch-types";
 import { Service } from "@/lib/types/service-types";
 import { Aesthetician } from "@/lib/types/aesthetician-types";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Award, User, Calendar, Clock } from "lucide-react";
+import { MapPin, Award, User, Calendar, Clock, Ticket } from "lucide-react";
 import { formatCurrency } from "@/lib/function";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Switch } from "./ui/switch";
 
 interface BookingConfirmationProps {
   branch: Branch;
@@ -16,7 +18,7 @@ interface BookingConfirmationProps {
   aesthetician: Aesthetician;
   appointmentDate: string;
   appointmentTime: string;
-  onConfirm: () => void;
+  onConfirm: (voucherCode?: string) => void;
   onCancel: () => void;
 }
 
@@ -30,6 +32,8 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   onCancel,
   isConfirming,
 }) => {
+  const [addVoucher, setAddVoucher] = useState<boolean>(false);
+  const [voucherCode, setVoucherCode] = useState<string>("");
   const fullName = `${aesthetician.first_name} ${aesthetician.last_name}`;
 
   // Format date for display
@@ -250,6 +254,40 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
             </div>
           </CardContent>
         </Card>
+
+        {/* Voucher Section */}
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center shadow-sm rounded-sm px-2 py-2">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Ticket className="w-5 h-5 text-primary" />
+                  <p className="text-sm font-medium">Add voucher</p>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Apply a discount voucher
+                </p>
+              </div>
+              <Switch
+                checked={addVoucher}
+                onCheckedChange={() => {
+                  setAddVoucher((value) => !value);
+                  setVoucherCode("");
+                }}
+              />
+            </div>
+            {addVoucher && (
+              <div className="mt-4">
+                <Input
+                  placeholder="Enter voucher code"
+                  value={voucherCode}
+                  onChange={(e) => setVoucherCode(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Action Buttons */}
@@ -262,7 +300,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
         </Button>
         <Button
           disabled={isConfirming}
-          onClick={onConfirm}
+          onClick={() => onConfirm(addVoucher ? voucherCode : undefined)}
           className="cursor-pointer flex-1 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
         >
           {isConfirming ? "Loading..." : "Confirm Booking"}

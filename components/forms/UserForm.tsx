@@ -23,6 +23,7 @@ import {
   Calendar,
   Shield,
   ShieldCheck,
+  Lock,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { userFormSchema, UserFormValues } from "@/schema/userSchema";
@@ -40,10 +41,14 @@ import {
 import SkeletonSettings from "../skeletons/SkeletonSettings";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { patchUser } from "@/api/user";
+import EmailVerificationModal from "@/components/modals/EmailVerificationModal";
+import ChangePasswordModal from "@/components/modals/ChangePasswordModal";
 
 export default function UserForm() {
   const [isEditing, setIsEditing] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const { user, updateUser } = useUserStore();
   const { auth, isAuth, access_token } = useAuthStore();
@@ -435,16 +440,39 @@ export default function UserForm() {
                   <FormItem>
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
-                      <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground min-h-10 flex items-center justify-between">
-                        <Badge variant={"secondary"} className="rounded-full">
-                          {field.value}
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className="text-xs rounded-full"
-                        >
-                          Read-only
-                        </Badge>
+                      <div className="space-y-3">
+                        <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground min-h-10 flex items-center justify-between">
+                          <Badge variant={"secondary"} className="rounded-full">
+                            {field.value}
+                          </Badge>
+                          <Badge
+                            variant="outline"
+                            className="text-xs rounded-full"
+                          >
+                            Read-only
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {auth?.is_verified === false && (
+                            <>
+                              <Shield className="h-4 w-4 text-orange-500" />
+                              <span className="text-sm text-orange-600">
+                                Email not verified
+                              </span>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  setShowEmailVerification(true)
+                                }
+                                className="ml-auto"
+                              >
+                                Verify Email
+                              </Button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </FormControl>
                   </FormItem>
@@ -457,13 +485,20 @@ export default function UserForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>New Password</FormLabel>
+                      <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Enter new password (leave blank to keep current)"
-                          {...field}
-                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setIsEditing(false);
+                            setShowChangePassword(true);
+                          }}
+                          className="w-full justify-start text-left"
+                        >
+                          <Lock className="h-4 w-4 mr-2" />
+                          Change Password
+                        </Button>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -500,6 +535,18 @@ export default function UserForm() {
           </Card>
         </div>
       </Form>
+
+      <EmailVerificationModal
+        isOpen={showEmailVerification}
+        onClose={() => setShowEmailVerification(false)}
+        onVerificationSuccess={() => setShowEmailVerification(false)}
+      />
+
+      <ChangePasswordModal
+        isOpen={showChangePassword}
+        onClose={() => setShowChangePassword(false)}
+        onSuccess={() => setShowChangePassword(false)}
+      />
     </div>
   );
 }

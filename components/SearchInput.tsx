@@ -21,8 +21,10 @@ const SearchInput = ({
     const params = new URLSearchParams(searchParams);
     if (query) {
       params.set("query", query);
+      params.delete("page");
     } else {
       params.delete("query");
+      params.delete("page");
     }
     replace(`${pathName}?${params.toString()}`);
   }, 300);

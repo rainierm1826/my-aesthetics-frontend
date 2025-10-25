@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import DropDownBranch from "../selects/DropDownBranch";
 import { ShieldUser } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -48,6 +49,8 @@ const AdminForm: React.FC<AdminFormProps> = ({
   branchId,
   adminId,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {access_token} = useAuthStore()
 
@@ -248,12 +251,27 @@ const AdminForm: React.FC<AdminFormProps> = ({
                         Password
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          id="password"
-                          placeholder="Enter password"
-                          type="password"
-                          {...field}
-                        />
+                        <div className="relative">
+                          <Input
+                            id="password"
+                            placeholder="Enter password"
+                            type={showPassword ? "text" : "password"}
+                            disabled={method == "patch"}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground disabled:cursor-not-allowed"
+                            disabled={method == "patch"}
+                          >
+                            {showPassword ? (
+                              <EyeOff className="w-4 h-4" />
+                            ) : (
+                              <Eye className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -275,13 +293,27 @@ const AdminForm: React.FC<AdminFormProps> = ({
                         Confirm
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          disabled={method == "patch"}
-                          id="confirmPassword"
-                          placeholder="Confirm password"
-                          type="password"
-                          {...field}
-                        />
+                        <div className="relative">
+                          <Input
+                            disabled={method == "patch"}
+                            id="confirmPassword"
+                            placeholder="Confirm password"
+                            type={showConfirmPassword ? "text" : "password"}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground disabled:cursor-not-allowed"
+                            disabled={method == "patch"}
+                          >
+                            {showConfirmPassword ? (
+                              <EyeOff className="w-4 h-4" />
+                            ) : (
+                              <Eye className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

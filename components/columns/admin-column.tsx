@@ -5,6 +5,7 @@ import { Admin } from "../../lib/types/admin-type";
 import ActionCell from "@/components/ActionCell";
 import AdminForm from "@/components/forms/AdminForm";
 import { deleteData } from "@/lib/function";
+import { useAuthStore } from "@/provider/store/authStore";
 
 export const adminColumn: ColumnDef<Admin>[] = [
   {
@@ -26,14 +27,16 @@ export const adminColumn: ColumnDef<Admin>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { access_token } = useAuthStore();
       return (
         <ActionCell
-          id={row.original.auth?.account_id}
+          id={row.original.user_id}
           deleteFn={() =>
-            deleteData({ id: row.original.auth?.account_id, url:"/auth/delete-admin" })
+            deleteData({ id: row.original.user_id, url: "/admin", token: access_token || "" })
           }
           deleteMessage="Admin has been deleted."
-          queryKey="account"
+          queryKey={["account", "admin"]}
           editDialog={
             <AdminForm
               adminId={row.original.user_id}

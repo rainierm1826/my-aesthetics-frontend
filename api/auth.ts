@@ -249,4 +249,58 @@ export async function resetPassword(data: unknown): Promise<SignUpResponse> {
   }
 }
 
+export async function sendEmailVerificationOTP(data: unknown): Promise<SignUpResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/send-email-verification-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(body.message || "Failed to send verification code");
+    }
+    return body as SignUpResponse;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function verifyEmailOTP(data: unknown): Promise<SignUpResponse> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/verify-email-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(body.message || "Failed to verify email");
+    }
+    return body as SignUpResponse;
+  } catch (error) {
+    throw error;
+  }
+}
+
 

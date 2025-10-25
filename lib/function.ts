@@ -112,18 +112,21 @@ export function formatNumber(number: number) {
 export async function deleteData({
   id,
   url,
+  token,
 }: {
   id: string;
   url: string;
+  token?: string;
 }): Promise<DeleteResponse> {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   try {
-    const response = await fetch(`${backendUrl}/${url}/${id}`, {
+    const response = await fetch(`${backendUrl}${url}/${id}`, {
       method: "PATCH",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
 
-    if (!response.status) {
+    if (!response.ok) {
       throw new Error(`error: ${response.status}`);
     }
     const result: DeleteResponse = await response.json();

@@ -23,12 +23,7 @@ const DataTableEntries = () => {
       const params = new URLSearchParams(searchParams.toString());
 
       params.delete("page");
-
-      if (nextLimit === 10) {
-        params.delete("limit");
-      } else {
-        params.set("limit", String(nextLimit));
-      }
+      params.set("limit", String(nextLimit));
 
       const qs = params.toString();
       const url = qs ? `${pathname}?${qs}` : pathname;

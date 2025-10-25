@@ -37,17 +37,22 @@ export const useBaseMutation = <TData = unknown, TVariables = void>(
       }
       throw new Error(`No ${method} function provided`);
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const keys = Array.isArray(config.queryKey[0])
         ? (config.queryKey as string[][])
         : [config.queryKey];
 
-      keys.forEach((key) => {
-        queryClient.invalidateQueries({
+      for (const key of keys) {
+        await queryClient.invalidateQueries({
           queryKey: Array.isArray(key) ? key : [key],
           exact: false, // invalidate nested queries too
         });
-      });
+        // Force an immediate refetch
+        await queryClient.refetchQueries({
+          queryKey: Array.isArray(key) ? key : [key],
+          exact: false,
+        });
+      }
 
       const messages = config.successMessages;
       const message =

@@ -113,11 +113,13 @@ const BookingFlow = () => {
     aesthetician_id,
     service_id,
     start_time,
+    voucher_code,
   }: {
     branch_id: string;
     aesthetician_id: string;
     service_id: string;
     start_time: string;
+    voucher_code?: string;
   }) => {
     if (
       !user?.first_name ||
@@ -129,15 +131,21 @@ const BookingFlow = () => {
       return;
     }
 
+    const payload: any = {
+      is_walk_in: false,
+      branch_id: branch_id,
+      service_id: service_id,
+      aesthetician_id: aesthetician_id,
+      start_time: convertTo24Hour(start_time),
+      final_payment_method: "cash",
+    };
+
+    if (voucher_code) {
+      payload.voucher_code = voucher_code;
+    }
+
     appointmentMutation.mutate({
-      data: {
-        is_walk_in: false,
-        branch_id: branch_id,
-        service_id: service_id,
-        aesthetician_id: aesthetician_id,
-        start_time: convertTo24Hour(start_time),
-        final_payment_method: "cash",
-      },
+      data: payload,
       token: access_token || "",
     });
   };
@@ -229,12 +237,13 @@ const BookingFlow = () => {
             aesthetician={selectedAesthetician}
             appointmentDate={selectedDate} // still passes today's date
             appointmentTime={selectedSlot}
-            onConfirm={() =>
+            onConfirm={(voucherCode) =>
               handleSubmit({
                 service_id: selectedService.service_id,
                 branch_id: selectedBranch.branch_id,
                 aesthetician_id: selectedAesthetician.aesthetician_id,
                 start_time: selectedSlot,
+                voucher_code: voucherCode,
               })
             }
             onCancel={handleReset}

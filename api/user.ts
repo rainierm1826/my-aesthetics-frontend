@@ -17,6 +17,28 @@ export async function patchUser({
   });
 }
 
+export async function changePassword({
+  current_password,
+  new_password,
+  token,
+}: {
+  current_password: string;
+  new_password: string;
+  token?: string | null;
+}): Promise<{ status: boolean; message: string }> {
+  return apiRequest<{ status: boolean; message: string }>("/auth/change-password", {
+    method: "POST",
+    body: JSON.stringify({
+      current_password,
+      new_password,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 export async function getUser(token?: string): Promise<UserResponse> {
   try {
     const headers: HeadersInit = {

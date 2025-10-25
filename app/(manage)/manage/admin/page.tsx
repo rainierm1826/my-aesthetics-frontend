@@ -26,15 +26,17 @@ export default async function AdminPage({
   const rawQuery = getFirst(sp.query);
   const rawPage = getFirst(sp.page) || "1";
   const rawLimit = getFirst(sp.limit) || "10";
+  const rawBranch = getFirst(sp.branch) || "";
 
   const query = rawQuery;
   const page = Number(rawPage) || 1;
   const limit = Number(rawLimit) || 10;
+  const branch = rawBranch;
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["admin", "account", { query, page, limit }],
-    queryFn: () => getAllAdmin({ query, page, limit, token:token}),
+    queryKey: ["account", "admin", { query, limit, page, branch }],
+    queryFn: () => getAllAdmin({ query, page, limit, branch, token:token}),
   });
 
   const dehydratedState = dehydrate(queryClient);

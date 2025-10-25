@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -156,6 +157,9 @@ const NewPasswordStep = ({
   onPasswordSubmit: () => void;
   onBackClick: () => void;
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const form = useForm<NewPasswordFormValues>({
     resolver: zodResolver(newPasswordSchema),
     defaultValues: {
@@ -202,13 +206,26 @@ const NewPasswordStep = ({
                   New Password
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    id="new-password"
-                    placeholder="Enter new password"
-                    type="password"
-                    disabled={passwordMutation.isPending}
-                    {...field}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="new-password"
+                      placeholder="Enter new password"
+                      type={showPassword ? "text" : "password"}
+                      disabled={passwordMutation.isPending}
+                      {...field}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -224,13 +241,26 @@ const NewPasswordStep = ({
                   Confirm Password
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    id="confirm-password"
-                    placeholder="Confirm new password"
-                    type="password"
-                    disabled={passwordMutation.isPending}
-                    {...field}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="confirm-password"
+                      placeholder="Confirm new password"
+                      type={showConfirmPassword ? "text" : "password"}
+                      disabled={passwordMutation.isPending}
+                      {...field}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
