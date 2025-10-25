@@ -121,7 +121,7 @@ export async function deleteData({
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   try {
-    const response = await fetch(`${backendUrl}${url}/${id}`, {
+    const response = await fetch(`${backendUrl}/${url}/${id}`, {
       method: "PATCH",
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
