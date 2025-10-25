@@ -483,7 +483,7 @@ export default function UserForm() {
                 <FormField
                   control={control}
                   name="password"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>

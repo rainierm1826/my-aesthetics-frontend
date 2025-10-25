@@ -77,11 +77,6 @@ const EmailStep = ({
 
   return (
     <>
-      <h2 className="text-lg font-semibold mb-2">Forgot Password?</h2>
-      <p className="text-sm text-gray-600 mb-4">
-        Enter your email and we'll send you a verification code to reset your password.
-      </p>
-
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <FormField

@@ -292,7 +292,7 @@ const EmailVerificationModal = ({
                   <div className="p-3 bg-red-50 border border-red-200 rounded-md flex gap-2">
                     <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-red-800">
-                      {(verifyOTPMutation.error as any)?.message || "Failed to verify email"}
+                      {(verifyOTPMutation.error as Error)?.message || "Failed to verify email"}
                     </p>
                   </div>
                 )}

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -112,7 +111,7 @@ const ForgotPasswordOTPForm = ({
           <Mail className="w-8 h-8 text-white" />
         </div>
         <h2 className="text-lg font-semibold mb-2">Verify Your Email</h2>
-        <p className="text-sm text-gray-600 mb-1">We've sent a 6-digit verification code to</p>
+        <p className="text-sm text-gray-600 mb-1">We&apos;ve sent a 6-digit verification code to</p>
         <p className="font-semibold text-gray-900">{email}</p>
       </div>
 
@@ -200,7 +199,7 @@ const ForgotPasswordOTPForm = ({
 
       <div className="mt-4 text-center">
         <p className="text-xs text-gray-500">
-          Didn't receive the code? Check your spam folder.
+          Didn&apos;t receive the code? Check your spam folder.
         </p>
       </div>
     </>
