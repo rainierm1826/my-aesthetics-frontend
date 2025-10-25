@@ -16,7 +16,7 @@ import {
 } from "../ui/form";
 import { z } from "zod";
 import ForgotPasswordOTPForm from "./ForgotPasswordOTPForm";
-import { forgotPassword, verifyOTPForgotPassword, resetPassword } from "@/api/auth";
+import { forgotPassword, resetPassword } from "@/api/auth";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 
 // Email validation schema
@@ -143,7 +143,6 @@ const OTPStep = ({
 // Step 3: New Password Form
 const NewPasswordStep = ({
   email,
-  otp,
   onPasswordSubmit,
   onBackClick,
 }: {

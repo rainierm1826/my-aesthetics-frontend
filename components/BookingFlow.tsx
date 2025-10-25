@@ -131,7 +131,15 @@ const BookingFlow = () => {
       return;
     }
 
-    const payload: any = {
+    const payload: {
+      is_walk_in: boolean;
+      branch_id: string;
+      service_id: string;
+      aesthetician_id: string;
+      start_time: string;
+      final_payment_method: string;
+      voucher_code?: string;
+    } = {
       is_walk_in: false,
       branch_id: branch_id,
       service_id: service_id,
