@@ -118,6 +118,7 @@ const EmailVerificationModal = ({
     if (isOpen && step === "email") {
       handleSendOTP();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const formatTime = (seconds: number) => {
@@ -131,14 +132,14 @@ const EmailVerificationModal = ({
   const handleSendOTP = () => {
     sendOTPMutation.mutate({
       email: auth?.email || "",
-    } as any);
+    } as { email: string });
   };
 
   const onSubmit = (values: OTPFormValues) => {
     verifyOTPMutation.mutate({
       email: auth?.email || "",
       otp_code: values.otp_code,
-    } as any);
+    } as { email: string; otp_code: string });
   };
 
   const handleResend = () => {
@@ -200,7 +201,7 @@ const EmailVerificationModal = ({
                 <div className="p-3 bg-red-50 border border-red-200 rounded-md flex gap-2">
                   <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-red-800">
-                    {(sendOTPMutation.error as any)?.message || "Failed to send verification code"}
+                    {(sendOTPMutation.error as Error)?.message || "Failed to send verification code"}
                   </p>
                 </div>
               )}

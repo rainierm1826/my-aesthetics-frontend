@@ -94,7 +94,7 @@ const ChangePasswordModal = ({
       current_password: values.current_password,
       new_password: values.new_password,
       token: access_token,
-    } as any);
+    } as { current_password: string; new_password: string; token: string });
   };
 
   const handleClose = () => {
@@ -228,7 +228,7 @@ const ChangePasswordModal = ({
               <div className="p-3 bg-red-50 border border-red-200 rounded-md flex gap-2">
                 <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-red-800">
-                  {(changePasswordMutation.error as any)?.message ||
+                  {(changePasswordMutation.error as Error)?.message ||
                     "Failed to change password"}
                 </p>
               </div>
