@@ -136,6 +136,7 @@ const BookingFlow = () => {
       branch_id: string;
       service_id: string;
       aesthetician_id: string;
+      date: string;
       start_time: string;
       final_payment_method: string;
       voucher_code?: string;
@@ -144,6 +145,7 @@ const BookingFlow = () => {
       branch_id: branch_id,
       service_id: service_id,
       aesthetician_id: aesthetician_id,
+      date: selectedDate,
       start_time: convertTo24Hour(start_time),
       final_payment_method: "cash",
     };

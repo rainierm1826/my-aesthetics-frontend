@@ -16,13 +16,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function CustomerTable() {
   const searchParams = useSearchParams();
-  const [page, setPage] = useState(1);
+  const router = useRouter();
   const [type, setType] = useState<"online" | "walkin" | "">("");
 
+  const page = Number(searchParams.get("page") ?? "1");
   const search = searchParams.get("query") || "";
   const limit = 10;
 
@@ -36,6 +37,15 @@ export default function CustomerTable() {
   const customers: CustomerRow[] = data?.customers ?? [];
   const pagination = data?.pagination;
 
+  const handleTypeChange = (value: string) => {
+    setType(value === "all" ? "" : (value as "online" | "walkin"));
+    // Reset to page 1 when changing type
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("page");
+    const qs = params.toString();
+    router.push(qs ? `?${qs}` : "?", { scroll: false });
+  };
+
   return (
     <>
       <div className="flex justify-between items-center mb-5 gap-4">
@@ -44,10 +54,7 @@ export default function CustomerTable() {
             placeholder="Search by name or phone..."
             size="w-1/2"
           />
-          <Select value={type || "all"} onValueChange={(value: string) => {
-            setType(value === "all" ? "" : (value as "online" | "walkin"));
-            setPage(1);
-          }}>
+          <Select value={type || "all"} onValueChange={handleTypeChange}>
             <SelectTrigger className="w-1/4">
               <SelectValue placeholder="Filter by type" />
             </SelectTrigger>
