@@ -30,9 +30,9 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import DropDownPaymentMethod from "../selects/DropDownPaymentMethod";
 import DropDownAesthetician from "../selects/DropDownAesthetician";
-import DropDownBranch from "../selects/DropDownBranch";
 import DropDownService from "../selects/DropDownService";
 import DropDownSlot from "../selects/DropDownSlot";
+import DropDownBranch from "../selects/DropDownBranch";
 import { patchAppointment, postAppointment } from "@/api/appointment";
 import { Switch } from "../ui/switch";
 import { useAuthStore } from "@/provider/store/authStore";
@@ -45,10 +45,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   formDescription,
   formTitle,
   appointmentId,
-  firstName,
-  lastName,
-  middleInitial,
-  phoneNumber,
+  walkInId,
   branchId,
   start_time,
   serviceId,
@@ -63,10 +60,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const form = useForm<WalkInAppointmentFormValues>({
     resolver: zodResolver(walkInAppointmentSchema),
     defaultValues: {
-      first_name: firstName || "",
-      last_name: lastName || "",
-      middle_initial: middleInitial || "",
-      phone_number: phoneNumber || "",
+      walk_in_id: walkInId || "",
       branch_id:
         (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
       service_id: serviceId || "",
@@ -74,7 +68,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       final_payment_method: finalPaymentMethod || "",
       voucher_code: voucherCode || undefined,
       start_time: start_time || "",
-      date: new Date().toISOString().split("T")[0],
+      date: new Date().toLocaleDateString("en-CA"),
     },
   });
 
@@ -105,15 +99,12 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
     onSuccess: (_, m) => {
       if (m === "post") {
         reset({
+          walk_in_id: "",
           aesthetician_id: "",
           final_payment_method: "",
           service_id: "",
-          first_name: "",
-          last_name: "",
-          middle_initial: "",
-          phone_number: "",
           start_time: "",
-          date: new Date().toISOString().split("T")[0],
+          date: new Date().toLocaleDateString("en-CA"),
           branch_id:
             (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
           voucher_code: undefined,
@@ -138,7 +129,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
 
   const onSubmit = async (values: WalkInAppointmentFormValues) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { voucher_code, date, ...rest } = values;
+    const { voucher_code, ...rest } = values;
 
     const payload = {
       ...rest,
@@ -163,96 +154,32 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
 
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-7 gap-3">
-            {/* First Name */}
-            <FormField
-              control={control}
-              name="first_name"
-              render={({ field }) => (
-                <FormItem className="space-y-2 col-span-3">
-                  <FormLabel
-                    htmlFor="first-name"
-                    className="text-xs text-gray-600"
-                  >
-                    First Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      id="first-name"
-                      placeholder="Enter first name"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          {/* Hidden fields required by schema */}
+          {auth?.role !== "owner" && (
+            <input type="hidden" {...form.register("branch_id")} />
+          )}
+          <input type="hidden" {...form.register("date")} />
 
-            {/* Last Name */}
-            <FormField
-              control={control}
-              name="last_name"
-              render={({ field }) => (
-                <FormItem className="space-y-2 col-span-3">
-                  <FormLabel
-                    htmlFor="last-name"
-                    className="text-xs text-gray-600"
-                  >
-                    Last Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      id="last-name"
-                      placeholder="Enter last name"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Middle Initial */}
-            <FormField
-              control={control}
-              name="middle_initial"
-              render={({ field }) => (
-                <FormItem className="col-span-1 space-y-2">
-                  <FormLabel
-                    htmlFor="middle-initial"
-                    className="text-xs text-gray-600"
-                  >
-                    M.I
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      id="middle-initial"
-                      placeholder="M"
-                      maxLength={1}
-                      className="w-full text-center"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {/* Walk-in Customer ID */}
+          <FormField
+            control={control}
+            name="walk_in_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Walk-in Customer ID</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter walk-in ID"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={control}
-              name="phone_number"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter phone number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Branch selection for owners only */}
             {auth?.role === "owner" && (
               <FormField
                 control={control}

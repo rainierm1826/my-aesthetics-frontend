@@ -65,3 +65,61 @@ export async function getUser(token?: string): Promise<UserResponse> {
     throw error;
   }
 }
+
+export async function getAllCustomers({
+  token,
+  page = 1,
+  limit = 10,
+  search = "",
+  type = "",
+  sort_by = "created_at",
+  order = "desc",
+}: {
+  token?: string | null;
+  page?: number;
+  limit?: number;
+  search?: string;
+  type?: "online" | "walkin" | "";
+  sort_by?: "created_at" | "name" | "phone";
+  order?: "asc" | "desc";
+} = {}): Promise<{
+  status: boolean;
+  message: string;
+  customers: Array<{
+    id: string;
+    first_name: string;
+    last_name: string;
+    middle_initial: string;
+    phone_number: string;
+    type: "online" | "walkin";
+    created_at: string;
+    image: string | null;
+  }>;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+    online_count: number;
+    walkin_count: number;
+  };
+}> {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("limit", limit.toString());
+  if (search) params.append("search", search);
+  if (type) params.append("type", type);
+  params.append("sort_by", sort_by);
+  params.append("order", order);
+
+  const queryString = params.toString();
+  const endpoint = `/user/all-customers${queryString ? `?${queryString}` : ""}`;
+
+  return apiRequest(endpoint, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+

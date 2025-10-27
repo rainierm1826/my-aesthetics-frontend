@@ -32,7 +32,10 @@ const DatePagination = ({ onValueChange, value }: DatePaginationProps) => {
   const currentDate = useMemo(() => {
     const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
     const dateParam = searchParams.get("date") || value || today;
-    return new Date(dateParam);
+    
+    // Parse date string (YYYY-MM-DD) without timezone conversion
+    const [year, month, day] = dateParam.split("-").map(Number);
+    return new Date(year, month - 1, day);
   }, [searchParams, value]);
 
   // Format date for display

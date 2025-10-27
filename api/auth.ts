@@ -303,4 +303,34 @@ export async function verifyEmailOTP(data: unknown): Promise<SignUpResponse> {
   }
 }
 
+export async function refreshToken(token: string): Promise<{
+  status: boolean;
+  message: string;
+  access_token: string;
+}> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(body.message || "Failed to refresh token");
+    }
+    return body;
+  } catch (error) {
+    throw error;
+  }
+}
 

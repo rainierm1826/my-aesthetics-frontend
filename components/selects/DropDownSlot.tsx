@@ -44,6 +44,13 @@ const DropDownSlot = ({
   });
 
   const availableSlots: string[] = data?.available_slots ?? [];
+  const serviceDuration: number = data?.service_duration ?? 0;
+  const workingHours = data?.working_hours ?? {
+    start_hour: 10,
+    start_minute: 0,
+    end_hour: 17,
+    end_minute: 0,
+  };
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -52,29 +59,55 @@ const DropDownSlot = ({
     ? searchParams.get("slot") || (includeAllOption ? "all" : "")
     : value || "";
 
-  // Generate all possible time slots (10:00 AM - 5:00 PM)
-  const generateAllSlots = () => {
-    const allSlots: string[] = [];
-    const startHour = 10;
-    const endHour = 17;
-
-    for (let hour = startHour; hour < endHour; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const time = new Date();
-        time.setHours(hour, minute, 0);
-        const formattedTime = time.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        });
-        allSlots.push(formattedTime);
-      }
+  // Convert time string to comparable format for sorting
+  const timeToMinutes = (timeStr: string): number => {
+    const [time, period] = timeStr.split(" ");
+    const [hoursStr, minutesStr] = time.split(":");
+    let hours = Number(hoursStr);
+    const minutes = Number(minutesStr);
+    
+    if (period === "PM" && hours !== 12) {
+      hours += 12;
+    } else if (period === "AM" && hours === 12) {
+      hours = 0;
     }
-
-    return allSlots;
+    
+    return hours * 60 + minutes;
   };
 
-  // Check if slot is in the past
+  // Generate all possible time slots based on working hours from backend
+  const generateAllSlots = () => {
+    const slots: string[] = [];
+    
+    // Use service duration for intervals, default to 30 if not available
+    const interval = serviceDuration || 30;
+
+    // eslint-disable-next-line prefer-const
+    let current = new Date();
+    current.setHours(workingHours.start_hour, workingHours.start_minute, 0, 0);
+    const endTime = new Date();
+    endTime.setHours(workingHours.end_hour, workingHours.end_minute, 0, 0);
+
+    while (current < endTime) {
+      // Format time as "HH:MM AM/PM" (matches backend format "%I:%M %p" with leading zero)
+      const minutes = String(current.getMinutes()).padStart(2, "0");
+      const period = current.getHours() >= 12 ? "PM" : "AM";
+      let displayHours = current.getHours() % 12;
+      if (displayHours === 0) displayHours = 12;
+      const displayHoursStr = String(displayHours).padStart(2, "0");
+      
+      const formattedTime = `${displayHoursStr}:${minutes} ${period}`;
+      slots.push(formattedTime);
+      current.setMinutes(current.getMinutes() + interval);
+    }
+
+    return slots.sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
+  };
+
+  // Get all slots (generated list, available marked by backend)
+  const allSlots = generateAllSlots();
+
+  // Check if slot END time is in the past (slot start + duration)
   const isSlotInPast = (slot: string, selectedDate: string) => {
     const today = new Date();
     const selectedDateObj = new Date(selectedDate);
@@ -95,18 +128,19 @@ const DropDownSlot = ({
       slotHours = 0;
     }
 
-    const slotTime = new Date();
-    slotTime.setHours(slotHours, minutes, 0, 0);
+    // Calculate slot END time (start + service duration)
+    const slotStartTime = new Date();
+    slotStartTime.setHours(slotHours, minutes, 0, 0);
+    const slotEndTime = new Date(slotStartTime.getTime() + serviceDuration * 60000);
 
-    return slotTime <= today;
+    // Slot is in the past if END time has passed
+    return slotEndTime <= today;
   };
-
-  const allSlots = generateAllSlots();
 
   const handleValueChange = useCallback(
     (newValue: string) => {
       if (useUrlParams) {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams.toString());
 
         if (newValue === "all" && includeAllOption) {
           params.delete("slot");
@@ -125,11 +159,11 @@ const DropDownSlot = ({
     },
     [
       useUrlParams,
-      searchParams,
       pathname,
       router,
       includeAllOption,
       onValueChange,
+      searchParams,
     ]
   );
 
@@ -180,7 +214,7 @@ const DropDownSlot = ({
           if (!isAvailable) {
             label += " (Booked)";
           } else if (isPast) {
-            label += "";
+            label += " (Past)";
           }
 
           return (

@@ -95,17 +95,13 @@ export interface AppointmentFormProps {
   formTitle: string;
   formDescription: string;
   appointmentId?: string;
+  walkInId?: string;
   branchId?: string;
   serviceId?: string;
   aestheticianId?: string;
-  duration?:string,
-  start_time?:string
-  firstName?: string;
-  lastName?: string;
-  middleInitial?: string;
-  phoneNumber?: string;
-  sex?: "male" | "female" | "others" | string;
+  duration?: string;
+  start_time?: string;
   finalPaymentMethod?: "cash" | "xendit" | string;
   toPay?: number;
-  voucherCode?:string
+  voucherCode?: string;
 }

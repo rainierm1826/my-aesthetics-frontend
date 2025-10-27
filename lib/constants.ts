@@ -43,6 +43,12 @@ export const managements = [
     rolesAllowed: ["owner", "admin"],
   },
   {
+    title: "Customers",
+    url: "/manage/customer",
+    icon: ShieldUser,
+    rolesAllowed: ["owner", "admin"],
+  },
+  {
     title: "Aesthetician",
     url: "/manage/aesthetician",
     icon: VenetianMask,

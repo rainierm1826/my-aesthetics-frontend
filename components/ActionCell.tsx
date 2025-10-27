@@ -78,8 +78,8 @@ const statusConfigs: StatusConfig[] = [
 
 type ActionCellProps = {
   id: string;
-  deleteFn: (id: string) => Promise<DeleteResponse>;
-  deleteMessage: string;
+  deleteFn?: (id: string) => Promise<DeleteResponse>;
+  deleteMessage?: string;
   queryKey: string[] | string;
   infoDialog?: ReactNode;
   previewDialog?: ReactNode;
@@ -224,9 +224,11 @@ function ActionCell({
             </DropdownMenuItem>
           )}
 
-          <DropdownMenuItem onSelect={handleDeleteClick}>
-            Delete
-          </DropdownMenuItem>
+          {deleteFn && deleteMessage && (
+            <DropdownMenuItem onSelect={handleDeleteClick}>
+              Delete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

@@ -106,6 +106,13 @@ export interface AvailableSlotsResponse {
   aesthetician_id: string;
   service_id: string;
   date: string;
-  available_slots: string[]; 
+  available_slots: string[];
+  service_duration: number;
+  working_hours: {
+    start_hour: number;
+    start_minute: number;
+    end_hour: number;
+    end_minute: number;
+  };
 }
 

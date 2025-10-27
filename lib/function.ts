@@ -1,4 +1,6 @@
 import { DeleteResponse } from "./types/types";
+import { useAuthStore } from "@/provider/store/authStore";
+import { refreshToken } from "@/api/auth";
 
 export async function apiRequest<T>(
   endpoint: string,
@@ -18,10 +20,39 @@ export async function apiRequest<T>(
   };
 
   try {
-    const response = await fetch(`${backendUrl}${endpoint}`, {
+    let response = await fetch(`${backendUrl}${endpoint}`, {
       ...options,
       headers,
     });
+
+    // Handle 401 - Token expired, try to refresh
+    if (response.status === 401) {
+      try {
+        const authStore = useAuthStore.getState();
+        const currentToken = authStore.access_token;
+
+        if (currentToken) {
+          const refreshResponse = await refreshToken(currentToken);
+          
+          if (refreshResponse.status && refreshResponse.access_token) {
+            // Update the token in store
+            authStore.refreshAccessToken(refreshResponse.access_token);
+            
+            // Update authorization header with new token
+            headers["Authorization"] = `Bearer ${refreshResponse.access_token}`;
+            
+            // Retry the original request with new token
+            response = await fetch(`${backendUrl}${endpoint}`, {
+              ...options,
+              headers,
+            });
+          }
+        }
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        // If refresh fails, proceed with original 401 response
+      }
+    }
 
     if (!response.ok) {
       let errorMessage = "Something went wrong";
@@ -53,7 +84,12 @@ export function buildParams(params: Record<string, unknown>): string {
 }
 
 export function toLongDate(strDate: string) {
-  const date = new Date(strDate);
+  // Parse as local time, not UTC
+  const [datePart, timePart] = strDate.split(" ");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hours, minutes, seconds] = (timePart || "00:00:00").split(":").map(Number);
+  
+  const date = new Date(year, month - 1, day, hours, minutes, seconds || 0);
 
   const formattedDate = date.toLocaleDateString("en-US", {
     year: "numeric",
@@ -81,13 +117,17 @@ export const formatTo12HourTime = (time: string | null): string => {
   if (!time) return "N/A";
 
   try {
-    const date = new Date(time);
+    // Parse "YYYY-MM-DD HH:MM:SS" format as local time
+    const [datePart, timePart] = time.split(" ");
+    const [year, month, day] = datePart.split("-").map(Number);
+    const [hours, minutes, seconds] = (timePart || "00:00:00").split(":").map(Number);
+    
+    const date = new Date(year, month - 1, day, hours, minutes, seconds || 0);
 
     return date.toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
-      timeZone: "UTC", // avoid timezone shift
     });
   } catch (error) {
     console.error("Error formatting time:", time, error);

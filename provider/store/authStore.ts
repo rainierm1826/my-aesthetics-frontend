@@ -16,6 +16,9 @@ interface AuthState {
   isAuth: boolean;
   setAuth: (auth: Auth | null, access_token: string | null) => void;
   clearAuth: () => void;
+  refreshAccessToken: (newToken: string) => void;
+  tokenExpiryTime: number | null;
+  setTokenExpiryTime: (time: number) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -25,11 +28,18 @@ export const useAuthStore = create<AuthState>()(
       access_token: null,
       isAuth: false,
       isAuthLoading: true,
+      tokenExpiryTime: null,
       setAuth: (auth, access_token) => {
         set({ auth, access_token, isAuth: !!auth, isAuthLoading: false });
       },
       setAuthLoading: (loading) => set({ isAuthLoading: loading }),
-      clearAuth: () => set({ auth: null, access_token: null, isAuth: false }),
+      clearAuth: () => set({ auth: null, access_token: null, isAuth: false, tokenExpiryTime: null }),
+      refreshAccessToken: (newToken) => {
+        set({ access_token: newToken });
+      },
+      setTokenExpiryTime: (time) => {
+        set({ tokenExpiryTime: time });
+      },
     }),
     {
       name: "auth-storage",
@@ -39,3 +49,4 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
+
