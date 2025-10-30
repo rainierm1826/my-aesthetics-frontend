@@ -33,8 +33,8 @@ export default function RootLayout({
                 .then(module => {
                   const Chatbot = module.default;
                   Chatbot.init({
-                    chatflowid: "b690697d-c2be-428b-8ea8-be2e3d72a2ec",
-                    apiHost: "https://my-aesthetics-chatbot.onrender.com",
+                    chatflowid: "55594acc-2a75-40f6-b7cb-b52b4800c4ae",
+                    apiHost: "https://ai.myaestheticsbrowstudio.com",
                     chatflowConfig: {
                       
                     },
