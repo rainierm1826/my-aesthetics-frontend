@@ -25,7 +25,7 @@ export const branchColumns: ColumnDef<Branch>[] = [
       return `${region}, ${city}`;
     },
   },
-
+  { accessorKey: "slot_capacity", id: "slot_capacity", header: "Slot Capacity" },
   { accessorKey: "address.region", id: "region", header: "Region" },
   { accessorKey: "address.province", id: "province", header: "Province" },
   { accessorKey: "address.city", id: "city", header: "City" },
@@ -73,6 +73,7 @@ export const branchColumns: ColumnDef<Branch>[] = [
               province={address.province}
               region={address.region}
               image={branch.image}
+              slot_capacity={branch.slot_capacity}
             />
           }
         />

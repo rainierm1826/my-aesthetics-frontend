@@ -34,6 +34,10 @@ export const branchFormSchema = z.object({
       .min(1, "Street address is required")
       .max(100, "Street address must be less than 100 characters"),
   }),
+  slot_capacity: z
+    .number()
+    .min(1, "Slot capacity must be at least 1")
+    .max(999, "Slot capacity must be less than 1000"),
 });
 
 export type BranchFormValues = z.infer<typeof branchFormSchema>;

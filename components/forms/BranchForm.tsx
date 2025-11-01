@@ -45,6 +45,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
   lot,
   province,
   region,
+  slot_capacity,
 }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ?? null
@@ -57,6 +58,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
     defaultValues: {
       image: image ?? null,
       branch_name: branchName || "",
+      slot_capacity: slot_capacity || 1,
       address: {
         region: region || "",
         province: province || "",
@@ -80,6 +82,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         form.reset({
           image: null,
           branch_name: "",
+          slot_capacity: 0,
           address: {
             region: "",
             province: "",
@@ -100,6 +103,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
 
     // Add text fields
     formData.append("branch_name", values.branch_name);
+    formData.append("slot_capacity", values.slot_capacity.toString());
     formData.append("region", values.address.region);
     formData.append("province", values.address.province);
     formData.append("city", values.address.city);
@@ -174,6 +178,27 @@ const BranchForm: React.FC<BranchFormProps> = ({
                 <FormLabel>Branch Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter branch name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="slot_capacity"
+            render={({ field }) => (
+              <FormItem className="mb-5">
+                <FormLabel>Slot Capacity</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter slot capacity"
+                    type="number"
+                    min="1"
+                    max="999"
+                    {...field}
+                    onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
