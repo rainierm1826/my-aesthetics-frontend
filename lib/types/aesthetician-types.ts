@@ -101,12 +101,20 @@ export interface AestheticianNameResponse {
   aesthetician: AestheticianName[];
 }
 
+export interface TimeSlotRange {
+  start_time: string;
+  end_time: string;
+  start_time_24: string;
+  end_time_24: string;
+  status: "available" | "not-available" | "past-time";
+}
+
 export interface AvailableSlotsResponse {
   status: boolean;
   aesthetician_id: string;
   service_id: string;
   date: string;
-  available_slots: string[];
+  available_slots: TimeSlotRange[];
   service_duration: number;
   working_hours: {
     start_hour: number;

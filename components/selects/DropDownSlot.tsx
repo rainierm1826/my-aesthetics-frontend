@@ -12,6 +12,7 @@ import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useAestheticianSlot } from "@/hooks/useAestheticianSlot";
+import { TimeSlotRange } from "@/lib/types/aesthetician-types";
 
 interface DropDownSlotProps
   extends Omit<DropDownProps, "value" | "onValueChange"> {
@@ -43,14 +44,7 @@ const DropDownSlot = ({
     token: access_token || "",
   });
 
-  const availableSlots: string[] = data?.available_slots ?? [];
-  const serviceDuration: number = data?.service_duration ?? 0;
-  const workingHours = data?.working_hours ?? {
-    start_hour: 10,
-    start_minute: 0,
-    end_hour: 17,
-    end_minute: 0,
-  };
+  const availableSlots = data?.available_slots ?? [];
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -59,82 +53,21 @@ const DropDownSlot = ({
     ? searchParams.get("slot") || (includeAllOption ? "all" : "")
     : value || "";
 
-  // Convert time string to comparable format for sorting
-  const timeToMinutes = (timeStr: string): number => {
-    const [time, period] = timeStr.split(" ");
-    const [hoursStr, minutesStr] = time.split(":");
-    let hours = Number(hoursStr);
-    const minutes = Number(minutesStr);
-    
-    if (period === "PM" && hours !== 12) {
-      hours += 12;
-    } else if (period === "AM" && hours === 12) {
-      hours = 0;
-    }
-    
-    return hours * 60 + minutes;
+  // Format slot for display
+  const formatSlotForDisplay = (slot: TimeSlotRange): string => {
+    return `${slot.start_time}-${slot.end_time}`;
   };
 
-  // Generate all possible time slots based on working hours from backend
-  const generateAllSlots = () => {
-    const slots: string[] = [];
-    
-    // Use service duration for intervals, default to 30 if not available
-    const interval = serviceDuration || 30;
-
-    // eslint-disable-next-line prefer-const
-    let current = new Date();
-    current.setHours(workingHours.start_hour, workingHours.start_minute, 0, 0);
-    const endTime = new Date();
-    endTime.setHours(workingHours.end_hour, workingHours.end_minute, 0, 0);
-
-    while (current < endTime) {
-      // Format time as "HH:MM AM/PM" (matches backend format "%I:%M %p" with leading zero)
-      const minutes = String(current.getMinutes()).padStart(2, "0");
-      const period = current.getHours() >= 12 ? "PM" : "AM";
-      let displayHours = current.getHours() % 12;
-      if (displayHours === 0) displayHours = 12;
-      const displayHoursStr = String(displayHours).padStart(2, "0");
-      
-      const formattedTime = `${displayHoursStr}:${minutes} ${period}`;
-      slots.push(formattedTime);
-      current.setMinutes(current.getMinutes() + interval);
-    }
-
-    return slots.sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
+  // Get status label for a slot
+  const getStatusLabel = (status: string): string => {
+    if (status === "past-time") return " (Past)";
+    if (status === "not-available") return " (Booked)";
+    return "";
   };
 
-  // Get all slots (generated list, available marked by backend)
-  const allSlots = generateAllSlots();
-
-  // Check if slot END time is in the past (slot start + duration)
-  const isSlotInPast = (slot: string, selectedDate: string) => {
-    const today = new Date();
-    const selectedDateObj = new Date(selectedDate);
-
-    // If selected date is not today, no slots are in the past
-    if (selectedDateObj.toDateString() !== today.toDateString()) {
-      return false;
-    }
-
-    // Parse the slot time (e.g., "10:30 AM")
-    const [time, period] = slot.split(" ");
-    const [hours, minutes] = time.split(":").map(Number);
-
-    let slotHours = hours;
-    if (period === "PM" && hours !== 12) {
-      slotHours += 12;
-    } else if (period === "AM" && hours === 12) {
-      slotHours = 0;
-    }
-
-    // Calculate slot END time (start + service duration)
-    const slotStartTime = new Date();
-    slotStartTime.setHours(slotHours, minutes, 0, 0);
-    const slotEndTime = new Date(slotStartTime.getTime() + serviceDuration * 60000);
-
-    // Slot is in the past if END time has passed
-    return slotEndTime <= today;
+  // Check if slot is clickable based on status
+  const isSlotClickable = (slot: TimeSlotRange): boolean => {
+    return slot.status === "available";
   };
 
   const handleValueChange = useCallback(
@@ -205,24 +138,17 @@ const DropDownSlot = ({
       <SelectContent align="end">
         {includeAllOption && <SelectItem value="all">All Slots</SelectItem>}
 
-        {allSlots.map((slot) => {
-          const isAvailable = availableSlots.includes(slot);
-          const isPast = isSlotInPast(slot, date);
-          const isDisabled = !isAvailable || isPast;
-
-          let label = slot;
-          if (!isAvailable) {
-            label += " (Booked)";
-          } else if (isPast) {
-            label += " (Past)";
-          }
+        {availableSlots.map((slot) => {
+          const slotDisplay = formatSlotForDisplay(slot);
+          const isClickable = isSlotClickable(slot);
+          const label = slotDisplay + getStatusLabel(slot.status);
 
           return (
             <SelectItem
-              key={slot}
-              value={slot}
-              disabled={isDisabled}
-              className={isDisabled ? "opacity-50 cursor-not-allowed" : ""}
+              key={slotDisplay}
+              value={slotDisplay}
+              disabled={!isClickable}
+              className={!isClickable ? "opacity-50 cursor-not-allowed" : ""}
             >
               {label}
             </SelectItem>

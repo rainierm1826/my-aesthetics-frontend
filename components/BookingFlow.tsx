@@ -46,8 +46,11 @@ const BookingFlow = () => {
     setStep(3);
   };
 
-  const convertTo24Hour = (time12h: string): string => {
-    const [time, period] = time12h.split(" ");
+  const convertTo24Hour = (timeRange: string): string => {
+    // Extract the start time from range like "02:00 PM-04:00 PM"
+    const startTime = timeRange.split("-")[0].trim(); // Gets "02:00 PM"
+    
+    const [time, period] = startTime.split(" ");
     const [h, m] = time.split(":").map(Number);
     const hours =
       period === "PM" && h !== 12
