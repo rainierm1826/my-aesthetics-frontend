@@ -10,7 +10,8 @@ import { TokenRefreshProvider } from "@/provider/TokenRefreshProvider";
 
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio",
-  description: "",
+  description:
+    "MY Aesthetics Brow Studio — expert microblading, brow shaping, lamination, lash lifts, and permanent makeup for natural, long-lasting results. Book a personalized beauty treatment today.",
   icons: {
     icon: "/icon.png",
   },
