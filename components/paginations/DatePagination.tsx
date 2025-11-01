@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -28,71 +28,80 @@ const DatePagination = ({ onValueChange, value }: DatePaginationProps) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  // Get current date from URL params or default to today
-  const currentDate = useMemo(() => {
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
-    const dateParam = searchParams.get("date") || value || today;
-    
-    // Parse date string (YYYY-MM-DD) without timezone conversion
-    const [year, month, day] = dateParam.split("-").map(Number);
-    return new Date(year, month - 1, day);
-  }, [searchParams, value]);
+  // ✅ Keep a local date state to avoid re-renders from searchParams lag
+  const [currentDate, setCurrentDate] = useState<Date>(() => {
+    const today = new Date();
+    const dateParam = searchParams.get("date") || value;
+    if (dateParam) {
+      const [y, m, d] = dateParam.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+    return today;
+  });
 
-  // Format date for display
-  const displayDate = useMemo(() => {
-    return currentDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  }, [currentDate]);
+  // ✅ Sync local state when URL param changes externally
+  useEffect(() => {
+    const dateParam = searchParams.get("date");
+    if (dateParam) {
+      const [y, m, d] = dateParam.split("-").map(Number);
+      const newDate = new Date(y, m - 1, d);
+      if (newDate.toDateString() !== currentDate.toDateString()) {
+        setCurrentDate(newDate);
+      }
+    }
+  }, [searchParams, currentDate]);
 
-  // Update URL params with new date
+  const displayDate = useMemo(
+    () =>
+      currentDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    [currentDate]
+  );
+
+  // ✅ Utility: format as YYYY-MM-DD without UTC offset
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString("en-CA"); // ISO-like but local time
+  };
+
   const updateDate = useCallback(
     (newDate: Date) => {
+      const dateString = formatDate(newDate);
       const params = new URLSearchParams(searchParams.toString());
-      const dateString = newDate.toISOString().split("T")[0];
-
       params.set("date", dateString);
+      const newUrl = `${pathname}?${params.toString()}`;
 
-      const queryString = params.toString();
-      const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
-
+      setCurrentDate(newDate); // local update first
       router.replace(newUrl, { scroll: false });
-
-      // Call the optional callback
       onValueChange?.(dateString);
     },
     [searchParams, pathname, router, onValueChange]
   );
 
-  // Navigate to previous day
   const goToPreviousDay = useCallback(() => {
-    const previousDay = new Date(currentDate);
-    previousDay.setDate(previousDay.getDate() - 1);
-    updateDate(previousDay);
+    const prev = new Date(currentDate);
+    prev.setDate(prev.getDate() - 1);
+    updateDate(prev);
   }, [currentDate, updateDate]);
 
-  // Navigate to next day
   const goToNextDay = useCallback(() => {
-    const nextDay = new Date(currentDate);
-    nextDay.setDate(nextDay.getDate() + 1);
-    updateDate(nextDay);
+    const next = new Date(currentDate);
+    next.setDate(next.getDate() + 1);
+    updateDate(next);
   }, [currentDate, updateDate]);
 
-  // Handle calendar date selection
   const handleCalendarSelect = useCallback(
     (date: Date | undefined) => {
-      if (date) {
-        updateDate(date);
-      }
+      if (date) updateDate(date);
     },
     [updateDate]
   );
 
   return (
     <div className="flex items-center gap-3">
-      <Pagination className=" flex justify-start">
+      <Pagination className="flex justify-start">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
@@ -117,6 +126,7 @@ const DatePagination = ({ onValueChange, value }: DatePaginationProps) => {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
+
       <Popover>
         <PopoverTrigger asChild>
           <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0">
@@ -128,7 +138,6 @@ const DatePagination = ({ onValueChange, value }: DatePaginationProps) => {
           sideOffset={0}
           alignOffset={0}
           className="!p-0 !m-0 border-0 shadow-none bg-transparent"
-          style={{ margin: 0, padding: 0 }}
         >
           <Calendar
             mode="single"
