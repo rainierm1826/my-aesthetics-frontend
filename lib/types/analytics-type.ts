@@ -7,6 +7,9 @@ export interface AppointmentSummaryResponse {
 
 export interface SalesSummaryResponse {
   total_revenue: number;
+  average_transaction_value: number;
+  total_discount_given: number;
+  total_voucher_usage: number;
 }
 
 export interface AppointmentOvertimeItem {

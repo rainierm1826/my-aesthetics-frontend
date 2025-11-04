@@ -27,7 +27,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
 
   let voucherDiscount = 0;
 
-  if (appointment.voucher_discount_type_snapshot === "fixed") {
+  if (appointment.discount_type_snapshot === "fixed") {
     voucherDiscount = appointment.discount_snapshot ?? 0;
   } else if (appointment.voucher_discount_type_snapshot === "percentage") {
     voucherDiscount = ((appointment.discount_snapshot ?? 0) / 100) * subtotal;
@@ -54,7 +54,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
 
       <Card
         ref={receiptRef}
-        className={`p-0 w-full mx-auto max-w-md shadow-lg h-[450px] overflow-y-scroll ${className}`}
+        className={`p-0 w-full mx-auto max-w-4xl shadow-lg h-[450px] overflow-y-scroll ${className}`}
       >
         <CardHeader className="text-center">
           <div className="space-y-3">
@@ -192,7 +192,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
                     </p>
                     <p className="text-sm font-medium tabular-nums text-red-500">
                       -
-                      {appointment.voucher_discount_type_snapshot == "fixed"
+                      {appointment.discount_type_snapshot == "fixed"
                         ? formatCurrency(appointment.discount_snapshot)
                         : `${appointment.discount_snapshot}%`}
                     </p>

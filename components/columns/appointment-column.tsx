@@ -35,12 +35,11 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
   },
   {
     // completed = green
-    // waiting = blue
+    // waiting = confirm = blue
     // pending = gray
     accessorKey: "appointment_status",
     header: "Appointment Status",
     cell: ({ row }) => {
-      console.log(row.original.start_time)
       const { status } = row.original;
       const s = status.charAt(0).toUpperCase() + status.slice(1);
       return (
@@ -59,7 +58,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
                       : ""
           }`}
         >
-          {s}
+          {s == "waiting" ? "Confirm" : s}
         </Badge>
       );
     },

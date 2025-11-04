@@ -89,19 +89,19 @@ const SalesDashboard = () => {
             info="Overall income generated across all branches"
           />
           <DashboardCard
-            title="Total Revenue"
-            content={`₱${formatNumber(summary.total_revenue)}`}
-            info="Overall income generated across all branches"
+            title="Average Transaction"
+            content={`₱${formatNumber(summary.average_transaction_value)}`}
+            info="Average revenue earned per appointment"
           />
           <DashboardCard
-            title="Total Revenue"
-            content={`₱${formatNumber(summary.total_revenue)}`}
-            info="Overall income generated across all branches"
+            title="Total Discounts"
+            content={`₱${formatNumber(summary.total_discount_given)}`}
+            info="Total amount discounted via vouchers and sales"
           />
           <DashboardCard
-            title="Total Revenue"
-            content={`₱${formatNumber(summary.total_revenue)}`}
-            info="Overall income generated across all branches"
+            title="Voucher Usage"
+            content={formatNumber(summary.total_voucher_usage)}
+            info="Number of appointments that used vouchers"
           />
         </div>
       )}

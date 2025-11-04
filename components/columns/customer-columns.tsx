@@ -21,7 +21,7 @@ export interface CustomerRow {
 export const customerColumns: ColumnDef<CustomerRow>[] = [
   {
     accessorKey: "id",
-    header: "ID",
+    header: "Customer ID",
     cell: ({ row }) => {
       const id = row.original.id;
       return (

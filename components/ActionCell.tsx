@@ -67,10 +67,10 @@ const statusConfigs: StatusConfig[] = [
     buttonHoverColor: "hover:bg-yellow-400",
   },
   {
-    label: "Mark as Waiting",
+    label: "Mark as Confirmed",
     value: "waiting",
-    dialogTitle: "Mark Appointment as Waiting?",
-    dialogDescription: "The appointment status will be updated to waiting.",
+    dialogTitle: "Mark Appointment as Confirmed?",
+    dialogDescription: "The appointment status will be updated to confirmed.",
     buttonColor: "bg-blue-500",
     buttonHoverColor: "hover:bg-blue-400",
   },
