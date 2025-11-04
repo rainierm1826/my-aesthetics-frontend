@@ -4,7 +4,6 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -47,7 +46,7 @@ export function DataTable<TData, TValue>({
   windowsSize,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    phoneNumber: false,
+    phone_number: false,
     sex: false,
     barangay: false,
     is_sale: false,
@@ -66,7 +65,8 @@ export function DataTable<TData, TValue>({
     state: { columnVisibility },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    pageCount: pageCount,
   });
 
   function ColumnToggle({ table }: { table: ReactTableType<TData> }) {

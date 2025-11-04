@@ -159,12 +159,6 @@ export const HistoryCard = ({
             <p className="text-sm font-medium text-amber-800">
               Amount to Pay: ₱{appointment.to_pay}
             </p>
-            {appointment.down_payment && (
-              <p className="text-xs text-amber-700">
-                Down Payment: ₱{appointment.down_payment} (
-                {appointment.down_payment_method})
-              </p>
-            )}
           </div>
         )}
 

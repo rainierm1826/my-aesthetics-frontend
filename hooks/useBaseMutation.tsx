@@ -66,7 +66,23 @@ export const useBaseMutation = <TData = unknown, TVariables = void>(
       config.onSuccess?.(data, method);
     },
 
-    onError: (error: Error) => {
+    onError: async (error: Error) => {
+      // Also invalidate queries on error to ensure UI is in sync
+      const keys = Array.isArray(config.queryKey[0])
+        ? (config.queryKey as string[][])
+        : [config.queryKey];
+
+      for (const key of keys) {
+        await queryClient.invalidateQueries({
+          queryKey: Array.isArray(key) ? key : [key],
+          exact: false,
+        });
+        await queryClient.refetchQueries({
+          queryKey: Array.isArray(key) ? key : [key],
+          exact: false,
+        });
+      }
+      
       toast.error(`${error}`);
     },
   });

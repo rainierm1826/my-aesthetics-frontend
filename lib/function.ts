@@ -117,18 +117,18 @@ export const formatTo12HourTime = (time: string | null): string => {
   if (!time) return "N/A";
 
   try {
-    // Parse "YYYY-MM-DD HH:MM:SS" format as local time
-    const [datePart, timePart] = time.split(" ");
-    const [year, month, day] = datePart.split("-").map(Number);
-    const [hours, minutes, seconds] = (timePart || "00:00:00").split(":").map(Number);
+    // Parse "YYYY-MM-DD HH:MM:SS" format directly without timezone conversion
+    const [, timePart] = time.split(" ");
+    if (!timePart) return "N/A";
     
-    const date = new Date(year, month - 1, day, hours, minutes, seconds || 0);
-
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
+    const [hours, minutes] = timePart.split(":").map(Number);
+    
+    // Convert 24-hour to 12-hour format
+    const period = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+    const displayMinutes = String(minutes).padStart(2, "0");
+    
+    return `${displayHours}:${displayMinutes} ${period}`;
   } catch (error) {
     console.error("Error formatting time:", time, error);
     return "N/A";

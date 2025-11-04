@@ -26,7 +26,6 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
   const subtotal = serviceCost + professionalFee;
 
   let voucherDiscount = 0;
-  const downPayment = appointment.down_payment ? appointment.down_payment : 0;
 
   if (appointment.voucher_discount_type_snapshot === "fixed") {
     voucherDiscount = appointment.discount_snapshot ?? 0;
@@ -34,7 +33,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
     voucherDiscount = ((appointment.discount_snapshot ?? 0) / 100) * subtotal;
   }
 
-  const totalServiceCost = subtotal - voucherDiscount - downPayment;
+  const totalServiceCost = subtotal - voucherDiscount;
 
   const printReceipt = () => {
     if (!receiptRef.current) return;
@@ -107,9 +106,13 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
                 Aesthetician
               </h4>
               <div>
-                <p className="font-medium">
-                  {appointment.aesthetician_name_snapshot}
-                </p>
+                {appointment.aesthetician_name_snapshot ? (
+                  <p className="font-medium">
+                    {appointment.aesthetician_name_snapshot}
+                  </p>
+                ) : (
+                  <p className="font-medium text-red-500 italic">Assign Aesthetician</p>
+                )}
                 {appointment.is_pro_snapshot && (
                   <p className="text-xs font-semibold text-green-500">
                     Professional
@@ -204,33 +207,12 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
           <div className="space-y-4">
             <div className="bg-primary text-primary-foreground rounded-lg p-4">
               <div className="flex justify-between items-center">
-                <p className="text-lg font-bold">TOTAL</p>
+                <p className="text-lg font-bold">TOTAL DUE</p>
                 <p className="text-2xl font-bold tabular-nums">
                   {formatCurrency(totalServiceCost)}
                 </p>
               </div>
             </div>
-
-            {appointment.down_payment && appointment.down_payment > 0 && (
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between items-center">
-                  <p>Down Payment ({appointment.down_payment_method})</p>
-                  <p className="font-medium tabular-nums">
-                    {formatCurrency(appointment.down_payment)}
-                  </p>
-                </div>
-                {appointment.to_pay &&
-                  appointment.to_pay > 0 &&
-                  appointment.down_payment && (
-                    <div className="flex justify-between items-center font-medium">
-                      <p>Balance Due</p>
-                      <p className="tabular-nums">
-                        {formatCurrency(appointment.to_pay)}
-                      </p>
-                    </div>
-                  )}
-              </div>
-            )}
 
             <div className="space-y-2 text-sm">
               {appointment.final_payment_method && (

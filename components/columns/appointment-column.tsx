@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { deleteData, formatTo12HourTime } from "@/lib/function";
 import ActionCell from "@/components/ActionCell";
 import ReceiptCard from "../cards/ReceiptCard";
+import ChangeAestheticianModal from "../modals/ChangeAestheticianModal";
 import { Appointment } from "@/lib/types/appointment-types";
 
 export const appointmentColumn: ColumnDef<Appointment>[] = [
@@ -39,6 +40,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
     accessorKey: "appointment_status",
     header: "Appointment Status",
     cell: ({ row }) => {
+      console.log(row.original.start_time)
       const { status } = row.original;
       const s = status.charAt(0).toUpperCase() + status.slice(1);
       return (
@@ -65,36 +67,28 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { appointment_id } = row.original;
+      const { appointment_id, aesthetician_id, branch_id, status } = row.original;
+      
+      // Only show change aesthetician for pending and waiting appointments
+      const canChangeAesthetician = status === "pending" || status === "waiting";
+
       return (
         <ActionCell
           deleteFn={(id: string) => deleteData({ id: id, url: "appointment" })}
           deleteMessage="Appointment has been deleted."
           queryKey="appointment"
           id={appointment_id}
-          editAppointmentStatus
-          infoDialog={<ReceiptCard appointment={row.original} />}
-          // editDialog={
-          //   <AppointmentForm
-          //     method="patch"
-          //     renderDialog={false}
-          //     formTitle="Edit Appointment"
-          //     formDescription="Update the appointment by changing in the details below."
-          //     buttonLabel="Update Appointment"
-          //     appointmentId={appointment_id}
-          //     firstName={first_name}
-          //     lastName={last_name}
-          //     middleInitial={middle_initial}
-          //     branchId={branch.branch_id}
-          //     serviceId={service.service_id}
-          //     aestheticianId={aesthetician.aesthetician_id}
-          //     finalPaymentMethod={final_payment_method || ""}
-          //     phoneNumber={phone_number}
-          //     toPay={to_pay}
-          //     sex={sex}
-          //     voucherCode={voucher_code || ""}
-          //   />
-          // }
+          editAppointmentStatus={true}
+          previewDialog={<ReceiptCard appointment={row.original} />}
+          changeAestheticianDialog={
+            canChangeAesthetician && branch_id ? (
+              <ChangeAestheticianModal
+                appointmentId={appointment_id}
+                currentAestheticianId={aesthetician_id || ""}
+                branchId={branch_id}
+              />
+            ) : undefined
+          }
         />
       );
     },

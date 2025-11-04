@@ -5,6 +5,7 @@ import {
   GetBranchesParams,
 } from "@/lib/types/branch-types";
 import { DeleteResponse } from "@/lib/types/types";
+import { AvailableSlotsResponse } from "@/lib/types/aesthetician-types";
 
 export async function postBranch({
   data,
@@ -63,4 +64,24 @@ export async function deleteBranch({
     body: JSON.stringify(branch_id),
     headers: { Authorization: `Bearer ${token}` },
   });
+}
+
+export async function getBranchAvailableSlots({
+  branch_id,
+  service_id,
+  date,
+  token,
+}: {
+  branch_id: string;
+  service_id: string;
+  date: string;
+  token: string;
+}): Promise<AvailableSlotsResponse> {
+  const queryString = buildParams({ service_id, date });
+  return apiRequest<AvailableSlotsResponse>(
+    `/branch/${branch_id}/available-slots?${queryString}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 }

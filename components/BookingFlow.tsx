@@ -3,11 +3,9 @@
 import React, { useState } from "react";
 import { Branch } from "@/lib/types/branch-types";
 import { Service } from "@/lib/types/service-types";
-import { Aesthetician } from "@/lib/types/aesthetician-types";
 import StepIndicator from "./StepIndicator";
 import BranchSelectionList from "./lists/BranchSelectionList";
 import ServiceSelectionList from "./lists/ServiceSelectionList";
-import AestheticianSelectionList from "./lists/AestheticianSelectionList";
 import SlotSelectionList from "./lists/SlotSelectionList";
 import BookingConfirmation from "./BookingConfirmation";
 import { useAuthStore } from "@/provider/store/authStore";
@@ -20,8 +18,7 @@ const BookingFlow = () => {
   const [step, setStep] = useState(1);
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const [selectedAesthetician, setSelectedAesthetician] =
-    useState<Aesthetician | null>(null);
+  const [selectedExperience, setSelectedExperience] = useState<"pro" | "regular" | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
@@ -33,7 +30,7 @@ const BookingFlow = () => {
   const handleBranchSelect = (branch: Branch) => {
     setSelectedBranch(branch);
     setSelectedService(null);
-    setSelectedAesthetician(null);
+    setSelectedExperience(null);
     setSelectedDate(new Date().toISOString().split("T")[0]);
     setSelectedSlot(null);
     setStep(2);
@@ -41,28 +38,13 @@ const BookingFlow = () => {
 
   const handleServiceSelect = (service: Service) => {
     setSelectedService(service);
-    setSelectedAesthetician(null);
+    setSelectedExperience(null);
     setSelectedSlot(null);
     setStep(3);
   };
 
-  const convertTo24Hour = (timeRange: string): string => {
-    // Extract the start time from range like "02:00 PM-04:00 PM"
-    const startTime = timeRange.split("-")[0].trim(); // Gets "02:00 PM"
-    
-    const [time, period] = startTime.split(" ");
-    const [h, m] = time.split(":").map(Number);
-    const hours =
-      period === "PM" && h !== 12
-        ? h + 12
-        : period === "AM" && h === 12
-          ? 0
-          : h;
-    return `${String(hours).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-  };
-
-  const handleAestheticianSelect = (aesthetician: Aesthetician) => {
-    setSelectedAesthetician(aesthetician);
+  const handleExperienceSelect = (experience: "pro" | "regular") => {
+    setSelectedExperience(experience);
     setSelectedSlot(null);
     setStep(4);
   };
@@ -87,7 +69,7 @@ const BookingFlow = () => {
     setStep(1);
     setSelectedBranch(null);
     setSelectedService(null);
-    setSelectedAesthetician(null);
+    setSelectedExperience(null);
     setSelectedDate(new Date().toISOString().split("T")[0]);
     setSelectedSlot(null);
   };
@@ -102,24 +84,24 @@ const BookingFlow = () => {
       ["sales-summary"],
       ["analytics-appointments"],
       ["analytics-sales"],
+      ["branch-slots"],
+      ["aesthetician-slots"],
     ],
     successMessages: {
       create: "Appointment has been created.",
     },
-    onSuccess: (data) => {
-      router.push(data.invoice_url || "/customer/dashboard");
+    onSuccess: () => {
+      router.push("/customer/history");
     },
   });
 
   const handleSubmit = ({
     branch_id,
-    aesthetician_id,
     service_id,
     start_time,
     voucher_code,
   }: {
     branch_id: string;
-    aesthetician_id: string;
     service_id: string;
     start_time: string;
     voucher_code?: string;
@@ -134,11 +116,12 @@ const BookingFlow = () => {
       return;
     }
 
+    
     const payload: {
       is_walk_in: boolean;
       branch_id: string;
       service_id: string;
-      aesthetician_id: string;
+      aesthetician_experience?: "pro" | "regular";
       date: string;
       start_time: string;
       final_payment_method: string;
@@ -147,11 +130,15 @@ const BookingFlow = () => {
       is_walk_in: false,
       branch_id: branch_id,
       service_id: service_id,
-      aesthetician_id: aesthetician_id,
       date: selectedDate,
-      start_time: convertTo24Hour(start_time),
+      start_time: start_time, // Already in 24-hour format from SlotSelectionList
       final_payment_method: "cash",
     };
+
+
+    if (selectedExperience) {
+      payload.aesthetician_experience = selectedExperience;
+    }
 
     if (voucher_code) {
       payload.voucher_code = voucher_code;
@@ -195,25 +182,67 @@ const BookingFlow = () => {
         />
       )}
 
-      {/* Step 3: Aesthetician Selection */}
+      {/* Step 3: Aesthetician Experience Selection */}
       {step === 3 && selectedBranch && selectedService && (
-        <AestheticianSelectionList
-          branchId={selectedBranch.branch_id}
-          selectedAesthetician={selectedAesthetician}
-          onAestheticianSelect={handleAestheticianSelect}
-        />
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold">Select Aesthetician Experience</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Regular Option */}
+            <div
+              onClick={() => handleExperienceSelect("regular")}
+              className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
+                selectedExperience === "regular"
+                  ? "border-primary bg-primary/5"
+                  : "border-gray-200 hover:border-primary/50"
+              }`}
+            >
+              <h3 className="text-xl font-semibold mb-2">Regular Aesthetician</h3>
+              <p className="text-gray-600">Standard service from our trained aestheticians</p>
+            </div>
+
+            {/* Pro Option */}
+            <div
+              onClick={() => handleExperienceSelect("pro")}
+              className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
+                selectedExperience === "pro"
+                  ? "border-primary bg-primary/5"
+                  : "border-gray-200 hover:border-primary/50"
+              }`}
+            >
+              <h3 className="text-xl font-semibold mb-2">Pro Aesthetician</h3>
+              <p className="text-gray-600">Premium service from our experienced professionals</p>
+              <p className="text-sm text-primary font-semibold mt-2">+₱1,500 professional fee</p>
+            </div>
+          </div>
+
+          {/* Continue Button */}
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => setStep(4)}
+              disabled={!selectedExperience}
+              className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
+                selectedExperience
+                  ? "bg-primary text-white hover:bg-primary/90"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+            >
+              Continue to Time Slot
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Step 4: Time Slot Selection (Date = Today by default) */}
       {step === 4 &&
         selectedBranch &&
         selectedService &&
-        selectedAesthetician && (
+        selectedExperience && (
           <div className="space-y-6">
             {/* Time Slot Selection */}
             <SlotSelectionList
               selectedService={selectedService.service_id}
-              selectedAesthetician={selectedAesthetician.aesthetician_id}
+              selectedBranch={selectedBranch.branch_id}
               selectedDate={selectedDate} // always today's date
               selectedSlot={selectedSlot}
               onSelectSlot={handleSlotSelect}
@@ -241,20 +270,19 @@ const BookingFlow = () => {
       {step === 5 &&
         selectedBranch &&
         selectedService &&
-        selectedAesthetician &&
+        selectedExperience &&
         selectedSlot && (
           <BookingConfirmation
             isConfirming={appointmentMutation.isPending}
             branch={selectedBranch}
             service={selectedService}
-            aesthetician={selectedAesthetician}
-            appointmentDate={selectedDate} // still passes today's date
+            aestheticianExperience={selectedExperience}
+            appointmentDate={selectedDate}
             appointmentTime={selectedSlot}
             onConfirm={(voucherCode) =>
               handleSubmit({
                 service_id: selectedService.service_id,
                 branch_id: selectedBranch.branch_id,
-                aesthetician_id: selectedAesthetician.aesthetician_id,
                 start_time: selectedSlot,
                 voucher_code: voucherCode,
               })

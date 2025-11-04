@@ -58,7 +58,6 @@ export enum ServiceCategory {
 
 export enum PaymentMethod {
   Cash = "cash",
-  Xendit = "xendit",
 }
 
 export enum PaymentStatus {

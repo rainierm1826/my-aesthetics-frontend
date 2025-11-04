@@ -1,7 +1,7 @@
 "use client";
 
 import { AppointmentFormProps } from "@/lib/types/appointment-types";
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -46,6 +46,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   formTitle,
   appointmentId,
   walkInId,
+  userId,
   branchId,
   start_time,
   serviceId,
@@ -53,9 +54,15 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   finalPaymentMethod,
   method,
   voucherCode,
+  status,
 }) => {
   const { auth, access_token } = useAuthStore();
   const { user } = useUserStore();
+
+  // Determine if this is for a walk-in customer
+  // For create (post): Always show walk-in field (creating new walk-in appointment)
+  // For edit (patch): Check if walkInId exists (editing walk-in) or userId exists (editing online customer)
+  const isWalkInCustomer = method === "post" || (method === "patch" && !!walkInId);
 
   const form = useForm<WalkInAppointmentFormValues>({
     resolver: zodResolver(walkInAppointmentSchema),
@@ -69,6 +76,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       voucher_code: voucherCode || undefined,
       start_time: start_time || "",
       date: new Date().toLocaleDateString("en-CA"),
+      status: status || "",
     },
   });
 
@@ -79,6 +87,23 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const service = watch("service_id");
   const aesthetician = watch("aesthetician_id");
   const date = watch("date");
+
+  // Reset form when props change (e.g., when modal reopens with loaded data)
+  useEffect(() => {
+    if (method === "patch") {
+      reset({
+        walk_in_id: walkInId || "",
+        branch_id: branchId || "",
+        service_id: serviceId || "",
+        aesthetician_id: aestheticianId || "",
+        final_payment_method: finalPaymentMethod || "",
+        voucher_code: voucherCode || undefined,
+        start_time: start_time || "",
+        date: new Date().toLocaleDateString("en-CA"),
+        status: status || "",
+      });
+    }
+  }, [method, walkInId, branchId, serviceId, aestheticianId, finalPaymentMethod, voucherCode, start_time, status, reset]);
 
   const appointmentMutation = useBaseMutation(method, {
     createFn: postAppointment,
@@ -91,6 +116,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       ["sales-summary"],
       ["analytics-appointments"],
       ["analytics-sales"],
+      ["branch-slots"],
+      ["aesthetician-slots"],
     ],
     successMessages: {
       create: "Appointment has been created.",
@@ -116,28 +143,59 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const isLoading = appointmentMutation.isPending;
 
   const convertTo24Hour = (time12h: string): string => {
-    const [time, period] = time12h.split(" ");
+    console.log("AppointmentForm convertTo24Hour input:", time12h);
+    
+    // Extract start time from range like "04:40 PM-05:00 PM"
+    const startTimeStr = time12h.split("-")[0].trim(); // Gets "04:40 PM"
+    console.log("Extracted start time:", startTimeStr);
+    
+    const [time, period] = startTimeStr.split(" ");
+    console.log("Time:", time, "Period:", period);
     const [h, m] = time.split(":").map(Number);
+    console.log("Hours:", h, "Minutes:", m);
     const hours =
       period === "PM" && h !== 12
         ? h + 12
         : period === "AM" && h === 12
           ? 0
           : h;
-    return `${String(hours).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    const result = `${String(hours).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    console.log("AppointmentForm converted result:", result);
+    return result;
   };
 
   const onSubmit = async (values: WalkInAppointmentFormValues) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { voucher_code, ...rest } = values;
 
-    const payload = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload: any = {
       ...rest,
       start_time: convertTo24Hour(rest.start_time), // Convert to 24-hour format
-      is_walk_in: true,
-      ...(method === "patch" && { appointment_id: appointmentId }),
-      ...(values.voucher_code ? { voucher_code: values.voucher_code } : {}),
+      is_walk_in: isWalkInCustomer,
     };
+
+    // For patch (edit) mode
+    if (method === "patch") {
+      payload.appointment_id = appointmentId;
+      
+      // Include walk_in_id if editing walk-in appointment
+      if (walkInId) {
+        payload.walk_in_id = walkInId;
+      }
+      
+      // Include user_id if editing online customer appointment
+      if (userId) {
+        payload.user_id = userId;
+        // Remove walk_in_id for online customers
+        delete payload.walk_in_id;
+      }
+    }
+
+    // Add voucher code if present
+    if (values.voucher_code) {
+      payload.voucher_code = values.voucher_code;
+    }
 
     appointmentMutation.mutate({ data: payload, token: access_token || "" });
   };
@@ -160,23 +218,31 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           )}
           <input type="hidden" {...form.register("date")} />
 
-          {/* Walk-in Customer ID */}
-          <FormField
-            control={control}
-            name="walk_in_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Walk-in Customer ID</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter walk-in ID"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Walk-in Customer ID - Only show for CREATE mode (post) */}
+          {/* For EDIT mode (patch), hide this field but still include it in submission */}
+          {method === "post" && (
+            <FormField
+              control={control}
+              name="walk_in_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Walk-in Customer ID</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter walk-in ID"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          {/* Hidden walk_in_id for editing walk-in appointments */}
+          {method === "patch" && walkInId && (
+            <input type="hidden" {...form.register("walk_in_id")} />
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Branch selection for owners only */}
@@ -261,6 +327,33 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                       date={date}
                       placeholder="Select time slot"
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          {/* Status Field - Only for patch (edit) mode */}
+          {method === "patch" && (
+            <FormField
+              control={control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Appointment Status</FormLabel>
+                  <FormControl>
+                    <select
+                      {...field}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                    >
+                      <option value="">Select Status</option>
+                      <option value="pending">Pending</option>
+                      <option value="waiting">Waiting</option>
+                      <option value="on-process">On Process</option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

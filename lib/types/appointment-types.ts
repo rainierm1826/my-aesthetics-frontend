@@ -26,13 +26,18 @@ export type Appointment = {
   service_comment: string | null;
   branch_comment: string | null;
   aesthetician_comment: string | null;
-  down_payment_method: string | null;
-  down_payment: number | null;
   final_payment_method: string | null;
   to_pay: number;
   payment_status: string;
   created_at: string; 
   updated_at: string;
+  // Add IDs for editing
+  branch_id?: string;
+  service_id?: string;
+  aesthetician_id?: string | null;
+  duration_snapshot?: number;
+  user_id?: string;
+  walk_in_id?: string;
 };
 
 
@@ -96,12 +101,14 @@ export interface AppointmentFormProps {
   formDescription: string;
   appointmentId?: string;
   walkInId?: string;
+  userId?: string;
   branchId?: string;
   serviceId?: string;
   aestheticianId?: string;
   duration?: string;
   start_time?: string;
-  finalPaymentMethod?: "cash" | "xendit" | string;
+  finalPaymentMethod?: "cash" | string;
   toPay?: number;
   voucherCode?: string;
+  status?: string;
 }

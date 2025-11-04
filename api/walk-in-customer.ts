@@ -47,9 +47,13 @@ export async function deleteWalkInCustomer({
   walk_in_id: string;
   token: string;
 }): Promise<DeleteResponse> {
+  console.log("Deleting walk-in customer with ID:", walk_in_id, "token:", token);
   return apiRequest<DeleteResponse>("/walkin", {
     method: "DELETE",
-    body: JSON.stringify(walk_in_id),
-    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ walk_in_id }),
+    headers: { 
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
   });
 }

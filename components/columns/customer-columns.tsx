@@ -5,6 +5,7 @@ import ActionCell from "@/components/ActionCell";
 import WalkInCustomerForm from "../forms/WalkInCustomerForm";
 import CustomerAnalyticsModal from "@/components/modals/CustomerAnalyticsModal";
 import { Badge } from "../ui/badge";
+import { deleteWalkInCustomer } from "@/api/walk-in-customer";
 
 export interface CustomerRow {
   id: string;
@@ -97,12 +98,20 @@ export const customerColumns: ColumnDef<CustomerRow>[] = [
     cell: ({ row }) => {
       const customer = row.original;
 
-      // Walk-in customers have edit and more info actions
+      // Walk-in customers have edit, delete, and more info actions
       if (customer.type === "walkin") {
         return (
           <ActionCell
             queryKey="all-customers"
             id={customer.id}
+            deleteFn={async (id: string) => {
+              const token = localStorage.getItem("token");
+              return deleteWalkInCustomer({
+                walk_in_id: id,
+                token: token || "",
+              });
+            }}
+            deleteMessage="Walk-in customer deleted successfully"
             previewDialog={null}
             infoDialog={
               <CustomerAnalyticsModal

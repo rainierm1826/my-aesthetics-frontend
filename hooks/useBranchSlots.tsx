@@ -1,30 +1,30 @@
 "use client";
 
-import { getAestheticianSlot } from "@/api/aesthetician";
+import { getBranchAvailableSlots } from "@/api/branch";
 import { AvailableSlotsResponse } from "@/lib/types/aesthetician-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-export function useAestheticianSlot({
-  aestheticianId,
+export function useBranchSlots({
+  branchId,
   serviceId,
   date,
   token,
 }: {
   date: string;
   serviceId: string;
-  aestheticianId: string;
+  branchId: string;
   token: string;
 }) {
   return useQuery<AvailableSlotsResponse, Error>({
-    queryKey: ["aesthetician-slots", aestheticianId, serviceId, date],
+    queryKey: ["branch-slots", branchId, serviceId, date],
     queryFn: () =>
-      getAestheticianSlot({
-        aesthetician_id: aestheticianId,
+      getBranchAvailableSlots({
+        branch_id: branchId,
         service_id: serviceId,
         date,
         token,
       }),
-    enabled: !!aestheticianId && !!serviceId && !!date && !!token,
+    enabled: !!branchId && !!serviceId && !!date && !!token,
     placeholderData: keepPreviousData,
     refetchOnMount: true,
     refetchOnWindowFocus: false,

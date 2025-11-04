@@ -2,14 +2,14 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { useAestheticianSlot } from "@/hooks/useAestheticianSlot";
+import { useBranchSlots } from "@/hooks/useBranchSlots";
 import { useAuthStore } from "@/provider/store/authStore";
 import { Clock } from "lucide-react";
 import { TimeSlotRange } from "@/lib/types/aesthetician-types";
 
 interface SlotSelectionListProps {
   selectedService: string;
-  selectedAesthetician: string;
+  selectedBranch: string;
   selectedDate: string;
   selectedSlot: string | null;
   onSelectSlot: (slot: string) => void;
@@ -17,14 +17,14 @@ interface SlotSelectionListProps {
 
 const SlotSelectionList = ({
   selectedService,
-  selectedAesthetician,
+  selectedBranch,
   selectedDate,
   selectedSlot,
   onSelectSlot,
 }: SlotSelectionListProps) => {
   const { access_token } = useAuthStore();
-  const { data, isLoading, error } = useAestheticianSlot({
-    aestheticianId: selectedAesthetician,
+  const { data, isLoading, error } = useBranchSlots({
+    branchId: selectedBranch,
     serviceId: selectedService,
     date: selectedDate,
     token: access_token || "",
@@ -92,8 +92,9 @@ const SlotSelectionList = ({
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
         {availableSlots.map((slot: TimeSlotRange) => {
           const slotDisplay = `${slot.start_time}-${slot.end_time}`;
+          const slot24Hour = slot.start_time_24; // Store the 24-hour format
           const isClickable = isSlotClickable(slot);
-          const isSelected = selectedSlot === slotDisplay;
+          const isSelected = selectedSlot === slot24Hour;
 
           // Determine the display label based on slot status
           const getStatusLabel = (status: string): string => {
@@ -105,7 +106,7 @@ const SlotSelectionList = ({
           return (
             <Card
               key={slotDisplay}
-              onClick={() => isClickable && onSelectSlot(slotDisplay)}
+              onClick={() => isClickable && onSelectSlot(slot24Hour)}
               className={`
                 relative overflow-hidden transition-all duration-200
                 ${

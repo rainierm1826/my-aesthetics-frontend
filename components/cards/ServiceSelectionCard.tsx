@@ -58,9 +58,12 @@ const ServiceSelectionCard: React.FC<ServiceSelectionCardProps> = ({
 
       <CardContent className="p-3 space-y-2">
         {/* Service Name */}
-        <h3 className="font-semibold text-base text-gray-900 line-clamp-1">
-          {service.service_name}
-        </h3>
+        <div className=" flex justify-between items-center">
+          <h3 className="font-semibold text-base text-gray-900 line-clamp-1">
+            {service.service_name}
+          </h3>
+        <p className="text-sm text-gray-500">{service.duration} minutes</p>
+        </div>
 
         {/* Rating */}
         <div className="flex items-center gap-1.5">

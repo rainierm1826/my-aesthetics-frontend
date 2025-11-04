@@ -36,6 +36,7 @@ const DropDownAppointmentStatus = ({
     { value: "waiting", label: "Waiting" },
     { value: "cancelled", label: "Cancelled" },
     { value: "completed", label: "Completed" },
+    { value: "pending", label: "Pending" },
   ];
 
   const searchParams = useSearchParams();

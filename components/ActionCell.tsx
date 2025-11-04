@@ -85,6 +85,7 @@ type ActionCellProps = {
   previewDialog?: ReactNode;
   editDialog?: ReactNode;
   editAppointmentStatus?: boolean;
+  changeAestheticianDialog?: ReactNode;
 };
 
 function ActionCell({
@@ -96,6 +97,7 @@ function ActionCell({
   previewDialog,
   editDialog,
   editAppointmentStatus,
+  changeAestheticianDialog,
 }: ActionCellProps) {
   const { access_token } = useAuthStore();
 
@@ -104,6 +106,7 @@ function ActionCell({
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
+  const [openChangeAestheticianDialog, setOpenChangeAestheticianDialog] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<StatusConfig | null>(
     null
   );
@@ -133,6 +136,11 @@ function ActionCell({
     setSelectedStatus(status);
     setDropdownOpen(false);
     setTimeout(() => setOpenStatusDialog(true), 100);
+  };
+
+  const handleChangeAestheticianClick = () => {
+    setDropdownOpen(false);
+    setTimeout(() => setOpenChangeAestheticianDialog(true), 100);
   };
 
   const deleteMutation = useBaseMutation("delete", {
@@ -212,6 +220,12 @@ function ActionCell({
             </>
           )}
 
+          {changeAestheticianDialog && (
+            <DropdownMenuItem onSelect={handleChangeAestheticianClick}>
+              Change Aesthetician
+            </DropdownMenuItem>
+          )}
+
           {infoDialog && (
             <DropdownMenuItem onSelect={handleMoreInfoClick}>
               More Info
@@ -270,6 +284,18 @@ function ActionCell({
               </DialogHeader>
             </VisuallyHidden>
             {previewDialog}
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Change Aesthetician Dialog */}
+      {changeAestheticianDialog && (
+        <Dialog open={openChangeAestheticianDialog} onOpenChange={setOpenChangeAestheticianDialog}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Change Aesthetician</DialogTitle>
+            </DialogHeader>
+            {changeAestheticianDialog}
           </DialogContent>
         </Dialog>
       )}

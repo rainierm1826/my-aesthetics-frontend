@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Branch } from "@/lib/types/branch-types";
 import { Service } from "@/lib/types/service-types";
-import { Aesthetician } from "@/lib/types/aesthetician-types";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Award, User, Calendar, Clock, Ticket } from "lucide-react";
 import { formatCurrency } from "@/lib/function";
@@ -15,7 +14,7 @@ interface BookingConfirmationProps {
   branch: Branch;
   service: Service;
   isConfirming: boolean;
-  aesthetician: Aesthetician;
+  aestheticianExperience: "pro" | "regular";
   appointmentDate: string;
   appointmentTime: string;
   onConfirm: (voucherCode?: string) => void;
@@ -25,7 +24,7 @@ interface BookingConfirmationProps {
 const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   branch,
   service,
-  aesthetician,
+  aestheticianExperience,
   appointmentDate,
   appointmentTime,
   onConfirm,
@@ -34,7 +33,6 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
 }) => {
   const [addVoucher, setAddVoucher] = useState<boolean>(false);
   const [voucherCode, setVoucherCode] = useState<string>("");
-  const fullName = `${aesthetician.first_name} ${aesthetician.last_name}`;
 
   // Format date for display
   const formatDate = (dateString: string) => {
@@ -47,19 +45,9 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
     });
   };
 
-  // Pricing calculations (matching ReceiptCard logic)
+  // Pricing calculations
   const serviceCost = service.discounted_price || service.price || 0;
-  const professionalFee = aesthetician.experience == "pro" ? 1500 : 0;
-
-  // Subtotal before down payment
-  const subtotal = serviceCost + professionalFee;
-
-  // Down payment (20% of subtotal)
-  const downPaymentPercentage = 20;
-  const downPayment = (subtotal * downPaymentPercentage) / 100;
-
-  // Remaining balance (to pay on visit)
-  const remainingBalance = subtotal - downPayment;
+  const professionalFee = aestheticianExperience === "pro" ? 1500 : 0;
 
   // For display: original price if there's a discount
   const originalPrice = service.price || 0;
@@ -103,20 +91,20 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
 
             <hr />
 
-            {/* Aesthetician */}
+            {/* Aesthetician Experience */}
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <User className="w-5 h-5 text-primary" />
-                <h3 className="font-semibold">Aesthetician</h3>
+                <h3 className="font-semibold">Aesthetician Type</h3>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">{fullName}</p>
-                  <p className="text-sm text-gray-600 capitalize">
-                    {aesthetician.experience}
-                  </p>
-                </div>
-              </div>
+              <p className="font-medium capitalize">
+                {aestheticianExperience === "pro" ? "Pro Aesthetician" : "Regular Aesthetician"}
+              </p>
+              <p className="text-sm text-gray-600">
+                {aestheticianExperience === "pro"
+                  ? "Professional aesthetician with advanced experience"
+                  : "Trained aesthetician"}
+              </p>
             </div>
 
             <hr />
@@ -164,7 +152,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
               </div>
 
               {/* Professional Fee */}
-              {aesthetician.experience == "pro" && (
+              {aestheticianExperience === "pro" && (
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Professional Fee</span>
                   <span className="font-medium text-amber-700">
@@ -173,50 +161,37 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                 </div>
               )}
 
-              {/* Subtotal */}
+              {/* Total Amount */}
               <div className="flex justify-between items-center pt-3 border-t-2 border-gray-200">
                 <span className="text-lg font-semibold text-gray-900">
-                  Subtotal
+                  Total Amount Due
                 </span>
                 <div className="text-xl font-bold text-primary">
-                  {formatCurrency(subtotal)}
+                  {formatCurrency(serviceCost + professionalFee)}
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Payment Breakdown */}
+        {/* Payment Details */}
         <Card>
           <CardContent className="p-4">
             <h3 className="font-semibold text-lg mb-4">Payment Details</h3>
 
             <div className="space-y-3">
-              {/* Down Payment */}
+              {/* Full Payment */}
               <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm text-gray-600">
-                    Down Payment ({downPaymentPercentage}%)
+                    Full Payment Due
                   </span>
                   <span className="text-xs font-medium text-primary">
-                    Pay Now
+                    Due on Visit
                   </span>
                 </div>
                 <div className="text-2xl font-bold text-primary">
-                  {formatCurrency(downPayment)}
-                </div>
-              </div>
-
-              {/* Remaining Balance */}
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm text-gray-600">Balance Due</span>
-                  <span className="text-xs font-medium text-gray-600">
-                    Pay on Visit
-                  </span>
-                </div>
-                <div className="text-xl font-semibold text-gray-900">
-                  {formatCurrency(remainingBalance)}
+                  {formatCurrency(serviceCost + professionalFee)}
                 </div>
               </div>
             </div>
@@ -241,13 +216,10 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                   <p className="font-medium mb-1">Payment Instructions:</p>
                   <ul className="space-y-1 list-disc list-inside">
                     <li>
-                      Pay {formatCurrency(downPayment)} now to secure your
-                      booking
-                    </li>
-                    <li>
-                      Pay the balance of {formatCurrency(remainingBalance)} when
+                      Pay {formatCurrency(serviceCost + professionalFee)} when
                       you arrive for your appointment
                     </li>
+                    <li>We accept cash and card payments</li>
                   </ul>
                 </div>
               </div>

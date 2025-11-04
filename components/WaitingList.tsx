@@ -38,7 +38,7 @@ const WaitingList = () => {
           />
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-[calc(100vh)] overflow-y-auto pr-2">
           {isFetching ? (
             <SkeletonWaitingList />
           ) : appointments.length === 0 ? (
