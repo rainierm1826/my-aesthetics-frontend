@@ -1,4 +1,4 @@
-import { apiRequest, buildParams } from "@/lib/function";
+import { apiRequest, buildParams, getTodayDate } from "@/lib/function";
 import {
   AppointmentListResponse,
   AppointmentResponse,
@@ -18,7 +18,7 @@ export async function getAllAppointments({
   status,
   token,
 }: GetAppointmentParams): Promise<AppointmentListResponse> {
-  const today = date ?? new Date().toISOString().split("T")[0];
+  const today = date ?? getTodayDate();
   const params = buildParams({
     query,
     page,
@@ -112,16 +112,10 @@ export async function getAppointmentAvailableSlots({
     ...(aesthetician_id && { aesthetician_id })
   });
   
-  const url = `/appointment/available-slots?${params}`;
-  console.log('API Call:', url, { branch_id, service_id, date, aesthetician_id });
-  
-  const response = await apiRequest<AvailableSlotsResponse>(
-    url,
+  return apiRequest<AvailableSlotsResponse>(
+    `/appointment/available-slots?${params}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
-  console.log('API Response:', response);
-  return response;
 }

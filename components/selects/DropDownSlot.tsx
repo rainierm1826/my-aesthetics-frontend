@@ -51,18 +51,6 @@ const DropDownSlot = ({
 
   const availableSlots = data?.available_slots ?? [];
   
-  // Debug logging
-  console.log('DropDownSlot Debug:', {
-    branchId,
-    serviceId,
-    date,
-    hasToken: !!access_token,
-    isLoading,
-    error: error?.message,
-    slotsCount: availableSlots.length,
-    data
-  });
-  
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
