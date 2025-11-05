@@ -46,6 +46,8 @@ const BranchForm: React.FC<BranchFormProps> = ({
   province,
   region,
   slot_capacity,
+  opening_time,
+  closing_time,
 }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ?? null
@@ -59,6 +61,8 @@ const BranchForm: React.FC<BranchFormProps> = ({
       image: image ?? null,
       branch_name: branchName || "",
       slot_capacity: slot_capacity || 1,
+      opening_time: opening_time || "10:00",
+      closing_time: closing_time || "17:00",
       address: {
         region: region || "",
         province: province || "",
@@ -83,6 +87,8 @@ const BranchForm: React.FC<BranchFormProps> = ({
           image: null,
           branch_name: "",
           slot_capacity: 0,
+          opening_time: "10:00",
+          closing_time: "17:00",
           address: {
             region: "",
             province: "",
@@ -104,6 +110,8 @@ const BranchForm: React.FC<BranchFormProps> = ({
     // Add text fields
     formData.append("branch_name", values.branch_name);
     formData.append("slot_capacity", values.slot_capacity.toString());
+    formData.append("opening_time", values.opening_time);
+    formData.append("closing_time", values.closing_time);
     formData.append("region", values.address.region);
     formData.append("province", values.address.province);
     formData.append("city", values.address.city);
@@ -204,6 +212,44 @@ const BranchForm: React.FC<BranchFormProps> = ({
               </FormItem>
             )}
           />
+
+          <div className="grid grid-cols-2 gap-3 mb-5">
+            <FormField
+              control={form.control}
+              name="opening_time"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Opening Time</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="HH:MM"
+                      type="time"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="closing_time"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Closing Time</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="HH:MM"
+                      type="time"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}

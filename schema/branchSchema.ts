@@ -38,6 +38,14 @@ export const branchFormSchema = z.object({
     .number()
     .min(1, "Slot capacity must be at least 1")
     .max(999, "Slot capacity must be less than 1000"),
+  opening_time: z
+    .string()
+    .min(1, "Opening time is required")
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format (HH:MM)"),
+  closing_time: z
+    .string()
+    .min(1, "Closing time is required")
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format (HH:MM)"),
 });
 
 export type BranchFormValues = z.infer<typeof branchFormSchema>;

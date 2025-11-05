@@ -73,6 +73,8 @@ export const branchColumns: ColumnDef<Branch>[] = [
               province={address.province}
               region={address.region}
               image={branch.image}
+              opening_time={branch.opening_time}
+              closing_time={branch.closing_time}
               slot_capacity={branch.slot_capacity}
             />
           }

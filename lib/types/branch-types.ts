@@ -8,6 +8,8 @@ export type Branch = {
   status: "active" | "close";
   address: Address;
   slot_capacity: number;
+  opening_time?: string;
+  closing_time?: string;
   created_at?: string;
   updated_at?: string;
 };
@@ -72,6 +74,8 @@ export interface BranchFormProps {
   lot?: string;
   image?: string;
   slot_capacity?: number;
+  opening_time?: string;
+  closing_time?: string;
   buttonLabel: string;
   dialogButtonLabel?: string | React.ReactNode;
 }
