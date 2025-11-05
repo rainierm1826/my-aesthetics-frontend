@@ -11,8 +11,7 @@ import {
 import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/provider/store/authStore";
-import { useAestheticianSlot } from "@/hooks/useAestheticianSlot";
-import { useBranchSlots } from "@/hooks/useBranchSlots";
+import { useAppointmentSlots } from "@/hooks/useAppointmentSlots";
 import { TimeSlotRange } from "@/lib/types/aesthetician-types";
 
 interface DropDownSlotProps
@@ -41,52 +40,29 @@ const DropDownSlot = ({
 }: DropDownSlotProps) => {
   const { access_token } = useAuthStore();
   
-  // Use branch slots if branchId is provided, otherwise use aesthetician slots
-  const branchQuery = useBranchSlots(
-    branchId ? {
-      branchId,
-      serviceId,
-      date,
-      token: access_token || "",
-    } : {
-      branchId: "",
-      serviceId: "",
-      date: "",
-      token: "",
-    }
-  );
-  
-  const aestheticianQuery = useAestheticianSlot(
-    aestheticianId ? {
-      aestheticianId,
-      serviceId,
-      date,
-      token: access_token || "",
-    } : {
-      aestheticianId: "",
-      serviceId: "",
-      date: "",
-      token: "",
-    }
-  );
-
-  const data = branchId ? branchQuery.data : aestheticianQuery.data;
-  const isLoading = branchId ? branchQuery.isLoading : aestheticianQuery.isLoading;
-  const error = branchId ? branchQuery.error : aestheticianQuery.error;
+  // Use the unified appointment slots hook
+  const { data, isLoading, error } = useAppointmentSlots({
+    branchId: branchId || undefined,
+    serviceId,
+    date,
+    token: access_token || "",
+    aestheticianId,
+  });
 
   const availableSlots = data?.available_slots ?? [];
   
-  // Debug: log the number of slots
-  console.log('Total slots received:', availableSlots.length);
-  console.log('Available slots:', availableSlots.filter(s => s.status === 'available').length);
-  console.log('Past slots:', availableSlots.filter(s => s.status === 'past-time').length);
-  console.log('Not available slots:', availableSlots.filter(s => s.status === 'not-available').length);
+  // Debug logging
+  console.log('DropDownSlot Debug:', {
+    branchId,
+    serviceId,
+    date,
+    hasToken: !!access_token,
+    isLoading,
+    error: error?.message,
+    slotsCount: availableSlots.length,
+    data
+  });
   
-  // Debug: log the 4:40 PM slot specifically
-  const slot440 = availableSlots.find(s => s.start_time === "04:40 PM");
-  if (slot440) {
-    console.log('4:40 PM slot:', slot440);
-  }
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -102,8 +78,8 @@ const DropDownSlot = ({
 
   // Get status label for a slot
   const getStatusLabel = (status: string): string => {
-    if (status === "past-time") return " (Past)";
-    if (status === "not-available") return " (Booked)";
+    if (status === "past") return " (Past)";
+    if (status === "booked") return " (Booked)";
     return "";
   };
 
@@ -180,23 +156,29 @@ const DropDownSlot = ({
       <SelectContent align="end" position="popper" className="max-h-[400px] overflow-y-auto" sideOffset={4}>
         {includeAllOption && <SelectItem value="all">All Slots</SelectItem>}
 
-        {availableSlots.map((slot) => {
-          const slotDisplay = formatSlotForDisplay(slot);
-          const isClickable = isSlotClickable(slot);
-          const statusLabel = getStatusLabel(slot.status);
-          const label = slotDisplay + statusLabel;
+        {availableSlots.length === 0 ? (
+          <SelectItem value="__empty" disabled>
+            No slots available
+          </SelectItem>
+        ) : (
+          availableSlots.map((slot) => {
+            const slotDisplay = formatSlotForDisplay(slot);
+            const isClickable = isSlotClickable(slot);
+            const statusLabel = getStatusLabel(slot.status);
+            const label = slotDisplay + statusLabel;
 
-          return (
-            <SelectItem
-              key={slotDisplay}
-              value={slotDisplay}
-              disabled={!isClickable}
-              className={!isClickable ? "opacity-50 cursor-not-allowed text-muted-foreground" : ""}
-            >
-              {label}
-            </SelectItem>
-          );
-        })}
+            return (
+              <SelectItem
+                key={slotDisplay}
+                value={slotDisplay}
+                disabled={!isClickable}
+                className={!isClickable ? "opacity-50 cursor-not-allowed text-muted-foreground" : ""}
+              >
+                {label}
+              </SelectItem>
+            );
+          })
+        )}
       </SelectContent>
     </Select>
   );

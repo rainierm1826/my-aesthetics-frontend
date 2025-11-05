@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { useBranchSlots } from "@/hooks/useBranchSlots";
+import { useAppointmentSlots } from "@/hooks/useAppointmentSlots";
 import { useAuthStore } from "@/provider/store/authStore";
 import { Clock } from "lucide-react";
 import { TimeSlotRange } from "@/lib/types/aesthetician-types";
@@ -13,6 +13,7 @@ interface SlotSelectionListProps {
   selectedDate: string;
   selectedSlot: string | null;
   onSelectSlot: (slot: string) => void;
+  selectedAesthetician?: string;
 }
 
 const SlotSelectionList = ({
@@ -21,13 +22,15 @@ const SlotSelectionList = ({
   selectedDate,
   selectedSlot,
   onSelectSlot,
+  selectedAesthetician,
 }: SlotSelectionListProps) => {
   const { access_token } = useAuthStore();
-  const { data, isLoading, error } = useBranchSlots({
+  const { data, isLoading, error } = useAppointmentSlots({
     branchId: selectedBranch,
     serviceId: selectedService,
     date: selectedDate,
     token: access_token || "",
+    aestheticianId: selectedAesthetician,
   });
 
   const availableSlots: TimeSlotRange[] = data?.available_slots ?? [];
@@ -98,8 +101,8 @@ const SlotSelectionList = ({
 
           // Determine the display label based on slot status
           const getStatusLabel = (status: string): string => {
-            if (status === "past-time") return "Past Time";
-            if (status === "not-available") return "Booked";
+            if (status === "past") return "Past Time";
+            if (status === "booked") return "Booked";
             return "";
           };
 

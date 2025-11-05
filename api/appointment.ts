@@ -5,6 +5,7 @@ import {
   GetAppointmentParams,
 } from "@/lib/types/appointment-types";
 import { DeleteResponse } from "@/lib/types/types";
+import { AvailableSlotsResponse } from "@/lib/types/aesthetician-types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -89,4 +90,38 @@ export async function deleteAppointment(appointment_id: {
   } catch (error) {
     throw error;
   }
+}
+
+export async function getAppointmentAvailableSlots({
+  branch_id,
+  service_id,
+  date,
+  token,
+  aesthetician_id,
+}: {
+  branch_id: string;
+  service_id: string;
+  date: string;
+  token: string;
+  aesthetician_id?: string;
+}): Promise<AvailableSlotsResponse> {
+  const params = buildParams({ 
+    branch_id, 
+    service_id, 
+    date,
+    ...(aesthetician_id && { aesthetician_id })
+  });
+  
+  const url = `/appointment/available-slots?${params}`;
+  console.log('API Call:', url, { branch_id, service_id, date, aesthetician_id });
+  
+  const response = await apiRequest<AvailableSlotsResponse>(
+    url,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  console.log('API Response:', response);
+  return response;
 }

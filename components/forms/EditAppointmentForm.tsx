@@ -347,6 +347,7 @@ const EditAppointmentForm: React.FC<EditAppointmentFormProps> = ({
                       <DropDownSlot
                         value={field.value}
                         onValueChange={(v) => field.onChange(v)}
+                        branchId={branch}
                         aestheticianId={aesthetician}
                         serviceId={service}
                         date={date}

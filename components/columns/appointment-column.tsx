@@ -58,7 +58,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
                       : ""
           }`}
         >
-          {s == "waiting" ? "Confirm" : s}
+          {s == "Waiting" ? "Confirm" : s}
         </Badge>
       );
     },
