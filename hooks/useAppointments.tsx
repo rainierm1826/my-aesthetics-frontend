@@ -4,6 +4,7 @@ import { getAllAppointments } from "@/api/appointment";
 import { AppointmentListResponse } from "@/lib/types/appointment-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import { getTodayDate } from "@/lib/function";
 
 export function useAppointments({branchId, token}:{branchId?:string, token:string}) {
   const searchParams = useSearchParams();
@@ -13,7 +14,7 @@ export function useAppointments({branchId, token}:{branchId?:string, token:strin
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayDate();
   const date = searchParams.get("date") ?? today;
 
   return useQuery<AppointmentListResponse, Error>({

@@ -13,15 +13,14 @@ import { useUserStore } from "@/provider/store/userStore";
 import { useRouter } from "next/navigation";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { postAppointment } from "@/api/appointment";
+import { getTodayDate } from "@/lib/function";
 
 const BookingFlow = () => {
   const [step, setStep] = useState(1);
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedExperience, setSelectedExperience] = useState<"pro" | "regular" | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString().split("T")[0]
-  );
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayDate());
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const { access_token } = useAuthStore();
   const { user } = useUserStore();
@@ -31,7 +30,7 @@ const BookingFlow = () => {
     setSelectedBranch(branch);
     setSelectedService(null);
     setSelectedExperience(null);
-    setSelectedDate(new Date().toISOString().split("T")[0]);
+    setSelectedDate(getTodayDate());
     setSelectedSlot(null);
     setStep(2);
   };
@@ -70,7 +69,7 @@ const BookingFlow = () => {
     setSelectedBranch(null);
     setSelectedService(null);
     setSelectedExperience(null);
-    setSelectedDate(new Date().toISOString().split("T")[0]);
+    setSelectedDate(getTodayDate());
     setSelectedSlot(null);
   };
 

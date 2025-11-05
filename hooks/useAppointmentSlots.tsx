@@ -19,15 +19,6 @@ export function useAppointmentSlots({
 }) {
   const isEnabled = !!branchId && !!serviceId && !!date && !!token;
   
-  console.log('useAppointmentSlots Hook:', {
-    branchId,
-    serviceId,
-    date,
-    hasToken: !!token,
-    aestheticianId,
-    isEnabled
-  });
-  
   return useQuery<AvailableSlotsResponse, Error>({
     queryKey: ["appointment-slots", branchId, serviceId, date, aestheticianId],
     queryFn: () =>
