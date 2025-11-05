@@ -36,7 +36,7 @@ const ServicesCard = ({
 }) => {
   return (
     <Link href={`/services/${service_id}`} passHref>
-      <Card className="cursor-pointer pt-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 w-[200px]">
+      <Card className="cursor-pointer pt-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 w-full">
         <CardContent className="p-0 w-full">
           {/* Image Container */}
           <div className="relative w-full aspect-[4/3] overflow-hidden">

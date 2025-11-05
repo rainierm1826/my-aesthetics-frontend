@@ -20,6 +20,16 @@ export default async function BranchPage({ params }: BranchPageProps) {
   let branch: BranchResponse | null = null;
   let reviews: Review[] = [];
 
+  // Format time from 24h to 12h format
+  const formatTime = (time?: string) => {
+    if (!time) return "N/A";
+    const [hours, minutes] = time.split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
   try {
     branch = await getBranch(id);
   } catch (error) {
@@ -28,11 +38,13 @@ export default async function BranchPage({ params }: BranchPageProps) {
 
   try {
     const res = await getReviews({ branch_id: id });
-    if (res.status) {
+    if (res.status && res.review) {
       reviews = res.review;
     }
-  } catch (error) {
-    console.error(error);
+  } catch {
+    // If no reviews are found, keep reviews as empty array
+    // This is expected behavior when a branch has no reviews yet
+    console.log("No reviews found for this branch");
   }
 
   const getStatusColor = (status: string) => {
@@ -90,7 +102,7 @@ export default async function BranchPage({ params }: BranchPageProps) {
                 </Badge>
               </div>
             </div>
-            <Avatar className="w-full h-48 rounded-lg">
+            <Avatar className="w-full h-74 rounded-lg">
               <AvatarImage
                 src={branchData.image}
                 alt={branchData.branch_name}
@@ -131,6 +143,29 @@ export default async function BranchPage({ params }: BranchPageProps) {
               <div>
                 {branchData.address.province}, {branchData.address.region}
               </div>
+            </div>
+          </div>
+
+          {/* Operating Hours */}
+          <div>
+            <h3 className="font-medium text-gray-900 mb-2">Operating Hours</h3>
+            <div className="flex items-center gap-3 text-gray-700">
+              <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
+              <span>
+                {formatTime(branchData.opening_time)} - {formatTime(branchData.closing_time)}
+              </span>
+            </div>
+            <div className="mt-2 text-sm">
+              <span className={`inline-flex items-center gap-2 ${
+                branchData.status === "active" 
+                  ? "text-green-600" 
+                  : "text-red-600"
+              }`}>
+                {branchData.status === "active" 
+                  ? `Currently Open • Closes at ${formatTime(branchData.closing_time)}`
+                  : `Currently Closed • Opens at ${formatTime(branchData.opening_time)}`
+                }
+              </span>
             </div>
           </div>
 

@@ -91,5 +91,7 @@ export type BranchCardProps = {
   province: string;
   city: string;
   lot: string;
+  opening_time?: string;
+  closing_time?: string;
   action?: boolean;
 }

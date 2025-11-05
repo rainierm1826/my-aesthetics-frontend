@@ -20,12 +20,23 @@ const BranchCard = ({
   lot,
   rating,
   branch_id,
+  opening_time,
+  closing_time,
 }: BranchCardProps) => {
+  // Format time from 24h to 12h format
+  const formatTime = (time?: string) => {
+    if (!time) return "N/A";
+    const [hours, minutes] = time.split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
   return (
     <Link href={`/branches/${branch_id}`} passHref>
       <Card
         className={clsx(
-          "pt-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col w-[200px]",
+          "pt-0 group overflow-hidden border-none bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col w-full",
           className
         )}
       >
@@ -76,7 +87,10 @@ const BranchCard = ({
             <div className="flex items-center gap-1">
               <Clock className="w-2.5 h-2.5 text-gray-400" />
               <span className="text-[9px] text-gray-600">
-                Open until 5:00 PM
+                {status === "active" 
+                  ? `Open until ${formatTime(closing_time)}`
+                  : `Closed • Opens at ${formatTime(opening_time)}`
+                }
               </span>
             </div>
 

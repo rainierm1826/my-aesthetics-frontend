@@ -53,6 +53,8 @@ export const branchColumns: ColumnDef<Branch>[] = [
               lot={address.lot}
               province={address.province}
               image={branch.image}
+              opening_time={branch.opening_time}
+              closing_time={branch.closing_time}
             />
           }
           deleteFn={(id: string) => deleteData({ id: id, url: "branch" })}
