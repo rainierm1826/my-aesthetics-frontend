@@ -67,18 +67,28 @@ function getAuthFromCookies(request: NextRequest): AuthPayload | null {
     const accessToken = request.cookies.get("access_token")?.value;
     
     if (!accessToken) {
+      // Debug: Log when no token is found (only in development)
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Middleware] No access_token cookie found");
+      }
       return null;
     }
 
     const decoded = decodeJWT(accessToken);
     
     if (!decoded || !decoded.sub || !decoded.role) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Middleware] Invalid token structure");
+      }
       return null;
     }
 
     // Check if token is expired
     const exp = decoded.exp as number | undefined;
     if (exp && exp * 1000 < Date.now()) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Middleware] Token expired");
+      }
       return null;
     }
 
@@ -89,7 +99,7 @@ function getAuthFromCookies(request: NextRequest): AuthPayload | null {
       is_verified: (decoded.is_verified as boolean) || false,
     };
   } catch (error) {
-    console.error("Error decoding token:", error);
+    console.error("[Middleware] Error decoding token:", error);
     return null;
   }
 }
