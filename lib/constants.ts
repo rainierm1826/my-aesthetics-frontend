@@ -14,6 +14,7 @@ export const general = [
     title: "Settings",
     url: "/manage/settings",
     icon: Settings,
+    rolesAllowed: ["owner"],
   },
 ];
 

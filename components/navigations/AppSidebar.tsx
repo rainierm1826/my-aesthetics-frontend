@@ -48,7 +48,7 @@ export function AppSidebar() {
         </SidebarHeader>
         {auth?.role === "owner" && <AnalyticsGroup pathname={pathname} />}
         <ManagementGroup pathname={pathname} userRole={auth?.role || "owner"} />
-        <GeneralGroup pathname={pathname} />
+        <GeneralGroup pathname={pathname} userRole={auth?.role || "owner"} />
         <SFooter />
       </SidebarContent>
     </Sidebar>
@@ -131,13 +131,23 @@ const ManagementGroup = ({ pathname, userRole }: ManagementGroupProps) => {
   );
 };
 
-const GeneralGroup = ({ pathname }: { pathname: string }) => {
+interface GeneralGroupProps {
+  pathname: string;
+  userRole: "admin" | "owner" | "customer";
+}
+
+const GeneralGroup = ({ pathname, userRole }: GeneralGroupProps) => {
+  const filteredGeneral = useMemo(
+    () => general.filter((item) => item.rolesAllowed.includes(userRole)),
+    [userRole]
+  );
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>General</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {general.map((item) => (
+          {filteredGeneral.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
                 <Link
