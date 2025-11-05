@@ -11,7 +11,7 @@ const CustomerWrapper: React.FC<CustomerWrapperProps> = ({ children }) => {
       <div className="flex justify-between items-center">
         <CustomerNavbar />
       </div>
-      <div className="container mx-auto py-5 px-5">{children}</div>
+      <div className="container mx-auto md:py-5 md:px-5">{children}</div>
     </>
   );
 };

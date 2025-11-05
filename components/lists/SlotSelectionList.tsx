@@ -89,7 +89,7 @@ const SlotSelectionList = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {availableSlots.map((slot: TimeSlotRange) => {
           const slotDisplay = `${slot.start_time}-${slot.end_time}`;
           const slot24Hour = slot.start_time_24; // Store the 24-hour format

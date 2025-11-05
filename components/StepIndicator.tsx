@@ -9,73 +9,73 @@ interface StepIndicatorProps {
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
   return (
-    <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
+    <div className="flex items-center gap-1 sm:gap-2 mb-4 sm:mb-6 overflow-x-auto pb-2">
       {/* Step 1: Branch */}
       <div
-        className={`flex items-center gap-2 ${currentStep >= 1 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-1 sm:gap-2 ${currentStep >= 1 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 1 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs sm:text-base ${currentStep >= 1 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {currentStep > 1 ? <Check className="w-5 h-5" /> : "1"}
+          {currentStep > 1 ? <Check className="w-3 h-3 sm:w-5 sm:h-5" /> : "1"}
         </div>
-        <span className="font-semibold whitespace-nowrap">Branch</span>
+        <span className="text-xs sm:text-base font-semibold whitespace-nowrap">Branch</span>
       </div>
 
-      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+      <ChevronRight className="w-3 h-3 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
 
       {/* Step 2: Service */}
       <div
-        className={`flex items-center gap-2 ${currentStep >= 2 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-1 sm:gap-2 ${currentStep >= 2 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 2 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs sm:text-base ${currentStep >= 2 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {currentStep > 2 ? <Check className="w-5 h-5" /> : "2"}
+          {currentStep > 2 ? <Check className="w-3 h-3 sm:w-5 sm:h-5" /> : "2"}
         </div>
-        <span className="font-semibold whitespace-nowrap">Service</span>
+        <span className="text-xs sm:text-base font-semibold whitespace-nowrap">Service</span>
       </div>
 
-      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+      <ChevronRight className="w-3 h-3 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
 
       {/* Step 3: Aesthetician */}
       <div
-        className={`flex items-center gap-2 ${currentStep >= 3 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-1 sm:gap-2 ${currentStep >= 3 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 3 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs sm:text-base ${currentStep >= 3 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {currentStep > 3 ? <Check className="w-5 h-5" /> : "3"}
+          {currentStep > 3 ? <Check className="w-3 h-3 sm:w-5 sm:h-5" /> : "3"}
         </div>
-        <span className="font-semibold whitespace-nowrap">Aesthetician</span>
+        <span className="text-xs sm:text-base font-semibold whitespace-nowrap">Aesthetician</span>
       </div>
 
-      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+      <ChevronRight className="w-3 h-3 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
 
       {/* Step 4: Date & Time */}
       <div
-        className={`flex items-center gap-2 ${currentStep >= 4 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-1 sm:gap-2 ${currentStep >= 4 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 4 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs sm:text-base ${currentStep >= 4 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {currentStep > 4 ? <Check className="w-5 h-5" /> : "4"}
+          {currentStep > 4 ? <Check className="w-3 h-3 sm:w-5 sm:h-5" /> : "4"}
         </div>
-        <span className="font-semibold whitespace-nowrap">Time</span>
+        <span className="text-xs sm:text-base font-semibold whitespace-nowrap">Time</span>
       </div>
 
-      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+      <ChevronRight className="w-3 h-3 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
 
       {/* Step 5: Confirm */}
       <div
-        className={`flex items-center gap-2 ${currentStep >= 5 ? "text-primary" : "text-gray-400"}`}
+        className={`flex items-center gap-1 sm:gap-2 ${currentStep >= 5 ? "text-primary" : "text-gray-400"}`}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${currentStep >= 5 ? "bg-primary text-white" : "bg-gray-200"}`}
+          className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs sm:text-base ${currentStep >= 5 ? "bg-primary text-white" : "bg-gray-200"}`}
         >
-          {currentStep > 5 ? <Check className="w-5 h-5" /> : "5"}
+          {currentStep > 5 ? <Check className="w-3 h-3 sm:w-5 sm:h-5" /> : "5"}
         </div>
-        <span className="font-semibold whitespace-nowrap">Confirm</span>
+        <span className="text-xs sm:text-base font-semibold whitespace-nowrap">Confirm</span>
       </div>
     </div>
   );
