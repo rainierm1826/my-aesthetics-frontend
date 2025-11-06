@@ -86,6 +86,7 @@ type ActionCellProps = {
   editDialog?: ReactNode;
   editAppointmentStatus?: boolean;
   changeAestheticianDialog?: ReactNode;
+  hasAesthetician?: boolean;
 };
 
 function ActionCell({
@@ -98,6 +99,7 @@ function ActionCell({
   editDialog,
   editAppointmentStatus,
   changeAestheticianDialog,
+  hasAesthetician = true,
 }: ActionCellProps) {
   const { access_token } = useAuthStore();
 
@@ -209,14 +211,27 @@ function ActionCell({
 
           {editAppointmentStatus && (
             <>
-              {statusConfigs.map((status) => (
-                <DropdownMenuItem
-                  key={status.value}
-                  onSelect={() => handleStatusClick(status)}
-                >
-                  {status.label}
-                </DropdownMenuItem>
-              ))}
+              {statusConfigs.map((status) => {
+                // Disable completed, on-process, and waiting (confirm) if no aesthetician assigned
+                const requiresAesthetician = ['completed', 'on-process', 'waiting'].includes(status.value);
+                const isDisabled = requiresAesthetician && !hasAesthetician;
+                
+                return (
+                  <DropdownMenuItem
+                    key={status.value}
+                    onSelect={() => !isDisabled && handleStatusClick(status)}
+                    disabled={isDisabled}
+                    className={isDisabled ? "opacity-50 cursor-not-allowed" : ""}
+                  >
+                    {status.label}
+                    {isDisabled && (
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        (Assign aesthetician first)
+                      </span>
+                    )}
+                  </DropdownMenuItem>
+                );
+              })}
             </>
           )}
 

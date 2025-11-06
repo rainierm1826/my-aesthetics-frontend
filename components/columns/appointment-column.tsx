@@ -78,6 +78,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
           queryKey="appointment"
           id={appointment_id}
           editAppointmentStatus={true}
+          hasAesthetician={!!aesthetician_id}
           previewDialog={<ReceiptCard appointment={row.original} />}
           changeAestheticianDialog={
             canChangeAesthetician && branch_id ? (
