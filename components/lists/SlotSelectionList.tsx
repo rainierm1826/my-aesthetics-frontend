@@ -25,6 +25,11 @@ const SlotSelectionList = ({
   selectedAesthetician,
 }: SlotSelectionListProps) => {
   const { access_token } = useAuthStore();
+  
+  // Debug: Log what date is being used
+  console.log('SlotSelectionList - selectedDate:', selectedDate);
+  console.log('SlotSelectionList - current local date:', new Date().toLocaleDateString('en-CA'));
+  
   const { data, isLoading, error } = useAppointmentSlots({
     branchId: selectedBranch,
     serviceId: selectedService,
@@ -34,6 +39,13 @@ const SlotSelectionList = ({
   });
 
   const availableSlots: TimeSlotRange[] = data?.available_slots ?? [];
+  
+  // Debug: Log the response
+  console.log('SlotSelectionList - API response:', { 
+    slotsCount: availableSlots.length, 
+    firstSlot: availableSlots[0],
+    data 
+  });
 
   // Check if slot is clickable based on backend status
   const isSlotClickable = (slot: TimeSlotRange): boolean => {
