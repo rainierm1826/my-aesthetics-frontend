@@ -20,7 +20,7 @@ const Branch = () => {
         <div className="mt-8">
           <Suspense
             fallback={
-              <div className="grid grid-cols-1 mx-10 md:grid-cols-2 justify-center px-4 gap-3 max-w-4xl sm:mx-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 justify-center w-full mx-auto max-w-7xl px-2 sm:px-4">
                 {Array.from({ length: 6 }).map((_, index) => (
                   <SkeletonCard key={index} />
                 ))}

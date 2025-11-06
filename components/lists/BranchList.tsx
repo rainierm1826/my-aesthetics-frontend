@@ -23,8 +23,7 @@ const BranchList = ({ action }: { action: boolean }) => {
           </div>
         </div>
       )}
-      <div className="flex justify-center items-center flex-col w-full">
-        <div className="inline-grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 mt-10 px-2 sm:px-4 place-items-center justify-items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 justify-center w-full mx-auto max-w-7xl px-2 sm:px-4 justify-center mx-auto">
           {isFetching
             ? Array.from({ length: 4 }).map((_, index) => (
                 <SkeletonCard key={index} />
@@ -46,7 +45,6 @@ const BranchList = ({ action }: { action: boolean }) => {
                 />
               ))}
         </div>
-      </div>
     </main>
   );
 };
