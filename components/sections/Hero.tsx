@@ -108,7 +108,7 @@ const Hero = () => {
               variants={buttonVariants}
             >
               <SignUpButton />
-              <BookNowButton size="" />
+              <BookNowButton size="" title="Book Now"/>
             </motion.div>
           )}
         </motion.div>

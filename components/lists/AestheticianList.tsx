@@ -49,7 +49,7 @@ const AestheticianList = ({ action }: { action: boolean }) => {
   return (
     <div className="flex justify-center flex-col w-full mx-auto bg-[#fffcf9]">
       {action && (
-        <div className="max-w-4xl mx-auto mb-16">
+        <div className="lg:max-w-4xl mx-auto mb-16">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-3 sm:gap-4 px-2 sm:px-0">
             <div className="w-full lg:flex-1 lg:max-w-md">
               <SearchInput placeholder="Search by name..." size="w-full" />
@@ -67,7 +67,7 @@ const AestheticianList = ({ action }: { action: boolean }) => {
         </div>
       )}
       <div className="flex justify-center w-full mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 max-w-7xl mx-auto px-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:max-w-7xl mx-auto px-2 w-full">
           {isLoading
             ? Array.from({ length: 10 }).map((_, index) => (
                 <SkeletonCard key={index} />

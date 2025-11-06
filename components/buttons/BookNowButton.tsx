@@ -13,18 +13,20 @@ import {
 import SignInForm from "../forms/SignInForm";
 import ForgotPasswordForm from "../forms/ForgotPasswordForm";
 import Image from "next/image";
+import { useAuthStore } from "@/provider/store/authStore";
 
-const BookNowButton = ({ size }: { size: string }) => {
+const BookNowButton = ({ size, title="Sign-In" }: { size: string, title?:string }) => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const {isAuth} = useAuthStore()
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
           variant={"default"}
-          className={`${size} bg-gradient-to-r from-[#d9c67a] to-[#f0e4b3] text-white font-semibold hover:opacity-90 transition-opacity`}
+          className={`${size} ${isAuth ? "hidden" : ""} bg-gradient-to-r from-[#d9c67a] to-[#f0e4b3] text-white font-semibold hover:opacity-90 transition-opacity`}
         >
-          Book Now
+          {title}
         </Button>
       </DialogTrigger>
       <DialogContent

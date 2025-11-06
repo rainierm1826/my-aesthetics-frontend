@@ -32,7 +32,7 @@ const Aesthetician = () => {
         }
       >
         <div className="flex justify-center w-full mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 justify-items-center max-w-7xl px-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 justify-items-center lg:max-w-7xl px-2 w-full">
             {isFetching
               ? Array.from({ length: 10 }).map((_, index) => (
                   <SkeletonCard key={index} />
