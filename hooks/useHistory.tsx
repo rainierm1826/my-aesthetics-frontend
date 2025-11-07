@@ -13,5 +13,6 @@ export function useHistory(token:string) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     staleTime: 60 * 60 * 1000,
+    enabled: !!token, // Only run query when token is available
   });
 }

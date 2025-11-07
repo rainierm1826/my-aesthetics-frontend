@@ -52,6 +52,12 @@ const BookingFlow = () => {
     setSelectedSlot(slot);
   };
 
+  const handleDateChange = (date: string) => {
+    console.log('BookingFlow - Date changed to:', date);
+    setSelectedDate(date);
+    setSelectedSlot(null); // Reset slot when date changes
+  };
+
   const handleContinueToConfirmation = () => {
     if (selectedSlot) {
       setStep(5);
@@ -133,6 +139,9 @@ const BookingFlow = () => {
       start_time: start_time, // Already in 24-hour format from SlotSelectionList
       final_payment_method: "cash",
     };
+
+    console.log('BookingFlow - Creating appointment with payload:', payload);
+    console.log('BookingFlow - selectedDate state:', selectedDate);
 
 
     if (selectedExperience) {
@@ -232,7 +241,7 @@ const BookingFlow = () => {
         </div>
       )}
 
-      {/* Step 4: Time Slot Selection (Date = Today by default) */}
+      {/* Step 4: Time Slot Selection */}
       {step === 4 &&
         selectedBranch &&
         selectedService &&
@@ -242,9 +251,10 @@ const BookingFlow = () => {
             <SlotSelectionList
               selectedService={selectedService.service_id}
               selectedBranch={selectedBranch.branch_id}
-              selectedDate={selectedDate} // always today's date
+              selectedDate={selectedDate}
               selectedSlot={selectedSlot}
               onSelectSlot={handleSlotSelect}
+              onDateChange={handleDateChange}
             />
 
             {/* Continue Button */}

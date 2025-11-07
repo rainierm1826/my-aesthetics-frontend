@@ -107,6 +107,7 @@ export interface AppointmentFormProps {
   aestheticianId?: string;
   duration?: string;
   start_time?: string;
+  date?: string;
   finalPaymentMethod?: "cash" | string;
   toPay?: number;
   voucherCode?: string;

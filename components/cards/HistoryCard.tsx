@@ -1,7 +1,7 @@
 import { Appointment } from "@/lib/types/appointment-types";
 import { ratingFormSchema, RatingFormValues } from "@/schema/ratingSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar, Coins, MapPin, Star, User } from "lucide-react";
+import { Calendar, MapPin, Star, User, Clock } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -22,10 +22,12 @@ import {
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
 import { Badge } from "../ui/badge";
+import { Separator } from "../ui/separator";
 import SelectRatingStar from "../SelectRatingStar";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
 import { useAuthStore } from "@/provider/store/authStore";
 import { patchAppointmentReview } from "@/api/review";
+import { formatCurrency, formatTo12HourTime } from "@/lib/function";
 
 export const HistoryCard = ({
   appointment,
@@ -74,6 +76,21 @@ export const HistoryCard = ({
     appointment.service_rating &&
     appointment.aesthetician_rating;
 
+  // Calculate costs like in ReceiptCard
+  const serviceCost =
+    appointment.discounted_price_snapshot ?? appointment.price_snapshot;
+  const professionalFee = appointment.is_pro_snapshot ? 1500 : 0;
+  const subtotal = serviceCost + professionalFee;
+
+  let voucherDiscount = 0;
+  if (appointment.discount_type_snapshot === "fixed") {
+    voucherDiscount = appointment.discount_snapshot ?? 0;
+  } else if (appointment.voucher_discount_type_snapshot === "percentage") {
+    voucherDiscount = ((appointment.discount_snapshot ?? 0) / 100) * subtotal;
+  }
+
+  const totalServiceCost = subtotal - voucherDiscount;
+
   return (
     <Card className="mb-4">
       <CardHeader>
@@ -85,7 +102,7 @@ export const HistoryCard = ({
             </CardTitle>
             <CardDescription className="flex items-center gap-1 mt-1">
               <Calendar className="h-3 w-3" />
-              {new Date(appointment.created_at).toLocaleDateString()}
+              {new Date(appointment.start_time).toLocaleDateString()}
             </CardDescription>
           </div>
           <Badge
@@ -119,10 +136,12 @@ export const HistoryCard = ({
           <div>
             <p className="text-gray-600">Aesthetician</p>
             <p className="font-medium">
-              {appointment.aesthetician_name_snapshot}
+              {appointment.aesthetician_name_snapshot || (
+                <span className="text-red-500 italic text-sm">Not assigned</span>
+              )}
             </p>
             {appointment.is_pro_snapshot && (
-              <Badge className="text-xs mt-1 bg-green-50 text-green-700 rounded full">
+              <Badge className="text-xs mt-1 bg-green-50 text-green-700 rounded-full">
                 Professional
               </Badge>
             )}
@@ -136,31 +155,73 @@ export const HistoryCard = ({
           </div>
           <div>
             <div className="flex items-center gap-1">
-              <Coins className="h-4 w-4 text-gray-600" />
-              <p className="text-gray-600">Price</p>
+              <Clock className="h-4 w-4 text-gray-600" />
+              <p className="text-gray-600">Time</p>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                {appointment.is_sale_snapshot && (
-                  <span className="text-gray-400 line-through text-sm">
-                    ₱{appointment.price_snapshot}
-                  </span>
-                )}
-                <span className="font-medium">
-                  ₱{appointment.discounted_price_snapshot}
-                </span>
-              </div>
-            </div>
+            <p className="font-medium">{formatTo12HourTime(appointment.start_time)}</p>
           </div>
         </div>
 
-        {appointment.payment_status !== "completed" && (
-          <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
-            <p className="text-sm font-medium text-amber-800">
-              Amount to Pay: ₱{appointment.to_pay}
-            </p>
+        <Separator />
+
+        {/* Cost Breakdown */}
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between items-center">
+            <p className="text-gray-600">Service Price</p>
+            <div className="text-right">
+              <p className="font-medium">{formatCurrency(serviceCost)}</p>
+              {appointment.is_sale_snapshot && (
+                <p className="text-xs text-gray-400 line-through">
+                  {formatCurrency(appointment.price_snapshot)}
+                </p>
+              )}
+            </div>
           </div>
-        )}
+
+          {appointment.is_pro_snapshot && (
+            <div className="flex justify-between items-center">
+              <p className="text-gray-600">Professional Fee</p>
+              <p className="font-medium">{formatCurrency(professionalFee)}</p>
+            </div>
+          )}
+
+          {appointment.discount_snapshot && appointment.discount_snapshot > 0 && (
+            <div className="flex justify-between items-center">
+              <p className="text-gray-600">
+                Discount
+                {appointment.voucher_code_snapshot &&
+                  ` (${appointment.voucher_code_snapshot})`}
+              </p>
+              <p className="font-medium text-red-500">
+                -
+                {appointment.discount_type_snapshot === "fixed"
+                  ? formatCurrency(appointment.discount_snapshot)
+                  : `${appointment.discount_snapshot}%`}
+              </p>
+            </div>
+          )}
+
+          <Separator className="my-2" />
+
+          <div className="flex justify-between items-center">
+            <p className="font-semibold">Total Amount</p>
+            <p className="text-lg font-bold">{formatCurrency(totalServiceCost)}</p>
+          </div>
+
+          {appointment.final_payment_method && (
+            <div className="flex justify-between items-center pt-1">
+              <p className="text-gray-600">Payment Method</p>
+              <p className="font-medium capitalize">{appointment.final_payment_method}</p>
+            </div>
+          )}
+
+          <div className="flex justify-between items-center">
+            <p className="text-gray-600">Payment Status</p>
+            <p className="font-semibold uppercase text-xs">{appointment.payment_status}</p>
+          </div>
+        </div>
+
+        <Separator />
 
         {showRatingForm && !hasRatings && !showForm && (
           <Button

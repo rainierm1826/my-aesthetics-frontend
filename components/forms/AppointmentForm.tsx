@@ -49,6 +49,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   userId,
   branchId,
   start_time,
+  date: initialDate,
   serviceId,
   aestheticianId,
   finalPaymentMethod,
@@ -75,7 +76,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       final_payment_method: finalPaymentMethod || "",
       voucher_code: voucherCode || undefined,
       start_time: start_time || "",
-      date: new Date().toLocaleDateString("en-CA"),
+      date: initialDate || new Date().toLocaleDateString("en-CA"),
       status: status || "",
     },
   });
@@ -99,11 +100,11 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
         final_payment_method: finalPaymentMethod || "",
         voucher_code: voucherCode || undefined,
         start_time: start_time || "",
-        date: new Date().toLocaleDateString("en-CA"),
+        date: initialDate || new Date().toLocaleDateString("en-CA"),
         status: status || "",
       });
     }
-  }, [method, walkInId, branchId, serviceId, aestheticianId, finalPaymentMethod, voucherCode, start_time, status, reset]);
+  }, [method, walkInId, branchId, serviceId, aestheticianId, finalPaymentMethod, voucherCode, start_time, initialDate, status, reset]);
 
   const appointmentMutation = useBaseMutation(method, {
     createFn: postAppointment,
@@ -216,7 +217,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           {auth?.role !== "owner" && (
             <input type="hidden" {...form.register("branch_id")} />
           )}
-          <input type="hidden" {...form.register("date")} />
 
           {/* Walk-in Customer ID - Only show for CREATE mode (post) */}
           {/* For EDIT mode (patch), hide this field but still include it in submission */}
@@ -243,6 +243,25 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           {method === "patch" && walkInId && (
             <input type="hidden" {...form.register("walk_in_id")} />
           )}
+
+          {/* Date Selection */}
+          <FormField
+            control={control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Appointment Date</FormLabel>
+                <FormControl>
+                  <Input
+                    type="date"
+                    {...field}
+                    min={new Date().toLocaleDateString("en-CA")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Branch selection for owners only */}

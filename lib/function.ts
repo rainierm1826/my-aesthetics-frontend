@@ -120,6 +120,26 @@ export const formatCurrency = (amount: number) => {
   })}`;
 };
 
+/**
+ * Parses a datetime string from backend (YYYY-MM-DD HH:MM:SS) as local time
+ * Avoids timezone conversion issues that occur with new Date(string)
+ */
+export const parseDateTime = (dateTimeString: string): Date => {
+  if (!dateTimeString) return new Date();
+  
+  try {
+    // Split into date and time parts
+    const [datePart, timePart] = dateTimeString.split(" ");
+    const [year, month, day] = datePart.split("-").map(Number);
+    const [hours, minutes, seconds] = (timePart || "00:00:00").split(":").map(Number);
+    
+    // Create date in local timezone (month is 0-indexed)
+    return new Date(year, month - 1, day, hours || 0, minutes || 0, seconds || 0);
+  } catch (error) {
+    console.error("Error parsing datetime:", dateTimeString, error);
+    return new Date();
+  }
+};
 
 export const formatTo12HourTime = (time: string | null): string => {
   if (!time) return "N/A";

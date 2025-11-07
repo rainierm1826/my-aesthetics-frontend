@@ -13,6 +13,7 @@ interface SlotSelectionListProps {
   selectedDate: string;
   selectedSlot: string | null;
   onSelectSlot: (slot: string) => void;
+  onDateChange?: (date: string) => void;
   selectedAesthetician?: string;
 }
 
@@ -22,6 +23,7 @@ const SlotSelectionList = ({
   selectedDate,
   selectedSlot,
   onSelectSlot,
+  onDateChange,
   selectedAesthetician,
 }: SlotSelectionListProps) => {
   const { access_token } = useAuthStore();
@@ -88,6 +90,23 @@ const SlotSelectionList = ({
         <Clock className="w-6 h-6" />
         <span>Select Time Slot</span>
       </h2>
+
+      {/* Date Selection */}
+      {onDateChange && (
+        <div className="mb-6">
+          <label htmlFor="appointment-date" className="block text-sm font-medium mb-2">
+            Select Date
+          </label>
+          <input
+            id="appointment-date"
+            type="date"
+            value={selectedDate}
+            onChange={(e) => onDateChange(e.target.value)}
+            min={new Date().toLocaleDateString("en-CA")}
+            className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          />
+        </div>
+      )}
 
       <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
         <div className="flex items-center gap-1">
