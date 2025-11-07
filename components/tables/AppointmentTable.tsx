@@ -17,10 +17,15 @@ import DashboardCard from "../cards/DashboardCard";
 import { AppointmentsAnalyticsResponse } from "@/lib/types/analytics-type";
 import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
 import { useAppointmentAnalytics } from "@/hooks/useAppointmentAnalytics";
+import { useAppointmentWebSocket } from "@/hooks/useAppointmentWebSocket";
 
 export default function AppointmentTable() {
   const { auth, isAuthLoading, access_token } = useAuthStore();
   const { user } = useUserStore();
+  
+  // Enable real-time appointment updates via WebSocket
+  useAppointmentWebSocket();
+  
   const { data, isFetching, isError } = useAppointments({
     branchId: user?.branch?.branch_id,
     token: access_token || "",

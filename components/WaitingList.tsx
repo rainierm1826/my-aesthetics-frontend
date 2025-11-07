@@ -9,10 +9,15 @@ import { useUserStore } from "@/provider/store/userStore";
 import { useAuthStore } from "@/provider/store/authStore";
 import { Appointment } from "@/lib/types/appointment-types";
 import SkeletonWaitingList from "./skeletons/SkeletonWaitingList";
+import { useAppointmentWebSocket } from "@/hooks/useAppointmentWebSocket";
 
 const WaitingList = () => {
   const { access_token } = useAuthStore();
   const { user } = useUserStore();
+  
+  // Enable real-time appointment updates via WebSocket
+  useAppointmentWebSocket();
+  
   const [selectedBranchId, setSelectedBranchId] = useState<string | undefined>(
     user?.branch?.branch_id
   );
@@ -76,7 +81,7 @@ const WaitingList = () => {
                               : "bg-gray-100 text-gray-700"
                     }`}
                   >
-                    {item.status}
+                    {item.status === "waiting" ? "confirm" : item.status}
                   </Badge>
                 </div>
                 <p className="text-sm text-gray-600 mb-1 ml-10">

@@ -68,16 +68,19 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
     cell: ({ row }) => {
       const { appointment_id, aesthetician_id, branch_id, status } = row.original;
       
-      // Only show change aesthetician for pending and waiting appointments
-      const canChangeAesthetician = status === "pending" || status === "waiting";
+      // If appointment is completed, only allow preview
+      const isCompleted = status === "completed";
+      
+      // Only show change aesthetician for pending and waiting appointments (and not completed)
+      const canChangeAesthetician = !isCompleted && (status === "pending" || status === "waiting");
 
       return (
         <ActionCell
-          deleteFn={(id: string) => deleteData({ id: id, url: "appointment" })}
-          deleteMessage="Appointment has been deleted."
+          deleteFn={!isCompleted ? (id: string) => deleteData({ id: id, url: "appointment" }) : undefined}
+          deleteMessage={!isCompleted ? "Appointment has been deleted." : undefined}
           queryKey="appointment"
           id={appointment_id}
-          editAppointmentStatus={true}
+          editAppointmentStatus={!isCompleted}
           hasAesthetician={!!aesthetician_id}
           previewDialog={<ReceiptCard appointment={row.original} />}
           changeAestheticianDialog={
@@ -89,6 +92,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
               />
             ) : undefined
           }
+          isCompleted={isCompleted}
         />
       );
     },

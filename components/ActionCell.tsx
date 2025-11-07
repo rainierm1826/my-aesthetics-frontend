@@ -87,6 +87,7 @@ type ActionCellProps = {
   editAppointmentStatus?: boolean;
   changeAestheticianDialog?: ReactNode;
   hasAesthetician?: boolean;
+  isCompleted?: boolean;
 };
 
 function ActionCell({
@@ -100,6 +101,7 @@ function ActionCell({
   editAppointmentStatus,
   changeAestheticianDialog,
   hasAesthetician = true,
+  isCompleted = false,
 }: ActionCellProps) {
   const { access_token } = useAuthStore();
 
@@ -203,60 +205,72 @@ function ActionCell({
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
-          {editDialog && (
-            <DropdownMenuItem onSelect={handleEditClick}>
-              Update
-            </DropdownMenuItem>
-          )}
-
-          {editAppointmentStatus && (
-            <>
-              {statusConfigs.map((status) => {
-                // Disable completed, on-process, and waiting (confirm) if no aesthetician assigned
-                const requiresAesthetician = ['completed', 'on-process', 'waiting'].includes(status.value);
-                const isDisabled = requiresAesthetician && !hasAesthetician;
-                
-                return (
-                  <DropdownMenuItem
-                    key={status.value}
-                    onSelect={() => !isDisabled && handleStatusClick(status)}
-                    disabled={isDisabled}
-                    className={isDisabled ? "opacity-50 cursor-not-allowed" : ""}
-                  >
-                    {status.label}
-                    {isDisabled && (
-                      <span className="ml-2 text-xs text-muted-foreground">
-                        (Assign aesthetician first)
-                      </span>
-                    )}
-                  </DropdownMenuItem>
-                );
-              })}
-            </>
-          )}
-
-          {changeAestheticianDialog && (
-            <DropdownMenuItem onSelect={handleChangeAestheticianClick}>
-              Change Aesthetician
-            </DropdownMenuItem>
-          )}
-
-          {infoDialog && (
-            <DropdownMenuItem onSelect={handleMoreInfoClick}>
-              More Info
-            </DropdownMenuItem>
-          )}
-
-          {previewDialog && (
+          {/* Show Preview first if appointment is completed */}
+          {isCompleted && previewDialog && (
             <DropdownMenuItem onSelect={handlePreviewClick}>
               Preview
             </DropdownMenuItem>
           )}
 
-          {deleteFn && deleteMessage && (
-            <DropdownMenuItem onSelect={handleDeleteClick}>
-              Delete
-            </DropdownMenuItem>
+          {/* Show other actions only if not completed */}
+          {!isCompleted && (
+            <>
+              {editDialog && (
+                <DropdownMenuItem onSelect={handleEditClick}>
+                  Update
+                </DropdownMenuItem>
+              )}
+
+              {editAppointmentStatus && (
+                <>
+                  {statusConfigs.map((status) => {
+                    // Disable completed, on-process, and waiting (confirm) if no aesthetician assigned
+                    const requiresAesthetician = ['completed', 'on-process', 'waiting'].includes(status.value);
+                    const isDisabled = requiresAesthetician && !hasAesthetician;
+                    
+                    return (
+                      <DropdownMenuItem
+                        key={status.value}
+                        onSelect={() => !isDisabled && handleStatusClick(status)}
+                        disabled={isDisabled}
+                        className={isDisabled ? "opacity-50 cursor-not-allowed" : ""}
+                      >
+                        {status.label}
+                        {isDisabled && (
+                          <span className="ml-2 text-xs text-muted-foreground">
+                            (Assign aesthetician first)
+                          </span>
+                        )}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </>
+              )}
+
+              {changeAestheticianDialog && (
+                <DropdownMenuItem onSelect={handleChangeAestheticianClick}>
+                  Change Aesthetician
+                </DropdownMenuItem>
+              )}
+
+              {infoDialog && (
+                <DropdownMenuItem onSelect={handleMoreInfoClick}>
+                  More Info
+                </DropdownMenuItem>
+              )}
+
+              {previewDialog && (
+                <DropdownMenuItem onSelect={handlePreviewClick}>
+                  Preview
+                </DropdownMenuItem>
+              )}
+
+              {deleteFn && deleteMessage && (
+                <DropdownMenuItem onSelect={handleDeleteClick}>
+                  Delete
+                </DropdownMenuItem>
+              )}
+            </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

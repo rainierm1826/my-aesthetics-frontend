@@ -10,9 +10,14 @@ import { Clock, CheckCircle, XCircle } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { useAuthStore } from "@/provider/store/authStore";
 import { AppointmentListSkeleton } from "../skeletons/SkeletonHistory";
+import { useAppointmentWebSocket } from "@/hooks/useAppointmentWebSocket";
 
 const AppointmentsTab = () => {
   const { access_token } = useAuthStore();
+  
+  // Enable real-time appointment updates via WebSocket
+  useAppointmentWebSocket();
+  
   const { data, isFetching } = useHistory(access_token || "");
   const appointments: Appointment[] = data?.appointment ?? [];
 

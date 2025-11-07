@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import Script from "next/script";
 import { inter } from "@/components/fonts/fonts";
 import { TokenRefreshProvider } from "@/provider/TokenRefreshProvider";
+import { WebSocketProvider } from "@/provider/WebSocketProvider";
 
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio",
@@ -165,10 +166,12 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} `}>
         <QueryProvider>
-          <TokenRefreshProvider />
-          <main>{children}</main>
-          <Toaster />
-          <Footer />
+          <WebSocketProvider>
+            <TokenRefreshProvider />
+            <main>{children}</main>
+            <Toaster />
+            <Footer />
+          </WebSocketProvider>
         </QueryProvider>
       </body>
     </html>
