@@ -335,3 +335,31 @@ export async function refreshToken(): Promise<{
   }
 }
 
+export async function clearCookies(): Promise<{
+  status: boolean;
+  message: string;
+}> {
+  try {
+    if (!backendUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
+      );
+    }
+    const response = await fetch(`${backendUrl}/auth/clear-cookies`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(body.message || "Failed to clear cookies");
+    }
+    return body;
+  } catch (error) {
+    throw error;
+  }
+}
