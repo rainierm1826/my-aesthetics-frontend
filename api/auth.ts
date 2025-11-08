@@ -303,7 +303,7 @@ export async function verifyEmailOTP(data: unknown): Promise<SignUpResponse> {
   }
 }
 
-export async function refreshToken(token: string): Promise<{
+export async function refreshToken(): Promise<{
   status: boolean;
   message: string;
   access_token: string;
@@ -314,13 +314,14 @@ export async function refreshToken(token: string): Promise<{
         "NEXT_PUBLIC_BACKEND_URL environment variable is not defined"
       );
     }
+    // Use credentials to send refresh_token cookie automatically
+    // No need to send token in Authorization header
     const response = await fetch(`${backendUrl}/auth/refresh`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
-      credentials: "include",
+      credentials: "include", // This sends the refresh_token cookie
     });
 
     const body = await response.json().catch(() => ({}));

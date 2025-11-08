@@ -32,7 +32,7 @@ export async function apiRequest<T>(
         const currentToken = authStore.access_token;
 
         if (currentToken) {
-          const refreshResponse = await refreshToken(currentToken);
+          const refreshResponse = await refreshToken();
           
           if (refreshResponse.status && refreshResponse.access_token) {
             // Update the token in store

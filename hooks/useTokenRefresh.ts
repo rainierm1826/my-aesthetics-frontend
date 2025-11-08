@@ -68,7 +68,7 @@ export const useTokenRefresh = () => {
     lastRefreshTime = now;
 
     try {
-      const response = await refreshToken(access_token);
+      const response = await refreshToken();
       if (response.status && response.access_token) {
         refreshAccessToken(response.access_token);
         console.log("[TokenRefresh] Token refreshed successfully");
