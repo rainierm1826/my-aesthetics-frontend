@@ -102,9 +102,7 @@ const EmailStep = ({
           />
 
           <div className="flex gap-2">
-            <Button className="flex-1" type="submit" disabled={emailMutation.isPending}>
-              {emailMutation.isPending ? "Sending..." : "Send Code"}
-            </Button>
+           
             <Button
               className="flex-1"
               variant="outline"
@@ -113,6 +111,9 @@ const EmailStep = ({
               disabled={emailMutation.isPending}
             >
               Back
+            </Button>
+             <Button className="flex-1" type="submit" disabled={emailMutation.isPending}>
+              {emailMutation.isPending ? "Sending..." : "Send Code"}
             </Button>
           </div>
         </form>
