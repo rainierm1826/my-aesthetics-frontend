@@ -360,7 +360,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
                         <FormLabel className="text-xs text-gray-600">
                           Sex
                         </FormLabel>
-                        <FormControl>
+                        <FormControl className="w-full">
                           <DropDownSex
                             value={field.value ?? ""}
                             onValueChange={(v) => field.onChange(v)}
@@ -380,7 +380,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
                         <FormLabel className="text-xs text-gray-600">
                           Availability
                         </FormLabel>
-                        <FormControl>
+                        <FormControl className="w-full">
                           <DropDownAvailability
                             value={field.value ?? ""}
                             onValueChange={(v) => field.onChange(v)}
@@ -406,7 +406,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
                       <FormLabel className="text-xs text-gray-600">
                         Experience Level
                       </FormLabel>
-                      <FormControl>
+                      <FormControl className="w-full">
                         <DropDownExperience
                           value={field.value ?? ""}
                           onValueChange={(v) => field.onChange(v)}
@@ -428,7 +428,7 @@ const AestheticianForm: React.FC<FormAesthetician> = ({
                         <FormLabel className="text-xs text-gray-600">
                           Assigned Branch
                         </FormLabel>
-                        <FormControl>
+                        <FormControl className="w-full">
                           <DropDownBranch
                             value={field.value ?? ""}
                             onValueChange={(v) => field.onChange(v)}

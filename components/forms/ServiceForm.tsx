@@ -289,7 +289,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel htmlFor="category">Category</FormLabel>
-                  <FormControl>
+                  <FormControl className="w-full">
                     <DropDownServiceCategory
                       value={field.value ?? ""}
                       onValueChange={field.onChange}
@@ -363,7 +363,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel>Discount Type</FormLabel>
-                  <FormControl>
+                  <FormControl className="w-full">
                     <DropDownDiscountType
                       value={field.value ?? ""}
                       onValueChange={field.onChange}
@@ -417,7 +417,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel>Branch</FormLabel>
-                  <FormControl>
+                  <FormControl className="w-full">
                     <DropDownBranch
                       includeAllOption
                       value={field.value ?? ""}

@@ -272,7 +272,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Choose Branch</FormLabel>
-                    <FormControl>
+                    <FormControl className="w-full">
                       <DropDownBranch
                         value={field.value || ""}
                         onValueChange={(v) => field.onChange(v)}
@@ -283,17 +283,15 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 )}
               />
             )}
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {((branch && method === "post") || method === "patch") && (
+             {((branch && method === "post") || method === "patch") && (
               <FormField
                 control={control}
                 name="service_id"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Choose Service</FormLabel>
-                    <FormControl>
+                    <FormControl className="w-full">
                       <DropDownService
                         value={field.value}
                         onValueChange={(v) => field.onChange(v)}
@@ -305,6 +303,9 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 )}
               />
             )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             {(method === "patch" ||
               (method === "post" && branch && service)) && (
@@ -314,7 +315,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Choose Aesthetician</FormLabel>
-                    <FormControl>
+                    <FormControl className="w-full">
                       <DropDownAesthetician
                         value={field.value}
                         onValueChange={(v) => field.onChange(v)}
@@ -326,9 +327,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 )}
               />
             )}
-          </div>
 
-          {/* Time Slot Selection */}
+             {/* Time Slot Selection */}
           {(method === "patch" ||
             (method === "post" && aesthetician && service)) && (
             <FormField
@@ -337,7 +337,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Choose Time Slot</FormLabel>
-                  <FormControl>
+                  <FormControl className="w-full">
                     <DropDownSlot
                       value={field.value}
                       onValueChange={(v) => field.onChange(v)}
@@ -353,6 +353,9 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               )}
             />
           )}
+          </div>
+
+         
 
           {/* Status Field - Only for patch (edit) mode */}
           {method === "patch" && (
@@ -388,7 +391,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Payment Method</FormLabel>
-                  <FormControl>
+                  <FormControl className="w-full">
                     <DropDownPaymentMethod
                       value={field.value ?? ""}
                       onValueChange={(v) => field.onChange(v)}

@@ -221,23 +221,7 @@ const BookingFlow = () => {
               <p className="text-gray-600">Premium service from our experienced professionals</p>
               <p className="text-sm text-primary font-semibold mt-2">+₱1,500 professional fee</p>
             </div>
-          </div>
-
-          {/* Continue Button */}
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={() => setStep(4)}
-              disabled={!selectedExperience}
-              className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
-                selectedExperience
-                  ? "bg-primary text-white hover:bg-primary/90"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
-            >
-              Continue to Time Slot
-            </button>
-          </div>
+          </div>          
         </div>
       )}
 

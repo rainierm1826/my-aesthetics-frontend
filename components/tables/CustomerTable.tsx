@@ -25,7 +25,7 @@ export default function CustomerTable() {
 
   const page = Number(searchParams.get("page") ?? "1");
   const search = searchParams.get("query") || "";
-  const limit = 10;
+  const limit = Number(searchParams.get("limit") ?? "10");
 
   const { data, isFetching, isError } = useAllCustomers({
     page,

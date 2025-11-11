@@ -47,6 +47,44 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
     });
   };
 
+  // Format time to show both 24-hour and 12-hour formats
+  const formatTime = (timeString: string) => {
+    // Extract start time from range like "04:40 PM-05:00 PM" or "17:30"
+    const startTimeStr = timeString.includes("-") 
+      ? timeString.split("-")[0].trim() 
+      : timeString.trim();
+    
+    let hours24: number;
+    let minutes: number;
+    
+    // Check if it's already in 12-hour format (contains AM/PM)
+    if (startTimeStr.includes("AM") || startTimeStr.includes("PM")) {
+      const [time, period] = startTimeStr.split(" ");
+      const [h, m] = time.split(":").map(Number);
+      minutes = m;
+      hours24 = period === "PM" && h !== 12
+        ? h + 12
+        : period === "AM" && h === 12
+          ? 0
+          : h;
+    } else {
+      // Already in 24-hour format
+      const [h, m] = startTimeStr.split(":").map(Number);
+      hours24 = h;
+      minutes = m;
+    }
+    
+    // Convert to 12-hour format
+    const hours12 = hours24 % 12 || 12;
+    const period = hours24 >= 12 ? "PM" : "AM";
+    
+    // Format strings
+    const time24 = `${String(hours24).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    const time12 = `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
+    
+    return `${time24} (${time12})`;
+  };
+
   // Pricing calculations
   const serviceCost = service.discounted_price || service.price || 0;
   const professionalFee = aestheticianExperience === "pro" ? 1500 : 0;
@@ -126,7 +164,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                   <Clock className="w-5 h-5 text-primary" />
                   <h3 className="font-semibold">Time</h3>
                 </div>
-                <p className="font-medium text-lg">{appointmentTime}</p>
+                <p className="font-medium text-lg">{formatTime(appointmentTime)}</p>
               </div>
             </div>
           </CardContent>
@@ -268,7 +306,8 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
       <div className="flex gap-4 mt-8">
         <Button
           onClick={onCancel}
-          className="cursor-pointer flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="cursor-pointer flex-1 px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+          variant={"outline"}
         >
           Cancel
         </Button>

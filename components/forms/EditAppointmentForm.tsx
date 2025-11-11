@@ -256,7 +256,7 @@ const EditAppointmentForm: React.FC<EditAppointmentFormProps> = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base font-semibold">Appointment Status</FormLabel>
-                <FormControl>
+                <FormControl className="w-full">
                   <DropDownAppointmentStatus
                     value={field.value}
                     onValueChange={(v) => field.onChange(v)}
@@ -280,7 +280,7 @@ const EditAppointmentForm: React.FC<EditAppointmentFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Branch</FormLabel>
-                    <FormControl>
+                    <FormControl className="w-full">
                       <DropDownBranch
                         value={field.value || ""}
                         onValueChange={(v) => field.onChange(v)}
@@ -298,7 +298,7 @@ const EditAppointmentForm: React.FC<EditAppointmentFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Service</FormLabel>
-                    <FormControl>
+                    <FormControl className="w-full">
                       <DropDownService
                         value={field.value}
                         onValueChange={(v) => field.onChange(v)}
@@ -324,7 +324,7 @@ const EditAppointmentForm: React.FC<EditAppointmentFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Aesthetician</FormLabel>
-                    <FormControl>
+                    <FormControl className="w-full">
                       <DropDownAesthetician
                         value={field.value}
                         onValueChange={(v) => field.onChange(v)}
@@ -343,7 +343,7 @@ const EditAppointmentForm: React.FC<EditAppointmentFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Time Slot</FormLabel>
-                    <FormControl>
+                    <FormControl className="w-full">
                       <DropDownSlot
                         value={field.value}
                         onValueChange={(v) => field.onChange(v)}
@@ -372,7 +372,7 @@ const EditAppointmentForm: React.FC<EditAppointmentFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Payment Method</FormLabel>
-                  <FormControl>
+                  <FormControl className="w-full">
                     <DropDownPaymentMethod
                       value={field.value ?? ""}
                       onValueChange={(v) => field.onChange(v)}

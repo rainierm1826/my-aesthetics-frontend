@@ -27,7 +27,7 @@ export async function getAllAesthetician({
     query,
     sex,
     sort,
-  });
+});
 
   return apiRequest<AestheticianListResponse>(`/aesthetician?${params}`);
 }

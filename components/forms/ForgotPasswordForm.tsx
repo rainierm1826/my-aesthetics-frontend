@@ -184,10 +184,6 @@ const NewPasswordStep = ({
 
   return (
     <>
-      <h2 className="text-lg font-semibold mb-2">Set New Password</h2>
-      <p className="text-sm text-gray-600 mb-4">
-        Enter a new password for your account.
-      </p>
 
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -262,13 +258,7 @@ const NewPasswordStep = ({
           />
 
           <div className="flex gap-2">
-            <Button 
-              className="flex-1" 
-              type="submit"
-              disabled={passwordMutation.isPending}
-            >
-              {passwordMutation.isPending ? "Resetting..." : "Reset Password"}
-            </Button>
+            
             <Button
               className="flex-1"
               variant="outline"
@@ -277,6 +267,13 @@ const NewPasswordStep = ({
               disabled={passwordMutation.isPending}
             >
               Back
+            </Button>
+            <Button 
+              className="flex-1" 
+              type="submit"
+              disabled={passwordMutation.isPending}
+            >
+              {passwordMutation.isPending ? "Resetting..." : "Reset Password"}
             </Button>
           </div>
         </form>
