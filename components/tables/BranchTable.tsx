@@ -36,7 +36,7 @@ export default function BranchTable() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-5">
           <DashboardCard
             title="Avarage Rating"
             content={summary.average_branch_rating.toFixed(2)}
