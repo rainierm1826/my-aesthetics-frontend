@@ -54,7 +54,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
 
       <Card
         ref={receiptRef}
-        className={`p-0 w-full mx-auto max-w-4xl shadow-lg h-[450px] overflow-y-scroll ${className}`}
+        className={`w-full mx-auto max-w-4xl shadow-lg h-[450px] overflow-y-scroll ${className}`}
       >
         <CardHeader className="text-center">
           <div className="space-y-3">

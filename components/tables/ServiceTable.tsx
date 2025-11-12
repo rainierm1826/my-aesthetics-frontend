@@ -41,13 +41,13 @@ export default function ServiceTable() {
     <>
       {auth?.role === "owner" ? (
         isFetchingServiceSummary ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
             {Array.from({ length: 4 }).map((_, index) => (
               <SkeletonScoreBoard key={index} />
             ))}
           </div>
         ) : (
-          <div className="flex flex-wrap gap-3 mb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
             <DashboardCard
               title="Total Services"
               content={summary.total_services}
@@ -68,25 +68,33 @@ export default function ServiceTable() {
       ) : null}
 
       <div className="">
-        <div className="flex justify-between mb-5">
-          <div className="flex gap-3 w-full">
-            <SearchInput placeholder="Search by name..." size="w-1/2" />
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <div className="w-full sm:w-1/2">
+              <SearchInput placeholder="Search by name..." size="w-full" />
+            </div>
             {auth?.role == "owner" && (
-              <DropDownBranch useUrlParams={true} includeAllOption={true} />
+              <div className="w-full sm:w-auto">
+                <DropDownBranch useUrlParams={true} includeAllOption={true} />
+              </div>
             )}
-            <DropDownServiceCategory
-              useUrlParams={true}
-              includeAllOption={true}
+            <div className="w-full sm:w-auto">
+              <DropDownServiceCategory
+                useUrlParams={true}
+                includeAllOption={true}
+              />
+            </div>
+          </div>
+          <div className="w-full sm:w-auto flex-shrink-0">
+            <ServiceForm
+              method="post"
+              formTitle="Add New Service"
+              formDescription="Fill in the details below to add a new service to help customers recognize it instantly."
+              renderDialog={true}
+              dialogButtonLabel="New Service"
+              buttonLabel="Create Service"
             />
           </div>
-          <ServiceForm
-            method="post"
-            formTitle="Add New Service"
-            formDescription="Fill in the details below to add a new service to help customers recognize it instantly."
-            renderDialog={true}
-            dialogButtonLabel="New Service"
-            buttonLabel="Create Service"
-          />
         </div>
         {isFetching ? (
           <SkeletonTable />

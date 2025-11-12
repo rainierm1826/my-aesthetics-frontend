@@ -22,18 +22,24 @@ export default function AdminTable() {
 
   return (
     <>
-      <div className="flex justify-between mb-5">
-        <div className="flex gap-3 w-full">
-          <SearchInput placeholder="Search by name..." size="w-1/2" />
-          <DropDownBranch useUrlParams={true} includeAllOption={true} />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <div className="w-full sm:w-1/2">
+            <SearchInput placeholder="Search by name..." size="w-full" />
+          </div>
+          <div className="w-full sm:w-auto">
+            <DropDownBranch useUrlParams={true} includeAllOption={true} />
+          </div>
         </div>
-        <AdminForm
-          method="post"
-          dialogButtonLabel="New Admin"
-          buttonLabel="Add Admin"
-          formDescription="Create a new admin by filling in the details below."
-          formTitle="Add New Admin"
-        />
+        <div className="w-full sm:w-auto">
+          <AdminForm
+            method="post"
+            dialogButtonLabel="New Admin"
+            buttonLabel="Add Admin"
+            formDescription="Create a new admin by filling in the details below."
+            formTitle="Add New Admin"
+          />
+        </div>
       </div>
 
       {isFetching ? (

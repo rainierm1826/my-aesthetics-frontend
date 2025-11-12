@@ -52,7 +52,7 @@ const AestheticianTable = () => {
           ))}
         </div>
       ) : auth?.role === "owner" ? (
-        <div className="flex flex-wrap gap-3 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
           <DashboardCard
             title="Average Rating"
             content={summary.average_aesthetician_rating.toFixed(2)}
@@ -77,28 +77,36 @@ const AestheticianTable = () => {
         </div>
       ) : null}
 
-      <div className="flex justify-between mb-5">
-        <div className="flex justify-between w-full">
-          <div className="flex gap-3 w-full">
-            <SearchInput placeholder="Search by name..." size="w-1/3" />
-            {auth?.role == "owner" && (
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-5 gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <div className="w-full sm:w-1/3">
+            <SearchInput placeholder="Search by name..." size="w-full" />
+          </div>
+          {auth?.role == "owner" && (
+            <div className="w-full sm:w-auto">
               <DropDownBranch useUrlParams={true} includeAllOption={true} />
-            )}
+            </div>
+          )}
+          <div className="w-full sm:w-auto">
             <DropDownExperience useUrlParams={true} includeAllOption={true} />
+          </div>
+          <div className="w-full sm:w-auto">
             <DropDownAvailability useUrlParams={true} includeAllOption={true} />
+          </div>
+          <div className="w-full sm:w-auto">
             <DropDownSex useUrlParams={true} includeAllOption={true} />
           </div>
+        </div>
+        <div className="w-full lg:w-auto flex-shrink-0">
           <AestheticianForm
             method="post"
             formTitle="Add Aesthetician"
-            formDescription="Fill in the aesthetician’s name, contact number, experience, gender, and branch. Add a profile photo to complete their profile."
+            formDescription="Fill in the aesthetician's name, contact number, experience, gender, and branch. Add a profile photo to complete their profile."
             dialogButtonLabel="New Aesthetician"
             buttonLabel="Create Aesthetician"
           />
         </div>
-      </div>
-
-      {isFetching ? (
+      </div>      {isFetching ? (
         <SkeletonTable />
       ) : isError ? (
         toast("Internal Error")

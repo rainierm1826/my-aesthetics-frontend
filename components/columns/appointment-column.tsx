@@ -68,10 +68,10 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
     cell: ({ row }) => {
       const { appointment_id, aesthetician_id, branch_id, status } = row.original;
       
-      // If appointment is completed, only allow preview
-      const isCompleted = status === "completed";
+      // If appointment is completed or cancelled, only allow preview
+      const isCompleted = status === "completed" || status === "cancelled";
       
-      // Only show change aesthetician for pending and waiting appointments (and not completed)
+      // Only show change aesthetician for pending and waiting appointments (and not completed/cancelled)
       const canChangeAesthetician = !isCompleted && (status === "pending" || status === "waiting");
 
       return (

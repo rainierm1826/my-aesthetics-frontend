@@ -17,19 +17,25 @@ export default function VoucherTable() {
 
   return (
     <>
-      <div className="flex justify-between mb-5">
-        <div className="flex gap-3 w-full">
-          <SearchInput placeholder="Search by code..." size="w-1/2" />
-          <DropDownDiscountType useUrlParams={true} includeAllOption={true} />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <div className="w-full sm:w-1/2">
+            <SearchInput placeholder="Search by code..." size="w-full" />
+          </div>
+          <div className="w-full sm:w-auto">
+            <DropDownDiscountType useUrlParams={true} includeAllOption={true} />
+          </div>
         </div>
 
-        <VoucherForm
-          method="post"
-          dialogButtonLabel="New Voucher"
-          buttonLabel="Add Voucher"
-          formDescription="Create a new voucher by filling in the details below."
-          formTitle="Add New Voucher"
-        />
+        <div className="w-full sm:w-auto flex-shrink-0">
+          <VoucherForm
+            method="post"
+            dialogButtonLabel="New Voucher"
+            buttonLabel="Add Voucher"
+            formDescription="Create a new voucher by filling in the details below."
+            formTitle="Add New Voucher"
+          />
+        </div>
       </div>
 
       {isFetching ? (

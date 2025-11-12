@@ -99,9 +99,9 @@ const SalesDashboard = () => {
             info="Total amount discounted via vouchers and sales"
           />
           <DashboardCard
-            title="Voucher Usage"
-            content={formatNumber(summary.total_voucher_usage)}
-            info="Number of appointments that used vouchers"
+            title="Cancellation Loss"
+            content={`₱${formatNumber(summary.cancellation_loss)}`}
+            info="Total potential revenue lost from cancelled appointments"
           />
         </div>
       )}

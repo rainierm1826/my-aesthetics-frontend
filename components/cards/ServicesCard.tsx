@@ -72,7 +72,7 @@ const ServicesCard = ({
             {/* Rating and Duration */}
             <div className="flex items-center justify-between gap-2">
               <RatingStar rating={rating} />
-              <div className="flex items-center gap-0.5 text-gray-600">
+              <div className="flex items-center gap-0.5 text-gray-600 invisible sm:visible">
                 <Clock className="w-3 h-3" />
                 <span className="text-[10px]">{duration} min</span>
               </div>

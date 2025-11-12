@@ -1,5 +1,12 @@
 import { apiRequest, buildParams } from "@/lib/function";
 
+export interface CustomerSummaryResponse {
+  total_customers: number;
+  active_customers: number;
+  customer_retention_rate: number;
+  average_customer_lifetime_value: number;
+}
+
 export interface CustomerDetail {
   customer: {
     id: string;
@@ -111,6 +118,14 @@ export async function getCustomerTimeline(
   });
 
   return apiRequest<TimelineResponse>(`/customer/timeline?${params}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function getCustomerSummary(
+  token: string
+): Promise<CustomerSummaryResponse> {
+  return apiRequest<CustomerSummaryResponse>(`/customer/summary`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 }

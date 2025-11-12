@@ -17,11 +17,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useSearchParams, useRouter } from "next/navigation";
+import DashboardCard from "@/components/cards/DashboardCard";
+import SkeletonScoreBoard from "../skeletons/SkeletonScoreBoard";
+import { useCustomerSummary } from "@/hooks/useCustomerSummary";
+import { useAuthStore } from "@/provider/store/authStore";
+import { formatNumber } from "@/lib/function";
 
 export default function CustomerTable() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [type, setType] = useState<"online" | "walkin" | "">("");
+  const { access_token, isAuthLoading, auth } = useAuthStore();
 
   const page = Number(searchParams.get("page") ?? "1");
   const search = searchParams.get("query") || "";
@@ -33,6 +39,9 @@ export default function CustomerTable() {
     search,
     type,
   });
+
+  const { data: summaryData, isFetching: isFetchingSummaryData } =
+    useCustomerSummary({ token: access_token || "" });
 
   const customers: CustomerRow[] = data?.customers ?? [];
   const pagination = data?.pagination;
@@ -48,24 +57,64 @@ export default function CustomerTable() {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-5 gap-4">
-        <div className="flex gap-3 flex-1">
-          <SearchInput
-            placeholder="Search by name or phone..."
-            size="w-1/2"
-          />
-          <Select value={type || "all"} onValueChange={handleTypeChange}>
-            <SelectTrigger className="w-1/4">
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="online">Online Customers</SelectItem>
-              <SelectItem value="walkin">Walk-in Customers</SelectItem>
-            </SelectContent>
-          </Select>
+      {/* Customer Summary Cards - Only visible for owner role */}
+      {auth?.role === "owner" && (
+        <div className="mb-8">
+          {isFetchingSummaryData || isAuthLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <SkeletonScoreBoard key={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <DashboardCard
+                title="Total Customers"
+                content={formatNumber(summaryData?.total_customers || 0)}
+                info="Total number of registered and walk-in customers"
+              />
+              <DashboardCard
+                title="Active Customers"
+                content={formatNumber(summaryData?.active_customers || 0)}
+                info="Customers with appointments in the last 30 days"
+              />
+              <DashboardCard
+                title="Retention Rate"
+                content={`${summaryData?.customer_retention_rate || 0}%`}
+                info="Percentage of customers with 2+ completed appointments"
+              />
+              <DashboardCard
+                title="Average Lifetime Value"
+                content={`₱${formatNumber(summaryData?.average_customer_lifetime_value || 0)}`}
+                info="Average total revenue generated per customer"
+              />
+            </div>
+          )}
         </div>
-        <div className="flex-shrink-0">
+      )}
+
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 flex-1">
+          <div className="w-full sm:w-1/2">
+            <SearchInput
+              placeholder="Search by name or phone..."
+              size="w-full"
+            />
+          </div>
+          <div className="w-full sm:w-1/4">
+            <Select value={type || "all"} onValueChange={handleTypeChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Filter by type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="online">Online Customers</SelectItem>
+                <SelectItem value="walkin">Walk-in Customers</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="w-full sm:w-auto flex-shrink-0">
           <WalkInCustomerForm
             method="post"
             formTitle="Add Walk-in Customer"

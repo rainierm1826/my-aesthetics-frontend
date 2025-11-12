@@ -153,11 +153,11 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="my-5 flex justify-between">
-        <div className="flex justify-start">
+      <div className="my-5 flex flex-col sm:flex-row justify-between gap-4">
+        <div className="flex justify-start order-2 sm:order-1">
           <PaginationComponent pageCount={pageCount} windowSize={windowsSize} />
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 justify-end order-1 sm:order-2">
           <DataTableEntries />
           <ColumnToggle table={table} />
         </div>

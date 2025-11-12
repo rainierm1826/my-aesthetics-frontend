@@ -30,13 +30,13 @@ export default function BranchTable() {
   return (
     <>
       {isFetchingBranchSummary ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
           {Array.from({ length: 4 }).map((_, index) => (
             <SkeletonScoreBoard key={index} />
           ))}
         </div>
       ) : (
-        <div className="flex flex-wrap gap-3 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
           <DashboardCard
             title="Avarage Rating"
             content={summary.average_branch_rating.toFixed(2)}
@@ -56,18 +56,22 @@ export default function BranchTable() {
             )}
         </div>
       )}
-      <div className="flex justify-between mb-5">
-        <div className="flex gap-3 w-full">
-          <SearchInput placeholder="Search by name..." size="w-1/2" />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <div className="w-full sm:w-1/2">
+            <SearchInput placeholder="Search by name..." size="w-full" />
+          </div>
         </div>
 
-        <BranchForm
-          method="post"
-          dialogButtonLabel="New Branch"
-          buttonLabel="Add Branch"
-          formDescription="Create a new branch by filling in the details below."
-          formTitle="Add New Branch"
-        />
+        <div className="w-full sm:w-auto flex-shrink-0">
+          <BranchForm
+            method="post"
+            dialogButtonLabel="New Branch"
+            buttonLabel="Add Branch"
+            formDescription="Create a new branch by filling in the details below."
+            formTitle="Add New Branch"
+          />
+        </div>
       </div>
 
       {isFetching ? (

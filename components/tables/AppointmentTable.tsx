@@ -46,13 +46,13 @@ export default function AppointmentTable() {
     <>
       {auth?.role === "owner" ? (
         isFetchingSummaryData ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
             {Array.from({ length: 4 }).map((_, index) => (
               <SkeletonScoreBoard key={index} />
             ))}
           </div>
         ) : (
-          <div className="flex flex-wrap gap-3 mb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
             {summary.average_service_rating.map((value, index) => (
               <DashboardCard
                 key={index}
@@ -65,24 +65,32 @@ export default function AppointmentTable() {
         )
       ) : null}
 
-      <div className="mb-5 flex">
+      <div className="mb-5">
         <DatePagination />
       </div>
-      <div className="flex justify-between items-center mb-5">
-        <div className="flex gap-3 w-full">
-          <SearchInput placeholder="Search by appointment id..." size="w-1/3" />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <div className="w-full sm:w-1/3">
+            <SearchInput placeholder="Search by appointment id..." size="w-full" />
+          </div>
           {auth?.role == "owner" && (
-            <DropDownBranch useUrlParams={true} includeAllOption={true} />
+            <div className="w-full sm:w-auto">
+              <DropDownBranch useUrlParams={true} includeAllOption={true} />
+            </div>
           )}
-          <DropDownAppointmentStatus useUrlParams={true} includeAllOption />
+          <div className="w-full sm:w-auto">
+            <DropDownAppointmentStatus useUrlParams={true} includeAllOption />
+          </div>
         </div>
-        <AppointmentForm
-          method="post"
-          dialogButtonLabel="New Appointment"
-          buttonLabel="Add Appointment"
-          formDescription="Create a new appointment by filling in the details below."
-          formTitle="Add New Appointment"
-        />
+        <div className="w-full sm:w-auto flex-shrink-0">
+          <AppointmentForm
+            method="post"
+            dialogButtonLabel="New Appointment"
+            buttonLabel="Add Appointment"
+            formDescription="Create a new appointment by filling in the details below."
+            formTitle="Add New Appointment"
+          />
+        </div>
       </div>
 
       {isFetching ? (

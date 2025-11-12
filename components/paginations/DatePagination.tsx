@@ -100,9 +100,9 @@ const DatePagination = ({ onValueChange, value }: DatePaginationProps) => {
   );
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="inline-flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-2">
       <Pagination className="flex justify-start">
-        <PaginationContent>
+        <PaginationContent className="flex-wrap">
           <PaginationItem>
             <PaginationPrevious
               href="#"
@@ -113,7 +113,7 @@ const DatePagination = ({ onValueChange, value }: DatePaginationProps) => {
               }}
             />
           </PaginationItem>
-          <p className="text-2xl font-bold whitespace-nowrap">{displayDate}</p>
+          <p className="text-lg sm:text-2xl font-bold whitespace-nowrap px-2">{displayDate}</p>
           <PaginationItem>
             <PaginationNext
               href="#"
@@ -129,7 +129,7 @@ const DatePagination = ({ onValueChange, value }: DatePaginationProps) => {
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0">
+          <Button className="bg-[#FBF9F2] text-black hover:bg-[#FBF9F2] focus-visible:border-0 w-full sm:w-auto">
             Calendar <CalendarIcon />
           </Button>
         </PopoverTrigger>
