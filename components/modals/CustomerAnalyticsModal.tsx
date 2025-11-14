@@ -161,23 +161,23 @@ const CustomerAnalyticsModal: React.FC<CustomerAnalyticsModalProps> = ({
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                 <div className="text-center">
                   <p className="text-xs text-gray-500 uppercase mb-2">Appointments</p>
-                  <p className="text-3xl font-bold">{stats?.total_appointments || 0}</p>
+                  <p className="text-xl font-bold">{stats?.total_appointments || 0}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-gray-500 uppercase mb-2">Completed</p>
-                  <p className="text-3xl font-bold text-green-600">
+                  <p className="text-xl font-bold text-green-600">
                     {stats?.completed_appointments || 0}
                   </p>
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-gray-500 uppercase mb-2">Cancelled</p>
-                  <p className="text-3xl font-bold text-red-600">
+                  <p className="text-xl font-bold text-red-600">
                     {stats?.cancelled_appointments || 0}
                   </p>
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-gray-500 uppercase mb-2">Total Spent</p>
-                  <p className="text-3xl font-bold break-words">₱{formatNumber(stats?.total_spent || 0)}</p>
+                  <p className="text-xl font-bold break-words">₱{formatNumber(stats?.total_spent || 0)}</p>
                 </div>
               </div>
             </CardContent>
@@ -278,24 +278,26 @@ const CustomerAnalyticsModal: React.FC<CustomerAnalyticsModalProps> = ({
                 <p className="text-gray-500">Loading spending data...</p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full text-sm table-fixed">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left py-2">Service</th>
-                        <th className="text-right py-2">Appointments</th>
-                        <th className="text-right py-2">Total Spent</th>
-                        <th className="text-right py-2">Average</th>
+                        <th className="text-left py-2 w-[35%]">Service</th>
+                        <th className="text-right py-2 w-[15%]">Apt.</th>
+                        <th className="text-right py-2 w-[25%]">Total Spent</th>
+                        <th className="text-right py-2 w-[25%]">Average</th>
                       </tr>
                     </thead>
                     <tbody>
                       {(spendingData?.spending || []).map((item, i) => (
                         <tr key={i} className="border-b hover:bg-gray-50">
-                          <td className="py-2">{item.service}</td>
-                          <td className="text-right">{item.appointment_count}</td>
-                          <td className="text-right font-semibold">
+                          <td className="py-2 truncate max-w-0" title={item.service}>
+                            <div className="truncate">{item.service}</div>
+                          </td>
+                          <td className="text-right whitespace-nowrap">{item.appointment_count}</td>
+                          <td className="text-right font-semibold whitespace-nowrap">
                             {formatCurrency(item.total_spent)}
                           </td>
-                          <td className="text-right">
+                          <td className="text-right whitespace-nowrap">
                             {formatCurrency(item.average_spent)}
                           </td>
                         </tr>
