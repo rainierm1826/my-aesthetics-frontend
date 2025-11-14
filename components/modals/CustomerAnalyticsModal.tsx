@@ -336,9 +336,21 @@ const CustomerAnalyticsModal: React.FC<CustomerAnalyticsModalProps> = ({
                         <div className="flex items-center gap-2">
                           <p className="font-medium text-sm">{apt.service_name_snapshot}</p>
                           <Badge
-                            className={`capitalize ${apt.status === "completed" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                            className={`rounded-full capitalize ${
+            apt.status == "completed"
+              ? "bg-green-100 text-green-700"
+              : apt.status == "waiting"
+                ? "bg-blue-100 text-blue-700"
+                : apt.status == "on-process"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : apt.status == "cancelled"
+                    ? "bg-red-100 text-red-700"
+                    : apt.status == "pending "
+                      ? "bg-gray-100 text-gray-700"
+                      : ""
+          }`}
                           >
-                            {apt.status}
+                            {apt.status == "waiting" ? "Confirm" : apt.status}
                           </Badge>
                         </div>
                         <p className="text-xs text-gray-600">
