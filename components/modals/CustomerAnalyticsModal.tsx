@@ -134,7 +134,7 @@ const CustomerAnalyticsModal: React.FC<CustomerAnalyticsModalProps> = ({
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wide">Type</p>
-                  <Badge variant={customerType === "online" ? "default" : "secondary"} className="mt-1">
+                  <Badge  className={`rounded-full ${ customerType === "online" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"}`}> 
                     {customerType === "online" ? "Online" : "Walk-in"}
                   </Badge>
                 </div>
@@ -195,7 +195,7 @@ const CustomerAnalyticsModal: React.FC<CustomerAnalyticsModalProps> = ({
               </div>
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-600">Days Since Last Appointment</p>
-                <p className="text-lg font-bold">{stats?.days_since_last_appointment ?? "N/A"} days</p>
+                <p className="text-lg font-bold">{stats?.days_since_last_appointment == 0 ? "Just now" : stats?.days_since_last_appointment ?? "N/A"} {stats.days_since_last_appointment == 0 ? "" : "days"}</p>
               </div>
             </CardContent>
           </Card>

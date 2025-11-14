@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock } from "lucide-react";
+import { Clock, User } from "lucide-react";
 import React, { useState } from "react";
 import { Badge } from "./ui/badge";
 import DropDownBranch from "./selects/DropDownBranch";
@@ -10,6 +10,7 @@ import { useAuthStore } from "@/provider/store/authStore";
 import { Appointment } from "@/lib/types/appointment-types";
 import SkeletonWaitingList from "./skeletons/SkeletonWaitingList";
 import { useAppointmentWebSocket } from "@/hooks/useAppointmentWebSocket";
+import { format } from "date-fns";
 
 const WaitingList = () => {
   const { access_token } = useAuthStore();
@@ -60,9 +61,9 @@ const WaitingList = () => {
             appointments.map((item) => (
               <div
                 key={item.appointment_id}
-                className="bg-gray-50 rounded-lg p-4 border border-gray-200"
+                className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow"
               >
-                <div className="flex items-start justify-between mb-2">
+                <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <p className="font-semibold text-gray-900">
                       {item.customer_name_snapshot}
@@ -84,9 +85,28 @@ const WaitingList = () => {
                     {item.status === "waiting" ? "confirm" : item.status}
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600 mb-1 ml-10">
-                  {item.service_name_snapshot}
-                </p>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Clock className="w-4 h-4 text-gray-400 shrink-0" />
+                    <span>
+                      {item.start_time 
+                        ? format(new Date(item.start_time), "MMM d, yyyy • h:mm a")
+                        : "Time not set"}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <User className="w-4 h-4 text-gray-400 shrink-0" />
+                    <span>
+                      {item.aesthetician_name_snapshot || "No aesthetician assigned"}
+                    </span>
+                  </div>
+                  
+                  <p className="text-sm text-gray-700 font-medium mt-2">
+                    {item.service_name_snapshot}
+                  </p>
+                </div>
               </div>
             ))
           )}

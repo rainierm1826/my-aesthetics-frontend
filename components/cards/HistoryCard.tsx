@@ -120,7 +120,7 @@ export const HistoryCard = ({
                         : ""
             }`}
           >
-            <p className="capitalize">{appointment.status}</p>
+            <p className="capitalize">{appointment.status == "waiting" ? "Confirm" : appointment.status}</p>
           </Badge>
         </div>
       </CardHeader>
