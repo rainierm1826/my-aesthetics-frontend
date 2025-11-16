@@ -26,6 +26,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
   const subtotal = serviceCost + professionalFee;
 
   let voucherDiscount = 0;
+  console.log(appointment);
 
   if (appointment.discount_type_snapshot === "fixed") {
     voucherDiscount = appointment.discount_snapshot ?? 0;
