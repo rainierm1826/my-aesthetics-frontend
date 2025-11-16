@@ -8,7 +8,6 @@ export default function FlowiseChatbot() {
   const { user, isUserLoading } = useUserStore();
 
   useEffect(() => {
-    // Update user avatar after chatbot loads and user data is available
     if (!isUserLoading && user?.image) {
       const userStorage = localStorage.getItem('user-storage');
       if (userStorage) {
@@ -125,7 +124,7 @@ export default function FlowiseChatbot() {
                         "Where are your branches located?",
                         "How do I book an appointment?",
                         "Can I cancel an appointment?",
-                        "What is the difference pro aestheticians?",
+                        "What is pro aestheticians?",
                       ],
                       starterPromptFontSize: 10,
                       clearChatOnReload: false,
