@@ -83,7 +83,7 @@ export const HistoryCard = ({
   const subtotal = serviceCost + professionalFee;
 
   let voucherDiscount = 0;
-  if (appointment.discount_type_snapshot === "fixed") {
+  if (appointment.voucher_discount_type_snapshot === "fixed") {
     voucherDiscount = appointment.discount_snapshot ?? 0;
   } else if (appointment.voucher_discount_type_snapshot === "percentage") {
     voucherDiscount = ((appointment.discount_snapshot ?? 0) / 100) * subtotal;
@@ -194,7 +194,7 @@ export const HistoryCard = ({
               </p>
               <p className="font-medium text-red-500">
                 -
-                {appointment.discount_type_snapshot === "fixed"
+                {appointment.voucher_discount_type_snapshot === "fixed"
                   ? formatCurrency(appointment.discount_snapshot)
                   : `${appointment.discount_snapshot}%`}
               </p>

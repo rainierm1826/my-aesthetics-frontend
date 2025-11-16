@@ -144,16 +144,10 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const isLoading = appointmentMutation.isPending;
 
   const convertTo24Hour = (time12h: string): string => {
-    console.log("AppointmentForm convertTo24Hour input:", time12h);
-    
-    // Extract start time from range like "04:40 PM-05:00 PM"
-    const startTimeStr = time12h.split("-")[0].trim(); // Gets "04:40 PM"
-    console.log("Extracted start time:", startTimeStr);
+    const startTimeStr = time12h.split("-")[0].trim();
     
     const [time, period] = startTimeStr.split(" ");
-    console.log("Time:", time, "Period:", period);
     const [h, m] = time.split(":").map(Number);
-    console.log("Hours:", h, "Minutes:", m);
     const hours =
       period === "PM" && h !== 12
         ? h + 12

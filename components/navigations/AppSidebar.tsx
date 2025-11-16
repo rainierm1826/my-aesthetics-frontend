@@ -199,7 +199,7 @@ const SFooter = () => {
                 <div className="flex items-center gap-3">
                   <ProfilePicture
                     fallback={user?.first_name?.charAt(0)}
-                    image={user?.image || "/profileFallback.jpg"}
+                    image={user?.image || "/profileFallback.png"}
                   />
                   <div className="space-y-0.5 ">
                     <p className="text-xs font-semibold whitespace-nowrap">
