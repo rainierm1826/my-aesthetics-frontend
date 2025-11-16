@@ -66,7 +66,7 @@ export const useBaseMutation = <TData = unknown, TVariables = void>(
       config.onSuccess?.(data, method);
     },
 
-    onError: async () => {
+    onError: async (error: Error) => {
       // Also invalidate queries on error to ensure UI is in sync
       const keys = Array.isArray(config.queryKey[0])
         ? (config.queryKey as string[][])
@@ -83,7 +83,7 @@ export const useBaseMutation = <TData = unknown, TVariables = void>(
         });
       }
       
-      toast.error(`Please try again.`);
+      toast.error(`${error.message}`);
     },
   });
 };
