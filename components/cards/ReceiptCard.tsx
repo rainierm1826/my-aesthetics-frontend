@@ -26,7 +26,6 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
   const subtotal = serviceCost + professionalFee;
 
   let voucherDiscount = 0;
-  console.log(appointment);
 
   if (appointment.voucher_discount_type_snapshot === "fixed") {
     voucherDiscount = appointment.discount_snapshot ?? 0;
@@ -193,7 +192,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
                     </p>
                     <p className="text-sm font-medium tabular-nums text-red-500">
                       -
-                      {appointment.discount_type_snapshot == "fixed"
+                      {appointment.voucher_discount_type_snapshot == "fixed"
                         ? formatCurrency(appointment.discount_snapshot)
                         : `${appointment.discount_snapshot}%`}
                     </p>
