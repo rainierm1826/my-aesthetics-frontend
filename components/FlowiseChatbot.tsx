@@ -113,7 +113,7 @@ export default function FlowiseChatbot() {
                       title: 'MY Assistant',
                       titleAvatarSrc: '/chatBot.png',
                       welcomeMessage: 'Hello! I\\'m MY Assistant, your personal AI helper. How can I assist you today?',
-                      errorMessage: 'I apologize, but I\\'m experiencing some technical difficulties. Please try again in a moment.',
+                      errorMessage: 'I apologize, but I\\'m experiencing some technical difficulties. Please contact us at https://www.facebook.com/myaestheticsbatangascity for further assistance.',
                       backgroundColor: '#ffffff',
                       backgroundImage: '',
                       height: 450,
