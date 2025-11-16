@@ -28,7 +28,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
   let voucherDiscount = 0;
   console.log(appointment);
 
-  if (appointment.discount_type_snapshot === "fixed") {
+  if (appointment.voucher_discount_type_snapshot === "fixed") {
     voucherDiscount = appointment.discount_snapshot ?? 0;
   } else if (appointment.voucher_discount_type_snapshot === "percentage") {
     voucherDiscount = ((appointment.discount_snapshot ?? 0) / 100) * subtotal;
