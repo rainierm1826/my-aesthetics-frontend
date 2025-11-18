@@ -1,4 +1,5 @@
-"use client";
+
+import React from "react";
 
 import {
   Bar,
@@ -41,6 +42,17 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
     return text.substring(0, maxLength) + "...";
   };
 
+  // Responsive: hide XAxis ticks and label on small screens
+  const [showXAxisLabels, setShowXAxisLabels] = React.useState(true);
+  React.useEffect(() => {
+    const handleResize = () => {
+      setShowXAxisLabels(window.innerWidth >= 640); // 640px = tailwind 'sm' breakpoint
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
       <CardHeader>
@@ -54,19 +66,19 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
           <CartesianGrid strokeDasharray="3 3" />
 
           {/* X axis = categories */}
-          <XAxis 
+          <XAxis
             dataKey={nameKey}
             interval={0}
-            tick={{ fontSize: 11 }}
-            tickFormatter={(value) => truncateText(value, 15)}
+            tick={showXAxisLabels ? { fontSize: 11 } : false}
+            tickFormatter={showXAxisLabels ? (value) => truncateText(value, 15) : undefined}
           >
-            <Label
-              value={String(nameKey)
-                .replace(/_/g, " ")
-                .replace(/\b\w/g, (c) => c.toUpperCase())}
-              offset={15}
-              position="bottom"
-            />
+              <Label
+                value={String(nameKey)
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (c) => c.toUpperCase())}
+                offset={15}
+                position="bottom"
+              />
           </XAxis>
 
           {/* Y axis = values */}
@@ -79,7 +91,7 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
             />
           </YAxis>
 
-          <Tooltip 
+          <Tooltip
             formatter={(val: number) => [formatNumber(val), value]}
             labelFormatter={(label) => String(label)}
             contentStyle={{ fontSize: '14px' }}

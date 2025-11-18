@@ -29,6 +29,17 @@ const PieChartComponent = <T extends Record<string, unknown>>({
     return chartConfig[value]?.label || value;
   };
 
+  // Responsive: hide legend on small screens
+  const [showLegend, setShowLegend] = React.useState(true);
+  React.useEffect(() => {
+    const handleResize = () => {
+      setShowLegend(window.innerWidth >= 640); // 640px = tailwind 'sm' breakpoint
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
       <CardHeader>
@@ -38,9 +49,8 @@ const PieChartComponent = <T extends Record<string, unknown>>({
         config={chartConfig}
         className="min-h-[150px] h-auto w-full"
       >
-        <PieChart >
+        <PieChart>
           <Pie
-          
             data={chartData}
             dataKey={dataKey}
             nameKey={nameKey}
@@ -49,7 +59,7 @@ const PieChartComponent = <T extends Record<string, unknown>>({
             outerRadius={100}
             stroke="#ffffff"
             strokeWidth={2}
-            label={({value }) => `${formatNumber(value as number)}`}
+            label={({ value }) => `${formatNumber(value as number)}`}
             labelLine={{ stroke: "#000000", strokeWidth: 1 }}
           >
             {chartData.map((entry, index) => {
@@ -58,9 +68,10 @@ const PieChartComponent = <T extends Record<string, unknown>>({
               return <Cell key={`cell-${index}`} fill={color} />;
             })}
           </Pie>
-
           <Tooltip formatter={(value: number) => formatNumber(value)} />
-          <Legend formatter={formatLegend} verticalAlign="top" height={36} />
+          {showLegend && (
+            <Legend formatter={formatLegend} verticalAlign="top" height={36} />
+          )}
         </PieChart>
       </ChartContainer>
     </Card>

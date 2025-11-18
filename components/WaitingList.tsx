@@ -24,6 +24,7 @@ const WaitingList = () => {
   );
 
   const { data, isFetching } = useAppointments({
+    ignoredQuery: true,
     branchId: selectedBranchId,
     token: access_token || "",
   });

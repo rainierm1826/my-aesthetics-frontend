@@ -6,10 +6,9 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { getTodayDate } from "@/lib/function";
 
-export function useAppointments({branchId, token}:{branchId?:string, token:string}) {
+export function useAppointments({branchId, token, ignoredQuery=false}:{branchId?:string, token:string, ignoredQuery?: boolean}) {
   const searchParams = useSearchParams();
-  const query = searchParams.get("query") ?? "";
-  const branch = searchParams.get("branch") ?? branchId ?? "";
+  const query = ignoredQuery ? "" : searchParams.get("query") ?? "";  const branch = searchParams.get("branch") ?? branchId ?? "";
   const status = searchParams.get("status") ?? "";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);

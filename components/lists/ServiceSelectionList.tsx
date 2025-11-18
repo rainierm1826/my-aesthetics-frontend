@@ -5,6 +5,7 @@ import { Service } from "@/lib/types/service-types";
 import ServiceSelectionCard from "@/components/cards/ServiceSelectionCard";
 import SkeletonCard from "@/components/skeletons/SkeletonCard";
 import { useInfiniteServices } from "@/hooks/useInfiniteServices";
+import SearchInput from "../SearchInput";
 
 interface ServiceSelectionListProps {
   branchId: string;
@@ -73,9 +74,14 @@ const ServiceSelectionList = ({
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-        <span>Select Service</span>
-      </h2>
+      <div className="mb-5">
+        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+          <span>Select Service</span>
+        </h2>
+      <SearchInput placeholder="Search by service name..." size="w-full" />
+      </div>
+     
+
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-6xl mx-auto">
         {isLoading ? (

@@ -1,13 +1,22 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { DropDownProps } from "@/lib/types/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useServiceName } from "@/hooks/useServiceName";
@@ -21,8 +30,7 @@ interface DropDownServiceProps
   placeholder?: string;
   includeAllOption?: boolean;
   useUrlParams?: boolean;
-    branchId?:string
-
+  branchId?: string;
 }
 
 const DropDownService = ({
@@ -31,16 +39,19 @@ const DropDownService = ({
   placeholder = "Select service",
   includeAllOption = false,
   useUrlParams = false,
-  branchId
+  branchId,
 }: DropDownServiceProps) => {
-  const {access_token} = useAuthStore()
-  const { data, isLoading, error } = useServiceName({branchId, token:access_token||""});
-  
+  const { access_token } = useAuthStore();
+  const { data, isLoading, error } = useServiceName({
+    branchId,
+    token: access_token || "",
+  });
 
   const services: ServiceName[] = data?.service ?? [];
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   const currentService = useUrlParams
     ? searchParams.get("service") || (includeAllOption ? "all" : "")
@@ -58,7 +69,6 @@ const DropDownService = ({
         }
         params.delete("page");
 
-        // More direct URL construction
         const queryString = params.toString();
         const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
@@ -77,64 +87,106 @@ const DropDownService = ({
     ]
   );
 
-  // Handle loading state
+  // Get display label for selected service
+  const getDisplayLabel = () => {
+    if (!currentService) return placeholder;
+    if (currentService === "all") return "All services";
+
+    const selected = services.find((s) => s.service_id === currentService);
+    return selected ? selected.service_name : placeholder;
+  };
+
   if (isLoading) {
     return (
-      <Select disabled>
-        <SelectTrigger>
-          <SelectValue placeholder="Loading services..." />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="__service" disabled>
-            Loading...
-          </SelectItem>
-        </SelectContent>
-      </Select>
+      <Button variant="outline" disabled className="w-full justify-between">
+        Loading services...
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
     );
   }
 
-  // Handle error state
   if (error) {
     return (
-      <Select disabled>
-        <SelectTrigger>
-          <SelectValue placeholder="Error loading services" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="__error" disabled>
-            Failed to load services
-          </SelectItem>
-        </SelectContent>
-      </Select>
+      <Button variant="outline" disabled className="w-full justify-between">
+        Error loading services
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
     );
   }
 
   return (
-    <Select value={currentService} onValueChange={handleValueChange}>
-      <SelectTrigger>
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent align="end">
-        {includeAllOption && (
-          <SelectItem value="all">All services</SelectItem>
-        )}
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {getDisplayLabel()}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent 
+        className="w-[var(--radix-popover-trigger-width)] p-0" 
+        align="end"
+        side="bottom"
+        sideOffset={4}
+        collisionPadding={8}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        <Command>
+          <CommandInput placeholder="Search service..." className="h-9" />
+          <CommandList>
+            <CommandEmpty>No service found.</CommandEmpty>
+            <CommandGroup>
+              {includeAllOption && (
+                <CommandItem
+                  value="all"
+                  onSelect={() => {
+                    handleValueChange("all");
+                    setOpen(false);
+                  }}
+                >
+                  All services
+                  <Check
+                    className={cn(
+                      "ml-auto h-4 w-4",
+                      currentService === "all" ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              )}
 
-        {services.length === 0 ? (
-          <SelectItem value="__no_service" disabled>
-            No service available
-          </SelectItem>
-        ) : (
-          services.map((s) => (
-            <SelectItem
-              key={s.service_id}
-              value={s.service_id}
-            >
-              {s.service_name}
-            </SelectItem>
-          ))
-        )}
-      </SelectContent>
-    </Select>
+              {services.length === 0 ? (
+                <CommandItem disabled>No service available</CommandItem>
+              ) : (
+                services.map((s) => (
+                  <CommandItem
+                    key={s.service_id}
+                    value={s.service_name}
+                    onSelect={() => {
+                      handleValueChange(s.service_id);
+                      setOpen(false);
+                    }}
+                  >
+                    {s.service_name}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        currentService === s.service_id
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))
+              )}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 };
 
