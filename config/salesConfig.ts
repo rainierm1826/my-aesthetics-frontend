@@ -1,23 +1,23 @@
 export const paymentMethodChartConfig = {
   cash: {
     label: "Cash",
-    color: "#E6D6A8",
+    color: "#BDA658",
   },
   "e-wallet": {
     label: "E-Wallet",
-    color: "#E8DDAE",
+    color: "#D4C080",
   },
   "bank-transfer": {
     label: "Bank Transfer",
-    color: "#EADFB4",
+    color: "#E6D6A8",
   },
   "credit-card": {
     label: "Credit Card",
-    color: "#EDE3BA",
+    color: "#A3873E",
   },
   "debit-card": {
     label: "Debit Card",
-    color: "#F0E7C0",
+    color: "#8A6D2F",
   },
 };
 
@@ -45,26 +45,26 @@ export const branchRevenueChartConfig = {
 export const serviceCategoryChartConfig = {
   "Semi-Permanent Make-Up": {
     label: "Semi-Permanent Make-Up",
-    color: "#E6D6A8",
+    color: "#BDA658",
   },
   "Facial & Laser Treatments": {
     label: "Facial & Laser Treatments",
-    color: "#E8DDAE",
+    color: "#D4C080",
   },
   Waxing: {
     label: "Waxing",
-    color: "#EADFB4",
+    color: "#9B8547",
   },
   "Slimming & Contouring": {
     label: "Slimming & Contouring",
-    color: "#EDE3BA",
+    color: "#A3873E",
   },
   "Diode Laser Hair Removal": {
     label: "Diode Laser Hair Removal",
-    color: "#F0E7C0",
+    color: "#8A6D2F",
   },
   Other: {
     label: "Others",
-    color: "#F2EAC6",
+    color: "#C5AF6B",
   },
 };

@@ -64,11 +64,6 @@ const WaitingList = () => {
                 className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-gray-900">
-                      {item.customer_name_snapshot}
-                    </p>
-                  </div>
                   <Badge
                     className={`text-xs px-2 py-1 rounded-full capitalize ${
                       item.status === "completed"
@@ -102,10 +97,6 @@ const WaitingList = () => {
                       {item.aesthetician_name_snapshot || "No aesthetician assigned"}
                     </span>
                   </div>
-                  
-                  <p className="text-sm text-gray-700 font-medium mt-2">
-                    {item.service_name_snapshot}
-                  </p>
                 </div>
               </div>
             ))

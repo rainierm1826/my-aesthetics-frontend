@@ -1,5 +1,5 @@
 import React from "react";
-import { Pie, PieChart, Cell, Tooltip } from "recharts";
+import { Pie, PieChart, Cell, Tooltip, Legend } from "recharts";
 
 import { ChartContainer } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle } from "../ui/card";
@@ -25,6 +25,9 @@ const PieChartComponent = <T extends Record<string, unknown>>({
   chartData,
 }: PieChartProps<T>) => {
 
+  const formatLegend = (value: string) => {
+    return chartConfig[value]?.label || value;
+  };
 
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
@@ -57,6 +60,7 @@ const PieChartComponent = <T extends Record<string, unknown>>({
           </Pie>
 
           <Tooltip formatter={(value: number) => formatNumber(value)} />
+          <Legend formatter={formatLegend} verticalAlign="top" height={36} />
         </PieChart>
       </ChartContainer>
     </Card>

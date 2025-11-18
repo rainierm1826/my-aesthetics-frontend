@@ -36,6 +36,11 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
   chartConfig,
   chartData,
 }: BarChartProps<T>) => {
+  const truncateText = (text: string, maxLength: number = 20) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
       <CardHeader>
@@ -43,22 +48,24 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
       </CardHeader>
       <ChartContainer
         config={chartConfig}
-        className="min-h-[300px] h-[300px] w-full"
+        className="min-h-[400px] h-[400px] w-full"
       >
-        <BarChart
-          data={chartData}
-          margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-        >
+        <BarChart data={chartData} margin={{ bottom: 40, left: 20 }}>
           <CartesianGrid strokeDasharray="3 3" />
 
           {/* X axis = categories */}
-          <XAxis dataKey={nameKey}>
+          <XAxis 
+            dataKey={nameKey}
+            interval={0}
+            tick={{ fontSize: 11 }}
+            tickFormatter={(value) => truncateText(value, 15)}
+          >
             <Label
               value={String(nameKey)
                 .replace(/_/g, " ")
                 .replace(/\b\w/g, (c) => c.toUpperCase())}
-              offset={-5}
-              position="insideBottom"
+              offset={15}
+              position="bottom"
             />
           </XAxis>
 
@@ -72,14 +79,17 @@ export const BarChartComponent = <T extends Record<string, unknown>>({
             />
           </YAxis>
 
-          <Tooltip formatter={(value: number) => formatNumber(value)} />
+          <Tooltip 
+            formatter={(val: number) => [formatNumber(val), value]}
+            labelFormatter={(label) => String(label)}
+            contentStyle={{ fontSize: '14px' }}
+          />
 
-          <Bar dataKey={dataKey} radius={4}>
+          <Bar dataKey={dataKey} radius={4} fill="#BDA658">
             {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                fill={chartConfig[(entry as any).category]?.color || "#E6D6A8"}
+                fill="#BDA658"
               />
             ))}
           </Bar>

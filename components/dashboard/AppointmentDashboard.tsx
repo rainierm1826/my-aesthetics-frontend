@@ -126,7 +126,7 @@ const AppointmentDashboard = () => {
               <SkeletonPieChart />
             ) : (
               <PieChartComponent
-                title="Appointment Status"
+                title="Completed vs Cancelled Appointments"
                 dataKey="count"
                 nameKey="status"
                 chartConfig={statusChartConfig}
@@ -167,7 +167,7 @@ const AppointmentDashboard = () => {
         <div className="space-y-6">
           <h2 className="text-xl font-semibold text-gray-800">Distribution</h2>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (
@@ -217,7 +217,7 @@ const AppointmentDashboard = () => {
             Performance & Ratings
           </h2>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             {isFetchingAppointmentData || isAuthLoading ? (
               <SkeletonBarChart />
             ) : (

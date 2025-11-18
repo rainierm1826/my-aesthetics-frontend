@@ -33,7 +33,7 @@ export const LineChartComponent = <T extends object>({
   chartConfig,
   chartData,
 }: LineChartProps<T>) => {
-  const color = Object.values(chartConfig)[0]?.color || "#BDA658";
+  const color = "#BDA658";
 
   return (
     <Card className="flex-1 bg-gradient-to-br from-white to-[#fffcef]">
@@ -66,7 +66,7 @@ export const LineChartComponent = <T extends object>({
               style={{ textAnchor: "middle" }}
             />
           </YAxis>
-          <Tooltip formatter={(value: number) => formatNumber(value)} />
+          <Tooltip formatter={(val: number) => [formatNumber(val), value]} />
           <Line
             type="monotone"
             dataKey={dataKey}
