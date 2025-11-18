@@ -194,9 +194,9 @@ export default function UserForm() {
   return (
     <div className="mx-auto space-y-6">
       <div className="flex items-center justify-end">
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           {!isEditing ? (
-            <Button onClick={handleEdit} className="flex items-center gap-2">
+            <Button onClick={handleEdit} className="flex items-center gap-2 w-full sm:w-auto">
               <Edit2 className="h-4 w-4" />
               Edit Profile
             </Button>
@@ -205,7 +205,7 @@ export default function UserForm() {
               <Button
                 onClick={handleSubmit(handleSave)}
                 disabled={!isDirty || isLoading}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 w-full sm:w-auto"
               >
                 <Save className="h-4 w-4" />
                 {isLoading ? "Saving..." : "Save Changes"}
@@ -214,7 +214,7 @@ export default function UserForm() {
                 variant="outline"
                 onClick={handleCancel}
                 disabled={isLoading}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 w-full sm:w-auto"
               >
                 <X className="h-4 w-4" />
                 Cancel
@@ -229,7 +229,7 @@ export default function UserForm() {
           {/* Profile Overview Card */}
           <Card className="overflow-hidden">
             <CardContent className="relative pt-0">
-              <div className="flex items-end gap-6 pb-6">
+              <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-6 pb-6">
                 <FormField
                   control={control}
                   name="image"
@@ -267,21 +267,21 @@ export default function UserForm() {
                   )}
                 />
 
-                <div className="flex-1 pb-2">
-                  <h2 className="text-2xl font-bold text-foreground">
+                <div className="flex-1 pb-2 text-center sm:text-left w-full">
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                     {fullName}
                   </h2>
-                  <p className="text-muted-foreground flex items-center gap-2 mt-1">
-                    <Mail className="h-4 w-4" />
-                    {watchedValues.email || auth?.email}
+                  <p className="text-muted-foreground flex items-center justify-center sm:justify-start gap-2 mt-1 text-sm sm:text-base break-all">
+                    <Mail className="h-4 w-4 flex-shrink-0" />
+                    <span className="break-all">{watchedValues.email || auth?.email}</span>
                   </p>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center justify-center sm:justify-start gap-2 mt-2 flex-wrap">
                     {auth?.is_verified ? (
                       <ShieldCheck className="h-4 w-4 text-blue-500" />
                     ) : (
                       <Shield className="h-4 w-4" />
                     )}
-                    <Badge variant={"secondary"} className="rounded-full">
+                    <Badge variant={"secondary"} className="rounded-full text-xs sm:text-sm">
                       {auth?.role == "admin" ? (
                         `Admin at ${user?.branch?.branch_name}`
                       ) : (
@@ -441,24 +441,26 @@ export default function UserForm() {
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
                       <div className="space-y-3">
-                        <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground min-h-10 flex items-center justify-between">
-                          <Badge variant={"secondary"} className="rounded-full">
+                        <div className="px-3 py-2 bg-muted rounded-md text-muted-foreground min-h-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                          <Badge variant={"secondary"} className="rounded-full break-all text-xs sm:text-sm">
                             {field.value}
                           </Badge>
                           <Badge
                             variant="outline"
-                            className="text-xs rounded-full"
+                            className="text-xs rounded-full whitespace-nowrap"
                           >
                             Read-only
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                           {auth?.is_verified === false && (
                             <>
-                              <Shield className="h-4 w-4 text-orange-500" />
-                              <span className="text-sm text-orange-600">
-                                Email not verified
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <Shield className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                                <span className="text-sm text-orange-600">
+                                  Email not verified
+                                </span>
+                              </div>
                               <Button
                                 type="button"
                                 variant="outline"
@@ -466,7 +468,7 @@ export default function UserForm() {
                                 onClick={() =>
                                   setShowEmailVerification(true)
                                 }
-                                className="ml-auto"
+                                className="w-full sm:w-auto sm:ml-auto"
                               >
                                 Verify Email
                               </Button>

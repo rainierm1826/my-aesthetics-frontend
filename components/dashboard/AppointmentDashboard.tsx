@@ -66,14 +66,20 @@ const AppointmentDashboard = () => {
   return (
     <div className="space-y-8">
       {/* Header Controls */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="flex gap-3">
-          <ToggleDates />
-          <DropDownYear />
-          <DropDownMonth />
+      <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+          <div className="w-full sm:w-auto">
+            <ToggleDates />
+          </div>
+          <div className="grid grid-cols-2 sm:flex gap-3">
+            <DropDownYear />
+            <DropDownMonth />
+          </div>
         </div>
 
-        <DropDownBranch useUrlParams={true} includeAllOption={true} />
+        <div className="w-full sm:w-auto lg:min-w-[200px]">
+          <DropDownBranch useUrlParams={true} includeAllOption={true} />
+        </div>
       </div>
 
       {/* Summary Cards */}

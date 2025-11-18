@@ -119,7 +119,7 @@ export default function CustomerTable() {
             method="post"
             formTitle="Add Walk-in Customer"
             formDescription="Fill in the customer's name and phone number to register a walk-in customer."
-            dialogButtonLabel="New Walk-in Customer"
+            dialogButtonLabel="New Customer"
             buttonLabel="Create Customer"
           />
         </div>

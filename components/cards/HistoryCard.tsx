@@ -217,7 +217,10 @@ export const HistoryCard = ({
 
           <div className="flex justify-between items-center">
             <p className="text-gray-600">Payment Status</p>
-            <p className="font-semibold uppercase text-xs">{appointment.payment_status}</p>
+            <p className="font-semibold uppercase text-xs">
+              {appointment.payment_status === "cancelled" ? "cancelled" : appointment.payment_status !== "completed" ? "unpaid" : appointment.payment_status}
+
+            </p>
           </div>
         </div>
 

@@ -227,13 +227,13 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
               <div className="flex justify-between items-center">
                 <p>Payment Status</p>
                 <p className="font-semibold uppercase">
-                  {appointment.payment_status}
+                  {appointment.payment_status === "cancelled" ? "cancelled" : appointment.payment_status !== "completed" ? "unpaid" : appointment.payment_status}
                 </p>
               </div>
 
               <div className="flex justify-between items-center">
                 <p>Appointment Status</p>
-                <p className="font-semibold uppercase">{appointment.status}</p>
+                <p className="font-semibold uppercase">{appointment.status === "waiting" ? "confirm" : appointment.status}</p>
               </div>
             </div>
           </div>
