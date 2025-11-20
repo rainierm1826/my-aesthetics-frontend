@@ -265,6 +265,7 @@ const WalkInCustomerForm: React.FC<FormWalkInCustomer> = ({
                       <Input
                         id="phone-number"
                         placeholder="e.g., +63 912 345 6789"
+                        maxLength={11}
                         inputMode="tel"
                         value={field.value ?? ""}
                         onChange={(e) => onPhoneChange(e.target.value)}

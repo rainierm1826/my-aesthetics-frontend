@@ -406,7 +406,7 @@ export default function UserForm() {
                       </FormLabel>
                       <FormControl>
                         {isEditing ? (
-                          <Input placeholder="+1 (555) 123-4567" {...field} />
+                          <Input placeholder="09123456789" maxLength={11} {...field} />
                         ) : (
                           <div className="px-3 py-2 bg-muted rounded-md min-h-10 flex items-center">
                             {field.value || "Not set"}
