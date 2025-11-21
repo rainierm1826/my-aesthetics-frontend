@@ -20,7 +20,22 @@ const BookingFlow = () => {
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedExperience, setSelectedExperience] = useState<"pro" | "regular" | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string>(getTodayDate());
+  const getTomorrowDate = () => {
+    // Always get tomorrow in PH timezone (Asia/Manila), output as YYYY-MM-DD
+    const now = new Date();
+    // Convert to PH timezone offset
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    const phOffset = 8 * 60 * 60000; // UTC+8
+    const phDate = new Date(utc + phOffset);
+    phDate.setDate(phDate.getDate() + 1);
+    // Format as YYYY-MM-DD
+    const yyyy = phDate.getFullYear();
+    const mm = String(phDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(phDate.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const [selectedDate, setSelectedDate] = useState<string>(getTomorrowDate());
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const { access_token } = useAuthStore();
   const { user } = useUserStore();

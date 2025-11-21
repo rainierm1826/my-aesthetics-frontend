@@ -28,9 +28,25 @@ const SlotSelectionList = ({
 }: SlotSelectionListProps) => {
   const { access_token } = useAuthStore();
   
+  // Ensure the date is at least tomorrow
+  React.useEffect(() => {
+    if (onDateChange) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      const minDate = tomorrow.toLocaleDateString("en-CA");
+      
+      // If selectedDate is not set, empty, or is today or before, set it to tomorrow
+      if (!selectedDate || selectedDate < minDate) {
+        onDateChange(minDate);
+      }
+    }
+  }, [selectedDate, onDateChange]);
+  
   // Debug: Log what date is being used
   console.log('SlotSelectionList - selectedDate:', selectedDate);
-  console.log('SlotSelectionList - current local date:', new Date().toLocaleDateString('en-CA'));
+  console.log('SlotSelectionList - current local date:', new Date().toLocaleDateString('en-PH'));
   
   const { data, isLoading, error } = useAppointmentSlots({
     branchId: selectedBranch,
@@ -102,7 +118,11 @@ const SlotSelectionList = ({
             type="date"
             value={selectedDate}
             onChange={(e) => onDateChange(e.target.value)}
-            min={new Date().toLocaleDateString("en-CA")}
+            min={(() => {
+              const tomorrow = new Date();
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              return tomorrow.toLocaleDateString("en-CA");
+            })()}
             className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>

@@ -22,13 +22,13 @@ const BranchSelectionList = ({
       <h2 className="text-2xl font-bold mb-4">Select Branch</h2>
 
       {isFetching ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {Array.from({ length: 4 }).map((_, index) => (
             <SkeletonCard key={index} />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ">
           {branches.map((branch) => (
             <BranchSelectionCard
               key={branch.branch_id}

@@ -249,7 +249,7 @@ function ActionCell({
 
               {changeAestheticianDialog && (
                 <DropdownMenuItem onSelect={handleChangeAestheticianClick}>
-                  Change Aesthetician
+                  {hasAesthetician ? "Change Aesthetician" : "Assign Aesthetician"} 
                 </DropdownMenuItem>
               )}
 
