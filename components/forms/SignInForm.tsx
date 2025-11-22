@@ -27,9 +27,10 @@ import { TokenPayload } from "@/lib/types/types";
 
 type SignInFormProps = {
   onForgotPassword?: () => void;
+  onSwitchToSignUp?: () => void;
 };
 
-const SignInForm = ({ onForgotPassword }: SignInFormProps) => {
+const SignInForm = ({ onForgotPassword, onSwitchToSignUp }: SignInFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   
   const form = useForm<SignInFormValues>({
@@ -160,6 +161,16 @@ const SignInForm = ({ onForgotPassword }: SignInFormProps) => {
         <Button className="w-full mt-3" type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : "Sign In"}
         </Button>
+        <div className="flex justify-center mt-2">
+          <span className="text-sm text-gray-600">Don&apos;t have an account? </span>
+          <button
+            type="button"
+            className="ml-1 text-sm text-primary-600 hover:underline"
+            onClick={onSwitchToSignUp}
+          >
+            Sign Up
+          </button>
+        </div>
       </form>
     </Form>
   );

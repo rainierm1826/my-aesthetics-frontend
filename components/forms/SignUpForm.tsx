@@ -20,9 +20,10 @@ import { signUp } from "@/api/auth";
 
 interface SignUpFormProps {
   onContinue: () => void;
+  onSwitchToSignIn?: () => void;
 }
 
-const SignUpForm = ({ onContinue }: SignUpFormProps) => {
+const SignUpForm = ({ onContinue, onSwitchToSignIn }: SignUpFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
@@ -158,6 +159,16 @@ const SignUpForm = ({ onContinue }: SignUpFormProps) => {
         <Button className="w-full mt-3" type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : "Continue"}
         </Button>
+        <div className="flex justify-center mt-2">
+          <span className="text-sm text-gray-600">Already have an account? </span>
+          <button
+            type="button"
+            className="ml-1 text-sm text-primary-600 hover:underline"
+            onClick={onSwitchToSignIn}
+          >
+            Sign In
+          </button>
+        </div>
       </form>
     </Form>
   );

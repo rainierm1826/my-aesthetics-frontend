@@ -7,6 +7,7 @@ import { inter } from "@/components/fonts/fonts";
 import { TokenRefreshProvider } from "@/provider/TokenRefreshProvider";
 import { WebSocketProvider } from "@/provider/WebSocketProvider";
 import FlowiseChatbot from "@/components/FlowiseChatbot";
+import { SignModalProvider, SignModal } from "@/components/modals";
 
 export const metadata: Metadata = {
   title: "MY Aesthetics Brow Studio",
@@ -28,12 +29,15 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} `}>
         <QueryProvider>
-          <WebSocketProvider>
-            <TokenRefreshProvider />
-            <main>{children}</main>
-            <Toaster />
-            <Footer />
-          </WebSocketProvider>
+          <SignModalProvider>
+            <WebSocketProvider>
+              <TokenRefreshProvider />
+              <SignModal />
+              <main>{children}</main>
+              <Toaster />
+              <Footer />
+            </WebSocketProvider>
+          </SignModalProvider>
         </QueryProvider>
       </body>
     </html>
