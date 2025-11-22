@@ -15,11 +15,13 @@ interface ChangeAestheticianModalProps {
   currentAestheticianId: string;
   branchId: string;
   onClose?: () => void;
+  isPro?: boolean;
 }
 
 const ChangeAestheticianModal: React.FC<ChangeAestheticianModalProps> = ({
   appointmentId,
   currentAestheticianId,
+  isPro,
   branchId,
   onClose,
 }) => {
@@ -27,7 +29,7 @@ const ChangeAestheticianModal: React.FC<ChangeAestheticianModalProps> = ({
   const [selectedAesthetician, setSelectedAesthetician] = useState<Aesthetician | null>(null);
 
   // Fetch aestheticians for the branch
-  const { data: aestheticiansData, isLoading } = useAestheticians(branchId);
+  const { data: aestheticiansData, isLoading } = useAestheticians({ branchId, isPro });
 
   const updateMutation = useBaseMutation("patch", {
     updateFn: patchAppointment,

@@ -5,7 +5,7 @@ import { AestheticianListResponse } from "@/lib/types/aesthetician-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-export function useAestheticians(branchId?:string) {
+export function useAestheticians({ branchId, isPro }: { branchId?: string, isPro?: boolean } = {}) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
   const branch = searchParams.get("branch") ?? branchId ??"";
@@ -13,7 +13,7 @@ export function useAestheticians(branchId?:string) {
   const limit = Number(searchParams.get("limit") ?? 10);
   const availability = searchParams.get("availability") ?? "";
   const sex = searchParams.get("sex") ?? "";
-  const experience = searchParams.get("experience") ?? "";
+  const experience = searchParams.get("experience") ?? (isPro ? "pro" : "");
 
   return useQuery<AestheticianListResponse, Error>({
     queryKey: [
