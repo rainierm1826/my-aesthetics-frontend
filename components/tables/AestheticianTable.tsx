@@ -22,9 +22,9 @@ import DashboardCard from "../cards/DashboardCard";
 const AestheticianTable = () => {
   const { auth, isAuthLoading, access_token } = useAuthStore();
   const { user } = useUserStore();
-  const { data, isFetching, isError } = useAestheticians(
-    user?.branch?.branch_id
-  );
+  const { data, isFetching, isError } = useAestheticians({  
+    branchId: user?.branch?.branch_id
+  });
   const aesthetician: Aesthetician[] = data?.aesthetician ?? [];
 
   const {
