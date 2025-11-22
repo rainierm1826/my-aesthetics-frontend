@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { Appointment } from "@/lib/types/appointment-types";
-import { formatCurrency, formatTo12HourTime, toLongDate } from "@/lib/function";
+import { formatCurrency, formatTo12HourTime } from "@/lib/function";
 import { printHtmlContent } from "@/lib/print";
 
 interface ReceiptCardProps {
@@ -64,7 +64,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
                 #{appointment.appointment_id}
               </p>
               <p className="text-sm text-muted-foreground">
-                {toLongDate(appointment.created_at)}
+                {new Date(appointment.start_time).toLocaleDateString()}
               </p>
             </div>
           </div>
@@ -233,7 +233,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
 
               <div className="flex justify-between items-center">
                 <p>Appointment Status</p>
-                <p className="font-semibold uppercase">{appointment.status === "waiting" ? "confirm" : appointment.status}</p>
+                <p className="font-semibold uppercase">{appointment.status === "waiting" ? "confirmed" : appointment.status}</p>
               </div>
             </div>
           </div>

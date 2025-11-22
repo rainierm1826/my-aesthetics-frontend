@@ -58,7 +58,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
                       : ""
           }`}
         >
-          {s == "Waiting" ? "Confirm" : s}
+          {s == "Waiting" ? "Confirmed" : s}
         </Badge>
       );
     },
@@ -66,7 +66,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { appointment_id, aesthetician_id, branch_id, status } = row.original;
+      const { appointment_id, aesthetician_id, branch_id, status, is_pro_snapshot } = row.original;
       
       // If appointment is completed or cancelled, only allow preview
       const isCompleted = status === "completed" || status === "cancelled";
@@ -87,6 +87,7 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
             canChangeAesthetician && branch_id ? (
               <ChangeAestheticianModal
                 appointmentId={appointment_id}
+                isPro={is_pro_snapshot }
                 currentAestheticianId={aesthetician_id || ""}
                 branchId={branch_id}
               />
