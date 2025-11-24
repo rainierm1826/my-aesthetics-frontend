@@ -85,7 +85,6 @@ type ActionCellProps = {
   previewDialog?: ReactNode;
   editDialog?: ReactNode;
   editAppointmentStatus?: boolean;
-  changeAestheticianDialog?: ReactNode;
   hasAesthetician?: boolean;
   isCompleted?: boolean;
 };
@@ -99,7 +98,6 @@ function ActionCell({
   previewDialog,
   editDialog,
   editAppointmentStatus,
-  changeAestheticianDialog,
   hasAesthetician = true,
   isCompleted = false,
 }: ActionCellProps) {
@@ -110,7 +108,6 @@ function ActionCell({
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
-  const [openChangeAestheticianDialog, setOpenChangeAestheticianDialog] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<StatusConfig | null>(
     null
   );
@@ -142,10 +139,7 @@ function ActionCell({
     setTimeout(() => setOpenStatusDialog(true), 100);
   };
 
-  const handleChangeAestheticianClick = () => {
-    setDropdownOpen(false);
-    setTimeout(() => setOpenChangeAestheticianDialog(true), 100);
-  };
+
 
   const deleteMutation = useBaseMutation("delete", {
     deleteFn: deleteFn,
@@ -247,11 +241,6 @@ function ActionCell({
                 </>
               )}
 
-              {changeAestheticianDialog && (
-                <DropdownMenuItem onSelect={handleChangeAestheticianClick}>
-                  {hasAesthetician ? "Change Aesthetician" : "Assign Aesthetician"} 
-                </DropdownMenuItem>
-              )}
 
               {infoDialog && (
                 <DropdownMenuItem onSelect={handleMoreInfoClick}>
@@ -317,17 +306,7 @@ function ActionCell({
         </Dialog>
       )}
 
-      {/* Change Aesthetician Dialog */}
-      {changeAestheticianDialog && (
-        <Dialog open={openChangeAestheticianDialog} onOpenChange={setOpenChangeAestheticianDialog}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Change Aesthetician</DialogTitle>
-            </DialogHeader>
-            {changeAestheticianDialog}
-          </DialogContent>
-        </Dialog>
-      )}
+      
 
       {/* Delete Dialog */}
       <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>

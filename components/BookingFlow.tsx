@@ -94,6 +94,7 @@ const BookingFlow = () => {
     setSelectedSlot(null);
   };
 
+  const [showPostBookingOptions, setShowPostBookingOptions] = useState(false);
   const appointmentMutation = useBaseMutation("post", {
     createFn: postAppointment,
     queryKey: [
@@ -111,7 +112,7 @@ const BookingFlow = () => {
       create: "Appointment has been created.",
     },
     onSuccess: () => {
-      router.push("/customer/history");
+      setShowPostBookingOptions(true);
     },
   });
 
@@ -177,127 +178,153 @@ const BookingFlow = () => {
     <div>
       <StepIndicator currentStep={step} />
 
-      {/* Back Button */}
-      {step > 1 && (
-        <button
-          type="button"
-          onClick={handleBack}
-          className="mb-6 px-4 py-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
-        >
-          ← Back
-        </button>
-      )}
-
-      {/* Step 1: Branch Selection */}
-      {step === 1 && (
-        <BranchSelectionList
-          selectedBranch={selectedBranch}
-          onBranchSelect={handleBranchSelect}
-        />
-      )}
-
-      {/* Step 2: Service Selection */}
-      {step === 2 && selectedBranch && (
-        <ServiceSelectionList
-          branchId={selectedBranch.branch_id}
-          selectedService={selectedService}
-          onServiceSelect={handleServiceSelect}
-        />
-      )}
-
-      {/* Step 3: Aesthetician Experience Selection */}
-      {step === 3 && selectedBranch && selectedService && (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold">Select Aesthetician Experience</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Regular Option */}
-            <div
-              onClick={() => handleExperienceSelect("regular")}
-              className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
-                selectedExperience === "regular"
-                  ? "border-primary bg-primary/5"
-                  : "border-gray-200 hover:border-primary/50"
-              }`}
+      {/* Post-booking options */}
+      {showPostBookingOptions ? (
+        <div className="flex flex-col items-center justify-center py-12">
+          <h2 className="text-2xl font-bold mb-6 text-center">Appointment Booked Successfully!</h2>
+          <div className="flex gap-4">
+            <button
+              className="px-6 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
+              onClick={() => router.push("/customer/history")}
             >
-              <h3 className="text-xl font-semibold mb-2">Regular Aesthetician</h3>
-              <p className="text-gray-600">Standard service from our trained aestheticians</p>
-            </div>
-
-            {/* Pro Option */}
-            <div
-              onClick={() => handleExperienceSelect("pro")}
-              className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
-                selectedExperience === "pro"
-                  ? "border-primary bg-primary/5"
-                  : "border-gray-200 hover:border-primary/50"
-              }`}
+              Go to Active Booking
+            </button>
+            <button
+              className="px-6 py-3 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors"
+              onClick={() => {
+                setShowPostBookingOptions(false);
+                handleReset();
+              }}
             >
-              <h3 className="text-xl font-semibold mb-2">Pro Aesthetician</h3>
-              <p className="text-gray-600">Premium service from our experienced professionals</p>
-              <p className="text-sm text-primary font-semibold mt-2">+₱1,500 professional fee</p>
-            </div>
-          </div>          
-        </div>
-      )}
-
-      {/* Step 4: Time Slot Selection */}
-      {step === 4 &&
-        selectedBranch &&
-        selectedService &&
-        selectedExperience && (
-          <div className="space-y-6">
-            {/* Time Slot Selection */}
-            <SlotSelectionList
-              selectedService={selectedService.service_id}
-              selectedBranch={selectedBranch.branch_id}
-              selectedDate={selectedDate}
-              selectedSlot={selectedSlot}
-              onSelectSlot={handleSlotSelect}
-              onDateChange={handleDateChange}
-            />
-
-            {/* Continue Button */}
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={handleContinueToConfirmation}
-                disabled={!selectedSlot}
-                className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
-                  selectedSlot
-                    ? "bg-primary text-white hover:bg-primary/90"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                Continue to Confirmation
-              </button>
-            </div>
+              Make Another Appointment
+            </button>
           </div>
-        )}
+        </div>
+      ) : (
+        <>
+          {/* Back Button */}
+          {step > 1 && (
+            <button
+              type="button"
+              onClick={handleBack}
+              className="mb-6 px-4 py-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
+            >
+              ← Back
+            </button>
+          )}
 
-      {/* Step 5: Confirmation */}
-      {step === 5 &&
-        selectedBranch &&
-        selectedService &&
-        selectedExperience &&
-        selectedSlot && (
-          <BookingConfirmation
-            isConfirming={appointmentMutation.isPending}
-            branch={selectedBranch}
-            service={selectedService}
-            aestheticianExperience={selectedExperience}
-            appointmentDate={selectedDate}
-            appointmentTime={selectedSlot}
-            onConfirm={(voucherCode) =>
-              handleSubmit({
-                service_id: selectedService.service_id,
-                branch_id: selectedBranch.branch_id,
-                start_time: selectedSlot,
-                voucher_code: voucherCode,
-              })
-            }
-            onCancel={handleReset}
-          />
-        )}
+          {/* Step 1: Branch Selection */}
+          {step === 1 && (
+            <BranchSelectionList
+              selectedBranch={selectedBranch}
+              onBranchSelect={handleBranchSelect}
+            />
+          )}
+
+          {/* Step 2: Service Selection */}
+          {step === 2 && selectedBranch && (
+            <ServiceSelectionList
+              branchId={selectedBranch.branch_id}
+              selectedService={selectedService}
+              onServiceSelect={handleServiceSelect}
+            />
+          )}
+
+          {/* Step 3: Aesthetician Experience Selection */}
+          {step === 3 && selectedBranch && selectedService && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold">Select Aesthetician Experience</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Regular Option */}
+                <div
+                  onClick={() => handleExperienceSelect("regular")}
+                  className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
+                    selectedExperience === "regular"
+                      ? "border-primary bg-primary/5"
+                      : "border-gray-200 hover:border-primary/50"
+                  }`}
+                >
+                  <h3 className="text-xl font-semibold mb-2">Regular Aesthetician</h3>
+                  <p className="text-gray-600">Standard service from our trained aestheticians</p>
+                </div>
+
+                {/* Pro Option */}
+                <div
+                  onClick={() => handleExperienceSelect("pro")}
+                  className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
+                    selectedExperience === "pro"
+                      ? "border-primary bg-primary/5"
+                      : "border-gray-200 hover:border-primary/50"
+                  }`}
+                >
+                  <h3 className="text-xl font-semibold mb-2">Pro Aesthetician</h3>
+                  <p className="text-gray-600">Premium service from our experienced professionals</p>
+                  <p className="text-sm text-primary font-semibold mt-2">+₱1,500 professional fee</p>
+                </div>
+              </div>          
+            </div>
+          )}
+
+          {/* Step 4: Time Slot Selection */}
+          {step === 4 &&
+            selectedBranch &&
+            selectedService &&
+            selectedExperience && (
+              <div className="space-y-6">
+                {/* Time Slot Selection */}
+                <SlotSelectionList
+                  selectedService={selectedService.service_id}
+                  selectedBranch={selectedBranch.branch_id}
+                  selectedDate={selectedDate}
+                  selectedSlot={selectedSlot}
+                  onSelectSlot={handleSlotSelect}
+                  onDateChange={handleDateChange}
+                />
+
+                {/* Continue Button */}
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleContinueToConfirmation}
+                    disabled={!selectedSlot}
+                    className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
+                      selectedSlot
+                        ? "bg-primary text-white hover:bg-primary/90"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
+                  >
+                    Continue to Confirmation
+                  </button>
+                </div>
+              </div>
+            )}
+
+          {/* Step 5: Confirmation */}
+          {step === 5 &&
+            selectedBranch &&
+            selectedService &&
+            selectedExperience &&
+            selectedSlot && (
+              <BookingConfirmation
+                isConfirming={appointmentMutation.isPending}
+                branch={selectedBranch}
+                service={selectedService}
+                aestheticianExperience={selectedExperience}
+                appointmentDate={selectedDate}
+                appointmentTime={selectedSlot}
+                onConfirm={(voucherCode) =>
+                  handleSubmit({
+                    service_id: selectedService.service_id,
+                    branch_id: selectedBranch.branch_id,
+                    start_time: selectedSlot,
+                    voucher_code: voucherCode,
+                  })
+                }
+                onCancel={handleReset}
+              />
+            )}
+        </>
+      )}
     </div>
   );
 };

@@ -13,7 +13,7 @@ export function useAestheticians({ branchId, isPro }: { branchId?: string, isPro
   const limit = Number(searchParams.get("limit") ?? 10);
   const availability = searchParams.get("availability") ?? "";
   const sex = searchParams.get("sex") ?? "";
-  const experience = searchParams.get("experience") ?? (isPro ? "pro" : "");
+  const experience = searchParams.get("experience") ?? (isPro ? "pro" : "regular");
 
   return useQuery<AestheticianListResponse, Error>({
     queryKey: [

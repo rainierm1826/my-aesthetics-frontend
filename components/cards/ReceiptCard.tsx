@@ -1,4 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import ChangeAestheticianModal from "../modals/ChangeAestheticianModal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+  // Modal state for ChangeAesthetician
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -16,6 +19,7 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
   appointment,
   className = "",
 }) => {
+  const [openChangeAesthetician, setOpenChangeAesthetician] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const serviceCost =
@@ -50,7 +54,35 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
           <Printer/>
           Print receipt
         </Button>
+        {/* Show Change Aesthetician button if not completed/cancelled and branch exists */}
+        {!(appointment.status === "completed" || appointment.status === "cancelled") && appointment.branch_id && (
+          <Button
+            className="ml-2"
+            variant="secondary"
+            size="default"
+            onClick={() => setOpenChangeAesthetician(true)}
+          >
+            {appointment.aesthetician_id ? "Change Aesthetician" : "Assign Aesthetician"}
+          </Button>
+        )}
       </div>
+      {/* Change Aesthetician Modal */}
+      {!(appointment.status === "completed" || appointment.status === "cancelled") && appointment.branch_id && (
+        <Dialog open={openChangeAesthetician} onOpenChange={setOpenChangeAesthetician}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Change Aesthetician</DialogTitle>
+            </DialogHeader>
+            <ChangeAestheticianModal
+              appointmentId={appointment.appointment_id}
+              isPro={appointment.is_pro_snapshot}
+              currentAestheticianId={appointment.aesthetician_id || ""}
+              branchId={appointment.branch_id}
+              onClose={() => setOpenChangeAesthetician(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
 
       <Card
         ref={receiptRef}

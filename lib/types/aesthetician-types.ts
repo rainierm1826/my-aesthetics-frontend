@@ -106,7 +106,7 @@ export interface TimeSlotRange {
   end_time: string;
   start_time_24: string;
   end_time_24: string;
-  status: "available" | "not-available" | "past-time";
+  status: "available" | "not-available" | "past-time" | "conflict";
 }
 
 export interface AvailableSlotsResponse {

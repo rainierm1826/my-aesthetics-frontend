@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { deleteData, formatTo12HourTime } from "@/lib/function";
 import ActionCell from "@/components/ActionCell";
 import ReceiptCard from "../cards/ReceiptCard";
-import ChangeAestheticianModal from "../modals/ChangeAestheticianModal";
 import { Appointment } from "@/lib/types/appointment-types";
 
 export const appointmentColumn: ColumnDef<Appointment>[] = [
@@ -66,13 +65,12 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { appointment_id, aesthetician_id, branch_id, status, is_pro_snapshot } = row.original;
+      const { appointment_id, aesthetician_id, status } = row.original;
       
       // If appointment is completed or cancelled, only allow preview
       const isCompleted = status === "completed" || status === "cancelled";
       
       // Only show change aesthetician for pending and waiting appointments (and not completed/cancelled)
-      const canChangeAesthetician = !isCompleted && (status === "pending" || status === "waiting");
 
       return (
         <ActionCell
@@ -83,16 +81,6 @@ export const appointmentColumn: ColumnDef<Appointment>[] = [
           editAppointmentStatus={!isCompleted}
           hasAesthetician={!!aesthetician_id}
           previewDialog={<ReceiptCard appointment={row.original} />}
-          changeAestheticianDialog={
-            canChangeAesthetician && branch_id ? (
-              <ChangeAestheticianModal
-                appointmentId={appointment_id}
-                isPro={is_pro_snapshot }
-                currentAestheticianId={aesthetician_id || ""}
-                branchId={branch_id}
-              />
-            ) : undefined
-          }
           isCompleted={isCompleted}
         />
       );

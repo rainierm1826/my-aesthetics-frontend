@@ -68,7 +68,7 @@ const SlotSelectionList = ({
   // Check if slot is clickable based on backend status
   const isSlotClickable = (slot: TimeSlotRange): boolean => {
     return slot.status === "available";
-  };
+  } 
 
   if (error) {
     return (
@@ -141,6 +141,10 @@ const SlotSelectionList = ({
           <div className="w-3 h-3 bg-primary rounded"></div>
           <span>Selected</span>
         </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-gray-400 rounded"></div>
+          <span>Conflict (Your Own)</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -154,37 +158,44 @@ const SlotSelectionList = ({
           const getStatusLabel = (status: string): string => {
             if (status === "past") return "Past Time";
             if (status === "booked") return "Booked";
+            if (status === "conflict") return "Conflict";
             return "";
           };
+
+          // Use default styles for conflict, just make it unclickable and show label
+          let cardClass = "relative overflow-hidden transition-all duration-200";
+          if (isSelected) {
+            cardClass += " bg-primary text-white border-primary shadow-lg scale-105 cursor-pointer";
+          } else if (slot.status === "conflict") {
+            cardClass += " bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200";
+          } else if (isClickable) {
+            cardClass += " bg-white hover:bg-green-50 hover:border-green-500 hover:shadow-md border-gray-200 cursor-pointer";
+          } else {
+            cardClass += " bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200";
+          }
+
+          let textClass = "text-sm font-semibold";
+          if (isSelected) {
+            textClass += " text-white";
+          } else if (slot.status === "conflict") {
+            textClass += " text-gray-400";
+          } else if (isClickable) {
+            textClass += " text-gray-900";
+          } else {
+            textClass += " text-gray-400";
+          }
 
           return (
             <Card
               key={slotDisplay}
               onClick={() => isClickable && onSelectSlot(slot24Hour)}
-              className={`
-                relative overflow-hidden transition-all duration-200
-                ${
-                  isSelected
-                    ? "bg-primary text-white border-primary shadow-lg scale-105 cursor-pointer"
-                    : isClickable
-                      ? "bg-white hover:bg-green-50 hover:border-green-500 hover:shadow-md border-gray-200 cursor-pointer"
-                      : "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
-                }
-              `}
+              className={cardClass}
             >
               <div className="p-4 flex flex-col items-center justify-center h-16">
-                <div
-                  className={`text-sm font-semibold ${
-                    isSelected
-                      ? "text-white"
-                      : isClickable
-                        ? "text-gray-900"
-                        : "text-gray-400"
-                  }`}
-                >
+                <div className={textClass}>
                   {slotDisplay}
                 </div>
-                {!isClickable && (
+                {(!isClickable || slot.status === "conflict") && (
                   <div className="text-xs mt-1 text-gray-500">
                     {getStatusLabel(slot.status)}
                   </div>
