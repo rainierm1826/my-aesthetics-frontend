@@ -113,8 +113,16 @@ export function ordinal(n: number): string {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-export const formatCurrency = (amount: number) => {
-  return `₱${amount.toLocaleString("en-PH", {
+export const formatCurrency = (amount: number | string | null | undefined) => {
+  // Coerce to a safe number; default to 0 if invalid
+  let value = 0;
+  if (typeof amount === "number" && isFinite(amount)) {
+    value = amount;
+  } else if (typeof amount === "string") {
+    const parsed = Number(amount);
+    value = isFinite(parsed) ? parsed : 0;
+  }
+  return `₱${value.toLocaleString("en-PH", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
@@ -141,21 +149,26 @@ export const parseDateTime = (dateTimeString: string): Date => {
   }
 };
 
-export const formatTo12HourTime = (time: string | null): string => {
+export const formatTo12HourTime = (time: string | null | undefined): string => {
   if (!time) return "N/A";
 
   try {
-    // Parse "YYYY-MM-DD HH:MM:SS" format directly without timezone conversion
-    const [, timePart] = time.split(" ");
+    // Support both "YYYY-MM-DD HH:MM:SS" and ISO "YYYY-MM-DDTHH:MM:SS"
+    const hasSpace = time.includes(" ");
+    const hasT = time.includes("T");
+    const timePart = hasSpace ? time.split(" ")[1] : hasT ? time.split("T")[1] : time;
     if (!timePart) return "N/A";
-    
-    const [hours, minutes] = timePart.split(":").map(Number);
-    
-    // Convert 24-hour to 12-hour format
+
+    const [hoursStr, minutesStr] = timePart.split(":");
+    const hours = Number(hoursStr);
+    const minutes = Number(minutesStr);
+
+    if (!isFinite(hours) || !isFinite(minutes)) return "N/A";
+
     const period = hours >= 12 ? "PM" : "AM";
     const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
     const displayMinutes = String(minutes).padStart(2, "0");
-    
+
     return `${displayHours}:${displayMinutes} ${period}`;
   } catch (error) {
     console.error("Error formatting time:", time, error);

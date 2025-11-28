@@ -33,11 +33,30 @@ export type Appointment = {
   updated_at: string;
   // Add IDs for editing
   branch_id?: string;
-  service_id?: string;
-  aesthetician_id?: string | null;
-  duration_snapshot?: number;
+  // Remove single service fields for multi-service support
+  // service_id?: string;
+  // aesthetician_id?: string | null;
+  // duration_snapshot?: number;
+  services?: AppointmentService[];
   user_id?: string;
   walk_in_id?: string;
+};
+
+// For multi-service appointment form
+export type AppointmentService = {
+  service_id: string;
+  aesthetician_id: string;
+  start_time: string;
+};
+
+export type WalkInAppointmentFormValues = {
+  walk_in_id: string;
+  voucher_code?: string;
+  final_payment_method: string;
+  branch_id: string;
+  date: string;
+  status?: string;
+  services: AppointmentService[];
 };
 
 

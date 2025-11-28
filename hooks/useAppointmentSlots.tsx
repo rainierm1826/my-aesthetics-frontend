@@ -1,7 +1,7 @@
 "use client";
 
 import { getAppointmentAvailableSlots } from "@/api/appointment";
-import { AvailableSlotsResponse } from "@/lib/types/aesthetician-types";
+import { AvailableSlotsApiResponse } from "@/lib/types/aesthetician-types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export function useAppointmentSlots({
@@ -10,17 +10,18 @@ export function useAppointmentSlots({
   date,
   token,
   aestheticianId,
+  usePost = false,
 }: {
   date: string;
   serviceId: string;
   branchId?: string;
   token: string;
   aestheticianId?: string;
+  usePost?: boolean;
 }) {
   const isEnabled = !!branchId && !!serviceId && !!date && !!token;
-  
-  return useQuery<AvailableSlotsResponse, Error>({
-    queryKey: ["appointment-slots", branchId, serviceId, date, aestheticianId],
+  return useQuery<AvailableSlotsApiResponse, Error>({
+    queryKey: ["appointment-slots", branchId, serviceId, date, aestheticianId, usePost],
     queryFn: () =>
       getAppointmentAvailableSlots({
         branch_id: branchId!,
@@ -28,6 +29,7 @@ export function useAppointmentSlots({
         date,
         token,
         aesthetician_id: aestheticianId,
+        usePost,
       }),
     enabled: isEnabled,
     placeholderData: keepPreviousData,

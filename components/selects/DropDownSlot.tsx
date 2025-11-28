@@ -41,15 +41,18 @@ const DropDownSlot = ({
   const { access_token } = useAuthStore();
   
   // Use the unified appointment slots hook
+  // Updated: use POST for /available-slots with JSON body for multi-service support
   const { data, isLoading, error } = useAppointmentSlots({
     branchId: branchId || undefined,
     serviceId,
     date,
     token: access_token || "",
     aestheticianId,
+    usePost: true, // instruct hook to use POST
   });
 
-  const availableSlots = data?.available_slots ?? [];
+  const availableSlots = data?.results?.[0]?.available_slots ?? [];
+  console.log(data)
   
   const searchParams = useSearchParams();
   const pathname = usePathname();

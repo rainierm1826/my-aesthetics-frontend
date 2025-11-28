@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 
 interface ChangeAestheticianModalProps {
   appointmentId: string;
+  serviceId: string;
   currentAestheticianId: string;
   branchId: string;
   onClose?: () => void;
@@ -20,6 +21,7 @@ interface ChangeAestheticianModalProps {
 
 const ChangeAestheticianModal: React.FC<ChangeAestheticianModalProps> = ({
   appointmentId,
+  serviceId,
   currentAestheticianId,
   isPro,
   branchId,
@@ -69,6 +71,7 @@ const ChangeAestheticianModal: React.FC<ChangeAestheticianModalProps> = ({
     updateMutation.mutate({
       data: {
         appointment_id: appointmentId,
+        service_id: serviceId,
         aesthetician_id: selectedAesthetician.aesthetician_id,
         aesthetician_name_snapshot: aestheticianNameSnapshot,
       },

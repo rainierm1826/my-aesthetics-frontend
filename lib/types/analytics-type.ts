@@ -85,7 +85,7 @@ export interface SalesAnalyticsResponse {
     revenue: number;
   }[];
   revenue_by_category: {
-    category_snapshot: string;
+    category: string;
     revenue: number;
   }[];
   revenue_by_branch: {

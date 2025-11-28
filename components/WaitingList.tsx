@@ -162,7 +162,7 @@ const WaitingList = ({selectedBranchId}:{selectedBranchId:string}) => {
                       <Clock className="w-4 h-4 text-gray-400 shrink-0" />
                       <span>
                         {item.start_time 
-                          ? format(new Date(item.start_time), "MMM d, yyyy • h:mm a")
+                          ? format(new Date(item.services?.[0]?.start_time || item.start_time), "MMM d, yyyy • h:mm a")
                           : "Time not set"}
                       </span>
                     </div>

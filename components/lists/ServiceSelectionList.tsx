@@ -9,13 +9,20 @@ import SearchInput from "../SearchInput";
 
 interface ServiceSelectionListProps {
   branchId: string;
-  selectedService: Service | null;
-  onServiceSelect: (service: Service) => void;
+  selectedService?: Service | null;
+  onServiceSelect?: (service: Service) => void;
+  // Multi-select mode
+  multi?: boolean;
+  selectedServiceIds?: string[];
+  onToggleService?: (service: Service) => void;
 }
 const ServiceSelectionList = ({
   branchId,
   selectedService,
   onServiceSelect,
+  multi = false,
+  selectedServiceIds = [],
+  onToggleService,
 }: ServiceSelectionListProps) => {
 
   
@@ -93,8 +100,12 @@ const ServiceSelectionList = ({
             <ServiceSelectionCard
               key={service.service_id}
               service={service}
-              isSelected={selectedService?.service_id === service.service_id}
-              onClick={onServiceSelect}
+              isSelected={
+                multi
+                  ? selectedServiceIds.includes(service.service_id)
+                  : selectedService?.service_id === service.service_id
+              }
+              onClick={multi ? onToggleService : onServiceSelect}
             />
           ))
         ) : (

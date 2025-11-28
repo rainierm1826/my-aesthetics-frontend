@@ -4,8 +4,8 @@ import {
   AppointmentResponse,
   GetAppointmentParams,
 } from "@/lib/types/appointment-types";
+import { AvailableSlotsApiResponse } from "@/lib/types/aesthetician-types";
 import { DeleteResponse } from "@/lib/types/types";
-import { AvailableSlotsResponse } from "@/lib/types/aesthetician-types";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -98,24 +98,47 @@ export async function getAppointmentAvailableSlots({
   date,
   token,
   aesthetician_id,
+  usePost = false,
 }: {
   branch_id: string;
   service_id: string;
   date: string;
   token: string;
   aesthetician_id?: string;
-}): Promise<AvailableSlotsResponse> {
-  const params = buildParams({ 
-    branch_id, 
-    service_id, 
-    date,
-    ...(aesthetician_id && { aesthetician_id })
-  });
-  
-  return apiRequest<AvailableSlotsResponse>(
-    `/appointment/available-slots?${params}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  usePost?: boolean;
+}): Promise<AvailableSlotsApiResponse> {
+  if (usePost) {
+    // POST body for multi-service support (single-service for now)
+    const body = JSON.stringify({
+      services: [
+        {
+          branch_id,
+          service_id,
+          date,
+          ...(aesthetician_id ? { aesthetician_id } : {}),
+        },
+      ],
+    });
+    return apiRequest<AvailableSlotsApiResponse>(
+      `/appointment/available-slots`,
+      {
+        method: "POST",
+        body,
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      }
+    );
+  } else {
+    const params = buildParams({ 
+      branch_id, 
+      service_id, 
+      date,
+      ...(aesthetician_id && { aesthetician_id })
+    });
+    return apiRequest<AvailableSlotsApiResponse>(
+      `/appointment/available-slots?${params}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  }
 }

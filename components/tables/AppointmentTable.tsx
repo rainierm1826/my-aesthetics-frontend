@@ -32,6 +32,50 @@ export default function AppointmentTable() {
   });
   const appointments: Appointment[] = data?.appointment ?? [];
 
+  // Sort by earliest service time, then by status priority
+  const statusPriority: Record<string, number> = {
+    pending: 1,
+    waiting: 2, // shown as "Confirmed" in UI
+    "on-process": 3,
+    completed: 4,
+    cancelled: 5,
+  };
+
+  const toTimestamp = (value: unknown): number => {
+    if (!value) return Number.MAX_SAFE_INTEGER;
+    const s = String(value);
+    let d = new Date(s);
+    if (!isNaN(d.getTime())) return d.getTime();
+    d = new Date(s.replace(" ", "T"));
+    if (!isNaN(d.getTime())) return d.getTime();
+    const m = s.match(/^([0-2]\d):([0-5]\d)(?::([0-5]\d))?$/);
+    if (m) {
+      const now = new Date();
+      now.setHours(parseInt(m[1], 10), parseInt(m[2], 10), m[3] ? parseInt(m[3], 10) : 0, 0);
+      return now.getTime();
+    }
+    return Number.MAX_SAFE_INTEGER;
+  };
+
+  type AptServiceLite = { start_time?: string };
+  type AptWithServices = Appointment & { services?: AptServiceLite[]; start_time?: string };
+
+  const getEarliestServiceTime = (apt: Appointment): number => {
+    const aptWithServices = apt as AptWithServices;
+    const times = (aptWithServices.services ?? []).map((s) => toTimestamp(s.start_time));
+    if (times.length === 0) return toTimestamp(aptWithServices.start_time);
+    return Math.min(...times);
+  };
+
+  const sortedAppointments = [...appointments].sort((a, b) => {
+    const ta = getEarliestServiceTime(a);
+    const tb = getEarliestServiceTime(b);
+    if (ta !== tb) return ta - tb;
+    const sa = statusPriority[a.status as keyof typeof statusPriority] ?? 99;
+    const sb = statusPriority[b.status as keyof typeof statusPriority] ?? 99;
+    return sa - sb;
+  });
+
   const { data: appointmentSummary, isFetching: isFetchingSummaryData } =
     useAppointmentAnalytics(access_token || "");
   const summary: AppointmentsAnalyticsResponse = appointmentSummary || {
@@ -100,7 +144,7 @@ export default function AppointmentTable() {
       ) : (
         <DataTable
           columns={appointmentColumn}
-          data={appointments}
+          data={sortedAppointments}
           pageCount={data?.pages}
           windowsSize={5}
         />

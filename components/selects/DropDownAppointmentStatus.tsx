@@ -33,7 +33,7 @@ const DropDownAppointmentStatus = ({
 }: DropDownAppointmentStatusProps) => {
   const status = [
     { value: "on-process", label: "On-Process" },
-    { value: "waiting", label: "Waiting" },
+    { value: "waiting", label: "Confirmed" },
     { value: "cancelled", label: "Cancelled" },
     { value: "completed", label: "Completed" },
     { value: "pending", label: "Pending" },

@@ -1,8 +1,8 @@
 "use client";
 
-import { AppointmentFormProps } from "@/lib/types/appointment-types";
+import { AppointmentFormProps, WalkInAppointmentFormValues as WalkInAppointmentFormValuesType, AppointmentService } from "@/lib/types/appointment-types";
 import React, { memo, useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import {
-  WalkInAppointmentFormValues,
   walkInAppointmentSchema,
 } from "@/schema/appointmentSchema";
 import { useBaseMutation } from "@/hooks/useBaseMutation";
@@ -25,7 +24,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Calendar } from "lucide-react";
+import { Calendar, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import DropDownPaymentMethod from "../selects/DropDownPaymentMethod";
@@ -38,6 +37,7 @@ import { Switch } from "../ui/switch";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useUserStore } from "@/provider/store/userStore";
 
+// Only import WalkInAppointmentFormValues from one place and do not redeclare it in this file.
 const AppointmentForm: React.FC<AppointmentFormProps> = ({
   renderDialog = true,
   dialogButtonLabel,
@@ -60,33 +60,37 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const { auth, access_token } = useAuthStore();
   const { user } = useUserStore();
 
-  // Determine if this is for a walk-in customer
-  // For create (post): Always show walk-in field (creating new walk-in appointment)
-  // For edit (patch): Check if walkInId exists (editing walk-in) or userId exists (editing online customer)
+
   const isWalkInCustomer = method === "post" || (method === "patch" && !!walkInId);
 
-  const form = useForm<WalkInAppointmentFormValues>({
+  const form = useForm<WalkInAppointmentFormValuesType>({
     resolver: zodResolver(walkInAppointmentSchema),
     defaultValues: {
       walk_in_id: walkInId || "",
       branch_id:
         (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
-      service_id: serviceId || "",
-      aesthetician_id: aestheticianId || "",
       final_payment_method: finalPaymentMethod || "",
       voucher_code: voucherCode || undefined,
-      start_time: start_time || "",
       date: initialDate || new Date().toLocaleDateString("en-CA"),
       status: status || "",
+      services: [
+        {
+          service_id: serviceId || "",
+          aesthetician_id: aestheticianId || "",
+          start_time: start_time || "",
+        },
+      ],
     },
   });
 
   const { control, handleSubmit, reset, watch } = form;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "services",
+  });
   const [addVoucher, setAddVoucher] = useState<boolean>(false);
 
   const branch = watch("branch_id");
-  const service = watch("service_id");
-  const aesthetician = watch("aesthetician_id");
   const date = watch("date");
 
   // Reset form when props change (e.g., when modal reopens with loaded data)
@@ -95,14 +99,18 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       reset({
         walk_in_id: walkInId || "",
         branch_id: branchId || "",
-        service_id: serviceId || "",
-        aesthetician_id: aestheticianId || "",
         final_payment_method: finalPaymentMethod || "",
         voucher_code: voucherCode || undefined,
-        start_time: start_time || "",
         date: initialDate || new Date().toLocaleDateString("en-CA"),
         status: status || "",
-      });
+        services: [
+          {
+            service_id: serviceId || "",
+            aesthetician_id: aestheticianId || "",
+            start_time: start_time || "",
+          },
+        ] as AppointmentService[],
+      } as WalkInAppointmentFormValuesType);
     }
   }, [method, walkInId, branchId, serviceId, aestheticianId, finalPaymentMethod, voucherCode, start_time, initialDate, status, reset]);
 
@@ -128,15 +136,19 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       if (m === "post") {
         reset({
           walk_in_id: "",
-          aesthetician_id: "",
           final_payment_method: "",
-          service_id: "",
-          start_time: "",
-          date: new Date().toLocaleDateString("en-CA"),
-          branch_id:
-            (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
+          branch_id: (auth?.role !== "owner" ? user?.branch?.branch_id : branchId) || "",
           voucher_code: undefined,
-        });
+          date: new Date().toLocaleDateString("en-CA"),
+          status: "",
+          services: [
+            {
+              service_id: "",
+              aesthetician_id: "",
+              start_time: "",
+            },
+          ],
+        } as WalkInAppointmentFormValuesType);
       }
     },
   });
@@ -159,39 +171,31 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
     return result;
   };
 
-  const onSubmit = async (values: WalkInAppointmentFormValues) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { voucher_code, ...rest } = values;
+  const onSubmit = async (values: WalkInAppointmentFormValuesType) => {
+    const { voucher_code, services, date, ...rest } = values;
+    // Build services array with converted times and include date in each service
+    const servicesPayload: AppointmentService[] = services.map((s) => ({
+      ...s,
+      start_time: convertTo24Hour(s.start_time),
+      date: date,
+    }));
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const payload: any = {
+    // Build payload with correct typing, remove root-level date
+    const payload: Record<string, unknown> = {
       ...rest,
-      start_time: convertTo24Hour(rest.start_time), // Convert to 24-hour format
       is_walk_in: isWalkInCustomer,
+      services: servicesPayload,
     };
 
-    // For patch (edit) mode
     if (method === "patch") {
       payload.appointment_id = appointmentId;
-      
-      // Include walk_in_id if editing walk-in appointment
-      if (walkInId) {
-        payload.walk_in_id = walkInId;
-      }
-      
-      // Include user_id if editing online customer appointment
+      if (walkInId) payload.walk_in_id = walkInId;
       if (userId) {
         payload.user_id = userId;
-        // Remove walk_in_id for online customers
         delete payload.walk_in_id;
       }
     }
-
-    // Add voucher code if present
-    if (values.voucher_code) {
-      payload.voucher_code = values.voucher_code;
-    }
-
+    if (voucher_code) payload.voucher_code = voucher_code;
     appointmentMutation.mutate({ data: payload, token: access_token || "" });
   };
 
@@ -213,7 +217,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           )}
 
           {/* Walk-in Customer ID - Only show for CREATE mode (post) */}
-          {/* For EDIT mode (patch), hide this field but still include it in submission */}
           {method === "post" && (
             <FormField
               control={control}
@@ -232,8 +235,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               )}
             />
           )}
-
-          {/* Hidden walk_in_id for editing walk-in appointments */}
           {method === "patch" && walkInId && (
             <input type="hidden" {...form.register("walk_in_id")} />
           )}
@@ -257,89 +258,18 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
             )}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Branch selection for owners only */}
-            {auth?.role === "owner" && (
-              <FormField
-                control={control}
-                name="branch_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Choose Branch</FormLabel>
-                    <FormControl className="w-full">
-                      <DropDownBranch
-                        value={field.value || ""}
-                        onValueChange={(v) => field.onChange(v)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-             {((branch && method === "post") || method === "patch") && (
-              <FormField
-                control={control}
-                name="service_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Choose Service</FormLabel>
-                    <FormControl className="w-full">
-                      <DropDownService
-                        value={field.value}
-                        onValueChange={(v) => field.onChange(v)}
-                        branchId={branch}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-            {(method === "patch" ||
-              (method === "post" && branch && service)) && (
-              <FormField
-                control={control}
-                name="aesthetician_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Choose Aesthetician</FormLabel>
-                    <FormControl className="w-full">
-                      <DropDownAesthetician
-                        value={field.value}
-                        onValueChange={(v) => field.onChange(v)}
-                        branchId={branch}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-             {/* Time Slot Selection */}
-          {(method === "patch" ||
-            (method === "post" && aesthetician && service)) && (
+          {/* Branch selection for owners only */}
+          {auth?.role === "owner" && (
             <FormField
               control={control}
-              name="start_time"
+              name="branch_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Choose Time Slot</FormLabel>
+                  <FormLabel>Choose Branch</FormLabel>
                   <FormControl className="w-full">
-                    <DropDownSlot
-                      value={field.value}
+                    <DropDownBranch
+                      value={field.value || ""}
                       onValueChange={(v) => field.onChange(v)}
-                      branchId={branch}
-                      aestheticianId={aesthetician}
-                      serviceId={service}
-                      date={date}
-                      placeholder="Select time slot"
                     />
                   </FormControl>
                   <FormMessage />
@@ -347,9 +277,91 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
               )}
             />
           )}
-          </div>
 
-         
+          {/* Multiple Services Section */}
+          <div className="space-y-4">
+            {fields.map((item, idx) => (
+              <div key={item.id} className="border p-4 rounded-md relative bg-muted/30">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={control}
+                    name={`services.${idx}.service_id`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Service</FormLabel>
+                        <FormControl className="w-full">
+                          <DropDownService
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            branchId={branch}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    name={`services.${idx}.aesthetician_id`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Aesthetician</FormLabel>
+                        <FormControl className="w-full">
+                          <DropDownAesthetician
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            branchId={branch}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                  <FormField
+                    control={control}
+                    name={`services.${idx}.start_time`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Time Slot</FormLabel>
+                        <FormControl className="w-full">
+                          <DropDownSlot
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            branchId={branch}
+                            aestheticianId={form.watch(`services.${idx}.aesthetician_id`)}
+                            serviceId={form.watch(`services.${idx}.service_id`)}
+                            date={date}
+                            placeholder="Select time slot"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {fields.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute bottom-2 right-2"
+                    onClick={() => remove(idx)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => append({ service_id: "", aesthetician_id: "", start_time: ""})}
+            >
+              + Add Service
+            </Button>
+          </div>
 
           {/* Status Field - Only for patch (edit) mode */}
           {method === "patch" && (

@@ -106,21 +106,24 @@ export interface TimeSlotRange {
   end_time: string;
   start_time_24: string;
   end_time_24: string;
-  status: "available" | "not-available" | "past-time" | "conflict";
+  status: "available" | "not-available" | "past-time" | "conflict" | "booked" | "past";
 }
 
-export interface AvailableSlotsResponse {
+export interface AvailableSlotsResult {
   status: boolean;
-  aesthetician_id: string;
+  branch_id: string;
   service_id: string;
   date: string;
   available_slots: TimeSlotRange[];
   service_duration: number;
+  slot_capacity: number;
   working_hours: {
-    start_hour: number;
-    start_minute: number;
-    end_hour: number;
-    end_minute: number;
+    opening_time: string;
+    closing_time: string;
   };
+}
+
+export interface AvailableSlotsApiResponse {
+  results: AvailableSlotsResult[];
 }
 

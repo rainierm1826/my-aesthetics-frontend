@@ -54,9 +54,10 @@ const SlotSelectionList = ({
     date: selectedDate,
     token: access_token || "",
     aestheticianId: selectedAesthetician,
+    usePost: true,
   });
 
-  const availableSlots: TimeSlotRange[] = data?.available_slots ?? [];
+  const availableSlots: TimeSlotRange[] = data?.results?.[0]?.available_slots ?? [];
   
   // Debug: Log the response
   console.log('SlotSelectionList - API response:', { 

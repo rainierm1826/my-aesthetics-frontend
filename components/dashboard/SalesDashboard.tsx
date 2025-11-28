@@ -140,7 +140,7 @@ const SalesDashboard = () => {
               <PieChartComponent
                 title="Revenue By Category"
                 dataKey="revenue"
-                nameKey="category_snapshot"
+                nameKey="category"
                 chartConfig={serviceCategoryChartConfig}
                 chartData={sales.revenue_by_category}
               />

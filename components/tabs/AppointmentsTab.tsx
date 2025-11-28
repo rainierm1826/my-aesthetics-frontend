@@ -1,89 +1,81 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Appointment } from "@/lib/types/appointment-types";
 import { HistoryCard } from "@/components/cards/HistoryCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+// import { Button } from "@/components/ui/button"; // Not used after removing global cancel
 
 import { Clock, CheckCircle, XCircle } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { useAuthStore } from "@/provider/store/authStore";
 import { AppointmentListSkeleton } from "../skeletons/SkeletonHistory";
 import { useAppointmentWebSocket } from "@/hooks/useAppointmentWebSocket";
-import { useBaseMutation } from "@/hooks/useBaseMutation";
-import { patchAppointment } from "@/api/appointment";
+// Global cancel removed; only per-service cancel is allowed via HistoryCard
 
 const AppointmentsTab = () => {
   const { access_token } = useAuthStore();
-  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null);
   
   // Enable real-time appointment updates via WebSocket
   useAppointmentWebSocket();
   
   const { data, isFetching } = useHistory(access_token || "");
-  const appointments: Appointment[] = data?.appointment ?? [];
+  const appointmentsRaw: Appointment[] = data?.appointment ?? [];
 
-  const activeAppointments: Appointment[] = appointments.filter((a) =>
-    ["pending", "waiting", "on-process"].includes(a.status)
-  );
-  const completedAppointments: Appointment[] = appointments.filter(
-    (a) => a.status === "completed"
-  );
-  const cancelledAppointments: Appointment[] = appointments.filter(
-    (a) => a.status === "cancelled"
-  );
+  // Derive overall appointment status from per-service statuses
+  const deriveStatus = (appt: Appointment): string => {
+    const svcs = appt.services || [];
+    if (!svcs.length) return appt.status;
+    const activeStatuses = svcs
+      .map((s) => String((s as { status?: string }).status || '').toLowerCase())
+      .filter((s) => s !== 'cancelled');
 
-  // Mutation for cancelling appointments
-  const cancelMutation = useBaseMutation("patch", {
-    updateFn: patchAppointment,
-    queryKey: [
-      ["appointment"],
-      ["history"],
-      ["aesthetician-name"],
-      ["aesthetician"],
-      ["appointment-summary"],
-      ["sales-summary"],
-      ["analytics-appointments"],
-      ["analytics-sales"],
-    ],
-    successMessages: {
-      update: "Appointment cancelled successfully",
-    },
-    onSuccess: () => {
-      setCancelDialogOpen(false);
-      setSelectedAppointmentId(null);
-    },
-  });
+    // If no active services (all cancelled) → cancelled
+    if (activeStatuses.length === 0) return 'cancelled';
 
-  const handleCancelClick = (appointmentId: string) => {
-    setSelectedAppointmentId(appointmentId);
-    setCancelDialogOpen(true);
+    if (activeStatuses.every((s) => s === 'completed')) return 'completed';
+    if (activeStatuses.some((s) => s === 'on-process')) return 'on-process';
+    if (activeStatuses.some((s) => s === 'waiting')) return 'waiting';
+    if (activeStatuses.every((s) => s === 'pending')) return 'pending';
+
+    return appt.status;
   };
 
-  const handleCancelConfirm = () => {
-    if (selectedAppointmentId) {
-      cancelMutation.mutate({
-        data: {
-          appointment_id: selectedAppointmentId,
-          status: "cancelled",
-        },
-        token: access_token || "",
-      });
-    }
+  const appointments: Appointment[] = appointmentsRaw.map((a) => ({
+    ...a,
+    status: deriveStatus(a) as Appointment['status'],
+  }));
+
+  // Helper to get latest date/time among services (fallback to appointment.start_time)
+  const getLatestTimestamp = (appt: Appointment): number => {
+    const serviceTimes = (appt.services || [])
+      .map((s) => {
+        const t = (s as { start_time?: string }).start_time;
+        return t ? Date.parse(t) : NaN;
+      })
+      .filter((n) => Number.isFinite(n)) as number[];
+    const apptTime = appt.start_time ? Date.parse(appt.start_time) : NaN;
+    const all = [...serviceTimes, apptTime].filter((n) => Number.isFinite(n)) as number[];
+    return all.length ? Math.max(...all) : 0;
   };
+
+  const sortByLatestDesc = (list: Appointment[]) =>
+    list.slice().sort((a, b) => getLatestTimestamp(b) - getLatestTimestamp(a));
+
+  const activeAppointments: Appointment[] = sortByLatestDesc(
+    appointments.filter((a) => ["pending", "waiting", "on-process"].includes(a.status))
+  );
+  const completedAppointments: Appointment[] = sortByLatestDesc(
+    appointments.filter((a) => a.status === "completed")
+  );
+  const cancelledAppointments: Appointment[] = sortByLatestDesc(
+    appointments.filter((a) => a.status === "cancelled")
+  );
+
+  console.log("AppointmentsTab - appointments:", appointments);
+
+  // Removed global cancel actions; per-service cancel is handled in HistoryCard
 
   return (
     <>
@@ -108,18 +100,7 @@ const AppointmentsTab = () => {
               <HistoryCard
                 appointment={appointment}
               />
-              {appointment.status === "pending" && (
-                <div className="absolute top-4 right-4">
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleCancelClick(appointment.appointment_id)}
-                    className="bg-red-500 hover:bg-red-400"
-                  >
-                    Cancel Appointment
-                  </Button>
-                </div>
-              )}
+              {/* Global cancel removed; users can cancel per service within HistoryCard */}
             </div>
           ))
         ) : (
@@ -174,29 +155,7 @@ const AppointmentsTab = () => {
       </TabsContent>
     </Tabs>
     
-    {/* Cancel Appointment Dialog */}
-    <AlertDialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Cancel Appointment?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to cancel this appointment? This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={cancelMutation.isPending}>
-            No, Keep It
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleCancelConfirm}
-            disabled={cancelMutation.isPending}
-            className="bg-red-500 text-white hover:bg-red-400 disabled:opacity-50"
-          >
-            {cancelMutation.isPending ? "Cancelling..." : "Yes, Cancel"}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    {/* Global cancel dialog removed */}
     </>
   );
 };
