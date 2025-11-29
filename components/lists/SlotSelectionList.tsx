@@ -15,6 +15,7 @@ interface SlotSelectionListProps {
   onSelectSlot: (slot: string) => void;
   onDateChange?: (date: string) => void;
   selectedAesthetician?: string;
+  conflictIntervals?: { start: number; end: number }[]; // existing occupied intervals in minutes from 00:00
 }
 
 const SlotSelectionList = ({
@@ -25,6 +26,7 @@ const SlotSelectionList = ({
   onSelectSlot,
   onDateChange,
   selectedAesthetician,
+  conflictIntervals = [],
 }: SlotSelectionListProps) => {
   const { access_token } = useAuthStore();
   
@@ -67,8 +69,9 @@ const SlotSelectionList = ({
   });
 
   // Check if slot is clickable based on backend status
-  const isSlotClickable = (slot: TimeSlotRange): boolean => {
-    return slot.status === "available";
+  const isSlotClickable = (slot: TimeSlotRange, isConflict: boolean): boolean => {
+    // Slot must be available and not conflicting with another selected service
+    return slot.status === "available" && !isConflict;
   } 
 
   if (error) {
@@ -151,9 +154,31 @@ const SlotSelectionList = ({
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {availableSlots.map((slot: TimeSlotRange) => {
           const slotDisplay = `${slot.start_time}-${slot.end_time}`;
-          const slot24Hour = slot.start_time_24; // Store the 24-hour format
-          const isClickable = isSlotClickable(slot);
-          const isSelected = selectedSlot === slot24Hour;
+          // Removed slot24Hour (unused) since conflict logic now relies on intervals
+          // Derive slot start in minutes for fine-grained conflict with multi-duration services
+          const slotStartMinutes = (() => {
+            const [time, period] = slot.start_time.split(" ");
+            const [hStr, mStr] = time.split(":");
+            let h = Number(hStr);
+            const m = Number(mStr || 0);
+            if (period === "PM" && h !== 12) h += 12;
+            if (period === "AM" && h === 12) h = 0;
+            return h * 60 + m;
+          })();
+          // Estimate end minutes using displayed end (backend provided)
+          const slotEndMinutes = (() => {
+            const [time, period] = slot.end_time.split(" ");
+            const [hStr, mStr] = time.split(":");
+            let h = Number(hStr);
+            const m = Number(mStr || 0);
+            if (period === "PM" && h !== 12) h += 12;
+            if (period === "AM" && h === 12) h = 0;
+            return h * 60 + m;
+          })();
+          const overlapsExisting = conflictIntervals.some(iv => slotStartMinutes < iv.end && iv.start < slotEndMinutes);
+          const isConflictOwn = overlapsExisting && selectedSlot !== slotDisplay;
+          const isClickable = isSlotClickable(slot, isConflictOwn);
+          const isSelected = selectedSlot === slotDisplay;
 
           // Determine the display label based on slot status
           const getStatusLabel = (status: string): string => {
@@ -167,7 +192,7 @@ const SlotSelectionList = ({
           let cardClass = "relative overflow-hidden transition-all duration-200";
           if (isSelected) {
             cardClass += " bg-primary text-white border-primary shadow-lg scale-105 cursor-pointer";
-          } else if (slot.status === "conflict") {
+          } else if (slot.status === "conflict" || isConflictOwn) {
             cardClass += " bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200";
           } else if (isClickable) {
             cardClass += " bg-white hover:bg-green-50 hover:border-green-500 hover:shadow-md border-gray-200 cursor-pointer";
@@ -178,7 +203,7 @@ const SlotSelectionList = ({
           let textClass = "text-sm font-semibold";
           if (isSelected) {
             textClass += " text-white";
-          } else if (slot.status === "conflict") {
+          } else if (slot.status === "conflict" || isConflictOwn) {
             textClass += " text-gray-400";
           } else if (isClickable) {
             textClass += " text-gray-900";
@@ -189,16 +214,16 @@ const SlotSelectionList = ({
           return (
             <Card
               key={slotDisplay}
-              onClick={() => isClickable && onSelectSlot(slot24Hour)}
+              onClick={() => isClickable && onSelectSlot(slotDisplay)}
               className={cardClass}
             >
               <div className="p-4 flex flex-col items-center justify-center h-16">
                 <div className={textClass}>
                   {slotDisplay}
                 </div>
-                {(!isClickable || slot.status === "conflict") && (
+                {((!isClickable && !isSelected) || slot.status === "conflict" || isConflictOwn) && (
                   <div className="text-xs mt-1 text-gray-500">
-                    {getStatusLabel(slot.status)}
+                    {isConflictOwn ? "Conflict" : getStatusLabel(slot.status)}
                   </div>
                 )}
               </div>

@@ -8,11 +8,11 @@ interface StepIndicatorProps {
 }
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
+  // Updated flow: Branch > Service > Experience & Time Slot > Confirm
   const steps = [
     { label: "Branch" },
     { label: "Service" },
-    { label: "Experience" },
-    { label: "Date & Time" },
+    { label: "Experience & Time Slot" },
     { label: "Confirm" },
   ];
 

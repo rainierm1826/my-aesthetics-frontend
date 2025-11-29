@@ -7,6 +7,7 @@ import StepIndicator from "./StepIndicator";
 import BranchSelectionList from "./lists/BranchSelectionList";
 import ServiceSelectionList from "./lists/ServiceSelectionList";
 import SlotSelectionList from "./lists/SlotSelectionList";
+import { toast } from "sonner";
 import { useAuthStore } from "@/provider/store/authStore";
 import { useUserStore } from "@/provider/store/userStore";
 import { useRouter } from "next/navigation";
@@ -122,15 +123,62 @@ const BookingFlow = () => {
     },
   });
 
-  const convertTo24Hour = (time12h: string): string => {
+  const convertTo24Hour = (range: string): string => {
     // Accepts values like "9:00 AM - 10:00 AM" or "9:00 AM"
-    const startTimeStr = time12h.split("-")[0].trim();
+    const startTimeStr = range.split("-")[0].trim();
     const [time, period] = startTimeStr.split(" ");
     const [hStr, mStr] = time.split(":");
     const h = Number(hStr);
     const m = Number(mStr ?? 0);
     const hours = period === "PM" && h !== 12 ? h + 12 : period === "AM" && h === 12 ? 0 : h;
     return `${String(hours).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+  };
+
+  const parseRangeToMinutes = (range: string): { start: number; end: number } => {
+    // "9:00 AM - 10:00 AM" -> minutes from 00:00
+    const parts = range.split("-").map(p => p.trim());
+    const parseOne = (val: string): number => {
+      const [time, period] = val.split(" ");
+      const [hStr, mStr] = time.split(":");
+      let h = Number(hStr);
+      const m = Number(mStr ?? 0);
+      if (period === "PM" && h !== 12) h += 12;
+      if (period === "AM" && h === 12) h = 0;
+      return h * 60 + m;
+    };
+    const start = parseOne(parts[0]);
+    const end = parts[1] ? parseOne(parts[1]) : start; // single time -> zero-length
+    return { start, end };
+  };
+
+  const getServiceDuration = (serviceId: string): number => {
+    const svc = selectedServices.find(s => s.service_id === serviceId);
+    return svc?.duration ? Number(svc.duration) : 60; // fallback 60 mins if undefined
+  };
+
+  const hasConflictWithExisting = (serviceId: string, candidateRange: string): boolean => {
+    const { start } = parseRangeToMinutes(candidateRange);
+    const candidateDuration = getServiceDuration(serviceId);
+    const candidateEnd = start + candidateDuration;
+    return selectedServices.some(s => {
+      if (s.service_id === serviceId) return false;
+      const existingRange = serviceSelections[s.service_id]?.slot;
+      if (!existingRange) return false;
+      const existingParsed = parseRangeToMinutes(existingRange);
+      const existingDuration = getServiceDuration(s.service_id);
+      const existingEnd = existingParsed.start + existingDuration;
+      return start < existingEnd && existingParsed.start < candidateEnd;
+    });
+  };
+
+  const buildConflictIntervals = (excludeServiceId: string): { start: number; end: number }[] => {
+    return selectedServices.filter(s => s.service_id !== excludeServiceId).map(s => {
+      const range = serviceSelections[s.service_id]?.slot;
+      if (!range) return null;
+      const parsed = parseRangeToMinutes(range);
+      const duration = getServiceDuration(s.service_id);
+      return { start: parsed.start, end: parsed.start + duration };
+    }).filter(Boolean) as { start: number; end: number }[];
   };
 
   // Display helper: format a time or time range to 12-hour
@@ -333,7 +381,14 @@ const BookingFlow = () => {
                         selectedBranch={selectedBranch.branch_id}
                         selectedDate={selectedDate}
                         selectedSlot={sel.slot}
-                        onSelectSlot={(slot) => setServiceSelections((prev) => ({ ...prev, [svc.service_id]: { ...sel, slot } }))}
+                        conflictIntervals={buildConflictIntervals(svc.service_id)}
+                        onSelectSlot={(slotRange) => {
+                          if (hasConflictWithExisting(svc.service_id, slotRange)) {
+                            toast.error("Time slot conflicts with another selected service (duration overlap)");
+                            return;
+                          }
+                          setServiceSelections((prev) => ({ ...prev, [svc.service_id]: { ...sel, slot: slotRange } }));
+                        }}
                       />
                     </div>
                   );
@@ -382,7 +437,7 @@ const BookingFlow = () => {
                           <p className="text-sm font-medium capitalize">{sel?.experience || '-'}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Start Time</p>
+                          <p className="text-xs text-muted-foreground">Time Slot</p>
                           <p className="text-sm font-medium">{formatTo12HourRange(sel?.slot || null)}</p>
                         </div>
                       </div>

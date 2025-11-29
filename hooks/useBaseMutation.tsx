@@ -38,18 +38,33 @@ export const useBaseMutation = <TData = unknown, TVariables = void>(
       throw new Error(`No ${method} function provided`);
     },
     onSuccess: async (data) => {
-      const keys = Array.isArray(config.queryKey[0])
-        ? (config.queryKey as string[][])
-        : [config.queryKey];
+      // Normalize queryKey config:
+      // - string -> [[string]]
+      // - string[] (e.g. ["appointment","history"]) -> [["appointment"],["history"]]
+      // - string[][] already treated as list of keys
+      const q = config.queryKey as any;
+      let normalized: string[][];
+      if (Array.isArray(q)) {
+        if (q.length > 0 && q.every((k) => typeof k === "string")) {
+          normalized = (q as string[]).map((k) => [k]);
+        } else if (Array.isArray(q[0])) {
+          normalized = q as string[][];
+        } else {
+          normalized = [[JSON.stringify(q)]]; // fallback, unlikely
+        }
+      } else if (typeof q === "string") {
+        normalized = [[q]];
+      } else {
+        normalized = [[JSON.stringify(q)]];
+      }
 
-      for (const key of keys) {
+      for (const key of normalized) {
         await queryClient.invalidateQueries({
-          queryKey: Array.isArray(key) ? key : [key],
-          exact: false, // invalidate nested queries too
+          queryKey: key,
+          exact: false,
         });
-        // Force an immediate refetch
         await queryClient.refetchQueries({
-          queryKey: Array.isArray(key) ? key : [key],
+          queryKey: key,
           exact: false,
         });
       }
@@ -67,18 +82,30 @@ export const useBaseMutation = <TData = unknown, TVariables = void>(
     },
 
     onError: async (error: Error) => {
-      // Also invalidate queries on error to ensure UI is in sync
-      const keys = Array.isArray(config.queryKey[0])
-        ? (config.queryKey as string[][])
-        : [config.queryKey];
+      // Normalize and invalidate on error as well
+      const q = config.queryKey as any;
+      let normalized: string[][];
+      if (Array.isArray(q)) {
+        if (q.length > 0 && q.every((k) => typeof k === "string")) {
+          normalized = (q as string[]).map((k) => [k]);
+        } else if (Array.isArray(q[0])) {
+          normalized = q as string[][];
+        } else {
+          normalized = [[JSON.stringify(q)]];
+        }
+      } else if (typeof q === "string") {
+        normalized = [[q]];
+      } else {
+        normalized = [[JSON.stringify(q)]];
+      }
 
-      for (const key of keys) {
+      for (const key of normalized) {
         await queryClient.invalidateQueries({
-          queryKey: Array.isArray(key) ? key : [key],
+          queryKey: key,
           exact: false,
         });
         await queryClient.refetchQueries({
-          queryKey: Array.isArray(key) ? key : [key],
+          queryKey: key,
           exact: false,
         });
       }
