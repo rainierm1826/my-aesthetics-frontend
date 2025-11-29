@@ -42,7 +42,7 @@ export default function FlowiseChatbot() {
                 const Chatbot = module.default;
                 Chatbot.init({
                   chatflowid: "55594acc-2a75-40f6-b7cb-b52b4800c4ae",
-                  apiHost: "https://ai.myaestheticsbrowstudio.com",
+                  apiHost: "https://cloud.flowiseai.com",
                   chatflowConfig: {},
                   observersConfig: {},
                   theme: {

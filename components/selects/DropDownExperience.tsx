@@ -63,7 +63,12 @@ const DropDownExperience = ({
         router.replace(newUrl, { scroll: false });
       }
 
-      onValueChange?.(newValue);
+      // Propagate empty string upstream when selecting "all" so parent clears filter
+      if (newValue === "all" && includeAllOption) {
+        onValueChange?.("");
+      } else {
+        onValueChange?.(newValue);
+      }
     },
     [
       useUrlParams,

@@ -132,10 +132,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       if (key === "image" && value instanceof File) {
         formData.append("image", value);
       } else if (key === "branch_id") {
-        if (value === "all") {
-        } else {
-          formData.append("branch_id", String(value));
-        }
+        // Always append branch_id; backend will interpret 'all' or empty as global (None)
+        formData.append("branch_id", String(value));
       } else if (typeof value === "boolean") {
         formData.append(key, value ? "true" : "false");
       } else if (typeof value === "number") {
