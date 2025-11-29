@@ -151,12 +151,15 @@ export const HistoryCard = ({
         })[0]
     : null;
 
-  // Aggregate pricing across all services
-  const servicePriceTotal = services.reduce((sum: number, s: HistoryService) => {
+  // Aggregate pricing across non-cancelled services only
+  const nonCancelledServices: HistoryService[] = services.filter(
+    (s) => String(s.status || "").toLowerCase() !== "cancelled"
+  );
+  const servicePriceTotal = nonCancelledServices.reduce((sum: number, s: HistoryService) => {
     const cost = s.discounted_price_snapshot ?? s.price_snapshot ?? 0;
     return sum + Number(cost || 0);
   }, 0);
-  const professionalFeeTotal = services.reduce((sum: number, s: HistoryService) => {
+  const professionalFeeTotal = nonCancelledServices.reduce((sum: number, s: HistoryService) => {
     const proFee = s.is_pro_snapshot ? 1500 : 0;
     return sum + Number(proFee || 0);
   }, 0);
@@ -164,11 +167,16 @@ export const HistoryCard = ({
 
   let voucherDiscount = 0;
   if (appointment.voucher_discount_type_snapshot === "fixed") {
-    voucherDiscount = Number(appointment.voucher_discount_amount_snapshot || appointment.discount_snapshot || 0);
+    voucherDiscount = Number(
+      appointment.voucher_discount_amount_snapshot || appointment.discount_snapshot || 0
+    );
   } else if (appointment.voucher_discount_type_snapshot === "percentage") {
-    const pct = Number(appointment.voucher_discount_amount_snapshot || appointment.discount_snapshot || 0);
+    const pct = Number(
+      appointment.voucher_discount_amount_snapshot || appointment.discount_snapshot || 0
+    );
     voucherDiscount = (pct / 100) * subtotal;
   }
+  const totalDue = Math.max(0, subtotal - voucherDiscount);
 
 
 
@@ -357,7 +365,7 @@ export const HistoryCard = ({
 
           <div className="flex justify-between items-center">
             <p className="font-semibold">Total Amount</p>
-            <p className="text-lg font-bold">{formatCurrency(appointment.to_pay)}</p>
+            <p className="text-lg font-bold">{formatCurrency(totalDue)}</p>
           </div>
 
           {appointment.final_payment_method && (

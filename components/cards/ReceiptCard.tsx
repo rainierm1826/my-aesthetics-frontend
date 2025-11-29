@@ -24,8 +24,9 @@ type AppointmentService = {
   discounted_price_snapshot?: number;
   is_sale_snapshot: boolean;
   is_pro_snapshot: boolean;
-  discount_snapshot?: number | null;
-  discount_type_snapshot?: string | null;
+  // New voucher snapshot fields (preferred)
+  voucher_discount_amount_snapshot?: number | null;
+  voucher_discount_type_snapshot?: string | null;
   voucher_code_snapshot?: string | null;
   aesthetician_name_snapshot?: string | null;
   start_time: string;
@@ -33,6 +34,11 @@ type AppointmentService = {
 };
 
 type AppointmentWithServices = Appointment & { services: AppointmentService[] };
+type AppointmentWithVoucher = Appointment & {
+  voucher_code_snapshot?: string | null;
+  voucher_discount_amount_snapshot?: number | null;
+  voucher_discount_type_snapshot?: string | null;
+};
 
 interface ReceiptCardProps {
   appointment: Appointment;
@@ -82,6 +88,8 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
     });
   };
 
+  console.log("ReceiptCard - appointment:", appointment);
+
   const handleStatusChangeRequest = (serviceId: string, serviceName: string, currentStatus: string, newStatus: string) => {
     setPendingStatusChange({ serviceId, serviceName, currentStatus, newStatus });
     setConfirmDialogOpen(true);
@@ -109,25 +117,54 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
     if (!b.start_time) return -1;
     return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
   });
-  const subtotal = services.reduce((sum: number, s: AppointmentService) => {
-    const serviceCost = s.discounted_price_snapshot ?? s.price_snapshot;
-    const professionalFee = s.is_pro_snapshot ? 1500 : 0;
-    return sum + serviceCost + professionalFee;
-  }, 0);
+  // Subtotal excludes cancelled services
+  const subtotal = services
+    .filter((s: AppointmentService) => (s.status || "pending") !== "cancelled")
+    .reduce((sum: number, s: AppointmentService) => {
+      const serviceCost = s.discounted_price_snapshot ?? s.price_snapshot;
+      const professionalFee = s.is_pro_snapshot ? 1500 : 0;
+      return sum + serviceCost + professionalFee;
+    }, 0);
+
 
   // Aggregate discounts (if any)
   let voucherDiscount = 0;
+  const voucherBreakdown: { name: string; code?: string | null; amount: number }[] = [];
+  let anyVoucherUsed = false;
   services.forEach((s: AppointmentService) => {
-    if (s.discount_type_snapshot === "fixed") {
-      voucherDiscount += s.discount_snapshot ?? 0;
-    } else if (s.discount_type_snapshot === "percentage") {
+    // Skip cancelled services entirely
+    if ((s.status || "pending") === "cancelled") return;
+    if (s.voucher_code_snapshot) anyVoucherUsed = true;
+    const discountType = s.voucher_discount_type_snapshot;
+    const discountAmt = s.voucher_discount_amount_snapshot ?? 0;
+    if (discountType === "fixed") {
+      const amt = discountAmt;
+      voucherDiscount += amt;
+      if (amt && amt > 0) voucherBreakdown.push({ name: s.service_name_snapshot, code: s.voucher_code_snapshot, amount: amt });
+    } else if (discountType === "percentage") {
       const serviceCost = s.discounted_price_snapshot ?? s.price_snapshot;
       const professionalFee = s.is_pro_snapshot ? 1500 : 0;
-      voucherDiscount += ((s.discount_snapshot ?? 0) / 100) * (serviceCost + professionalFee);
+      const amt = ((discountAmt ?? 0) / 100) * (serviceCost + professionalFee);
+      voucherDiscount += amt;
+      if (amt && amt > 0) voucherBreakdown.push({ name: s.service_name_snapshot, code: s.voucher_code_snapshot, amount: amt });
     }
   });
 
-  const totalServiceCost = subtotal - voucherDiscount;
+  // Include appointment-level voucher snapshot if present
+  const appt = appointment as AppointmentWithVoucher;
+  const apptVoucherType = appt.voucher_discount_type_snapshot;
+  const apptVoucherAmt = appt.voucher_discount_amount_snapshot ?? 0;
+  if (apptVoucherType === "fixed" && apptVoucherAmt > 0) {
+    voucherDiscount += apptVoucherAmt;
+    voucherBreakdown.push({ name: "Appointment", code: appt.voucher_code_snapshot, amount: apptVoucherAmt });
+    anyVoucherUsed = true;
+  } else if (apptVoucherType === "percentage" && apptVoucherAmt > 0) {
+    const amt = (apptVoucherAmt / 100) * subtotal;
+    voucherDiscount += amt;
+    voucherBreakdown.push({ name: "Appointment", code: appt.voucher_code_snapshot, amount: amt });
+    anyVoucherUsed = true;
+  }
+
 
   const printReceipt = () => {
     if (!receiptRef.current) return;
@@ -221,7 +258,6 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
     return !(serviceStatus === "completed" || serviceStatus === "cancelled");
   };
 
-  console.log("Rendering ReceiptCard for appointment:", appointment.services?.map(s => s.start_time) ?? "No services");
 
   return (
     <div className="space-y-4 max-h-[85vh] overflow-y-auto overflow-x-hidden">
@@ -239,7 +275,11 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
               <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight">RECEIPT</h2>
                 <div className="flex flex-col items-end gap-1">
-                  {getStatusBadge(appointment.status)}
+                  {(
+                    (appointment as AppointmentWithVoucher).voucher_code_snapshot
+                  ) && (
+                    <Badge className="text-xs bg-purple-500 rounded-full">Voucher: {(appointment as AppointmentWithVoucher).voucher_code_snapshot}</Badge>
+                  )}
                   {services.length > 0 && (
                     <p className="text-xs text-muted-foreground italic">
                       {getStatusSummary()}
@@ -298,6 +338,9 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
                           </div>
                           <div className="flex gap-1.5 flex-shrink-0">
                             {s.is_pro_snapshot && <Badge className="text-xs bg-green-500 rounded-full">Professional</Badge>}
+                            {s.voucher_code_snapshot && (
+                              <Badge className="text-xs bg-purple-500 rounded-full">Voucher: {s.voucher_code_snapshot}</Badge>
+                            )}
                           </div>
                         </div>
                         
@@ -419,12 +462,39 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({
 
                 <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-2.5 md:p-3 rounded-lg shadow-sm border-2">
                   <p className="font-bold text-sm md:text-base">Total Due</p>
-                  <p className="text-xl md:text-2xl font-bold tabular-nums text-primary">{formatCurrency(totalServiceCost)}</p>
+                  <p className="text-xl md:text-2xl font-bold tabular-nums text-primary">{formatCurrency(Math.max(0, subtotal - voucherDiscount))}</p>
                 </div>
 
                 <Separator className="my-3" />
 
                 <div className="space-y-2 text-xs md:text-sm">
+                  {((appointment as AppointmentWithVoucher).voucher_code_snapshot) && (
+                    <div className="flex justify-between items-center p-2 bg-white/50 dark:bg-slate-900/50 rounded-md gap-2">
+                      <p className="text-muted-foreground">Voucher Code</p>
+                      <p className="font-semibold break-words text-right">{(appointment as AppointmentWithVoucher).voucher_code_snapshot}</p>
+                    </div>
+                  )}
+                  {typeof (appointment as AppointmentWithVoucher).voucher_discount_amount_snapshot === "number" && (((appointment as AppointmentWithVoucher).voucher_discount_amount_snapshot ?? 0) > 0) && (
+                    <div className="flex justify-between items-center p-2 bg-white/50 dark:bg-slate-900/50 rounded-md gap-2">
+                      <p className="text-muted-foreground">Voucher Discount</p>
+                      <p className="font-semibold break-words text-right">-{formatCurrency((appointment as AppointmentWithVoucher).voucher_discount_amount_snapshot ?? 0)}</p>
+                    </div>
+                  )}
+                  {(voucherBreakdown.length > 0 || anyVoucherUsed) && (
+                    <div className="p-2 bg-white/50 dark:bg-slate-900/50 rounded-md border">
+                      <p className="font-semibold mb-2">Voucher Breakdown</p>
+                      <div className="space-y-1">
+                        {voucherBreakdown.length === 0 && anyVoucherUsed ? (
+                          <p className="text-muted-foreground">Voucher applied but discount amount is 0 for current services.</p>
+                        ) : voucherBreakdown.map((v, i) => (
+                          <div key={`${v.name}-${i}`} className="flex justify-between items-center">
+                            <span className="text-muted-foreground break-words">{v.name}{v.code ? ` · ${v.code}` : ""}</span>
+                            <span className="font-medium tabular-nums">-{formatCurrency(v.amount)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {appointment.final_payment_method && (
                     <div className="flex justify-between items-center p-2 bg-white/50 dark:bg-slate-900/50 rounded-md gap-2">
                       <p className="text-muted-foreground flex items-center gap-1.5">
